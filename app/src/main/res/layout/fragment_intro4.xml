@@ -17,7 +17,6 @@
         android:id="@+id/backBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:src="@drawable/backarrow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -26,7 +25,6 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_alignParentLeft="true"
         android:layout_marginTop="50dp"
         android:gravity="top"
@@ -40,24 +38,115 @@
         app:layout_constraintTop_toBottomOf="@+id/backBtn" />
 
     <EditText
+        android:id="@+id/nickname"
         android:layout_width="345dp"
         android:layout_height="48dp"
+        android:layout_marginTop="71dp"
         android:background="#F4F4F4"
         android:hint="guide_example"
-        android:layout_marginTop="71dp"
         android:paddingLeft="28dp"
         android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:text="@"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/nickname"
+        app:layout_constraintStart_toStartOf="@+id/nickname"
+        app:layout_constraintTop_toTopOf="@+id/nickname" />
+
+    <ImageView
+        android:id="@+id/warning"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/warningicon"
+        android:layout_marginRight="40dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/nickname"
+        app:layout_constraintEnd_toEndOf="@+id/nickname"
+        app:layout_constraintTop_toTopOf="@+id/nickname" />
+    <ImageView
+        android:id="@+id/complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/completeicon"
+        android:layout_marginRight="40dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/nickname"
+        app:layout_constraintEnd_toEndOf="@+id/nickname"
+        app:layout_constraintTop_toTopOf="@+id/nickname"/>
+
+    <ImageView
+        android:id="@+id/removeBtn"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginRight="8dp"
+        android:src="@drawable/removeicon"
+        app:layout_constraintBottom_toBottomOf="@+id/nickname"
+        app:layout_constraintEnd_toEndOf="@+id/nickname"
+        app:layout_constraintTop_toTopOf="@+id/nickname" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="8dp"
+        android:gravity="top"
+        android:lineSpacingExtra="8sp"
+        android:text="영문, 숫자, 밑줄(_), 마침표(.)를 포함하여 2~20자를 지원합니다."
+        android:textColor="#767676"
+        android:textSize="12sp"
+        android:translationY="-3.84sp"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/nickname" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="다른 유저와 중복되는 아이디입니다."
+        android:layout_alignParentLeft="true"
+        android:textColor="#D56461"
+        android:visibility="invisible"
+        android:layout_marginTop="8dp"
+        android:gravity="top"
+        android:lineSpacingExtra="8sp"
+        android:textSize="12sp"
+        android:translationY="-3.84sp"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/nickname"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="사용 가능한 아이디입니다."
+        android:layout_alignParentLeft="true"
+        android:textColor="#6A8EF0"
+        android:visibility="invisible"
+        android:layout_marginTop="8dp"
+        android:gravity="top"
+        android:lineSpacingExtra="8sp"
+        android:textSize="12sp"
+        android:translationY="-3.84sp"
+        app:layout_constraintStart_toStartOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/nickname"/>
+
+    <Button
+        android:id="@+id/nextBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rectangle3"
+        android:text="다음"
+        android:textColor="#999999"
         android:textSize="18sp"
-        android:text="@"
-        android:layout_marginTop="84dp"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"/>
+        android:layout_marginBottom="56dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

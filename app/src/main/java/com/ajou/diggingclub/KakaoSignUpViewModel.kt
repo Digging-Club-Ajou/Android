@@ -13,8 +13,6 @@ class KakaoSignUpViewModel : ViewModel() {
     get() = _authCode
 
     fun setAuthCode(string : String) = viewModelScope.launch(Dispatchers.IO) {
-        if(authCode != null){
-            _authCode.postValue(string)
-        }
+        _authCode.postValue(string)
     }
 }

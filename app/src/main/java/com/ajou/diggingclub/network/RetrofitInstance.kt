@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
 
-    private const val BASE_URL = "http://3.34.171.76:8080/" // const val은 컴파일 시간 동안 할당되어야 함, 함수 같은 거 할당 x
+    private const val BASE_URL = "" // const val은 컴파일 시간 동안 할당되어야 함, 함수 같은 거 할당 x
 
     private val client = Retrofit
         .Builder()

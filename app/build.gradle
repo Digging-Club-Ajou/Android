@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 //val properties = Properties().apply {
@@ -10,6 +11,8 @@ plugins {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('apikey.properties').newDataInputStream())
 def native_api_key = properties.getProperty('native_api_key')
+def client_id = properties.getProperty('client_id')
+def redirect_uri = properties.getProperty('redirect_uri')
 
 android {
     namespace 'com.ajou.diggingclub'
@@ -24,7 +27,9 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "NATIVE_API_KEY", properties['native_api_key']
+        buildConfigField "String", "NATIVE_API_KEY", native_api_key
+        buildConfigField "String", "CLIENT_ID", client_id
+        buildConfigField "String", "REDIRECT_URI", redirect_uri
 
         manifestPlaceholders = [NATIVE_API_KEY : native_api_key]
     }
@@ -36,8 +41,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_9
+        targetCompatibility JavaVersion.VERSION_1_9
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -68,4 +73,29 @@ dependencies {
     // LiveData
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
 
+    // Navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+
+    // Data Store
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
+    //Hilt
+    def hilt_version = "2.44"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt ("com.google.dagger:hilt-compiler:$hilt_version")
+
+    // OkHttp
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.10.0"))
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+
+    //Retrofit
+    def retrofit_version = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
 }

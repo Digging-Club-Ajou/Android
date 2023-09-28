@@ -1,11 +1,12 @@
-package com.ajou.diggingclub
+package com.ajou.diggingclub.start
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.ajou.diggingclub.R
 
-class IntroActivity : AppCompatActivity() {
+class LandingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_intro)
+        setContentView(R.layout.activity_landing)
     }
 }

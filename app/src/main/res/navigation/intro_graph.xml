@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/intro_graph"
+    app:startDestination="@id/introFragment1">
+
+    <fragment
+        android:id="@+id/introFragment4"
+        android:name="com.ajou.diggingclub.intro.fragments.IntroFragment4"
+        android:label="fragment_intro4"
+        tools:layout="@layout/fragment_intro4" />
+    <fragment
+        android:id="@+id/introFragment1"
+        android:name="com.ajou.diggingclub.intro.fragments.IntroFragment1"
+        android:label="fragment_intro1"
+        tools:layout="@layout/fragment_intro1" />
+    <fragment
+        android:id="@+id/introFragment2"
+        android:name="com.ajou.diggingclub.intro.fragments.IntroFragment2"
+        android:label="fragment_intro2"
+        tools:layout="@layout/fragment_intro2" />
+    <fragment
+        android:id="@+id/introFragment3"
+        android:name="com.ajou.diggingclub.intro.fragments.IntroFragment3"
+        android:label="fragment_intro3"
+        tools:layout="@layout/fragment_intro3" />
+</navigation>

@@ -4,6 +4,8 @@
     package="com.ajou.diggingclub">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".GlobalApplication"
@@ -17,7 +19,10 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".StartActivity"
+            android:name=".start.LandingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".IntroActivity"
             android:exported="false" />
         <activity
             android:name=".KakaoSignUpActivity"

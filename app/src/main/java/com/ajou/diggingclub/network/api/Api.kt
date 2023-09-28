@@ -15,5 +15,8 @@ interface Api {
     @Headers("Content-Type:application/json")
     @POST("api/signup")
     fun signUpUser(@Body userInfo : SignUpRequestBody) : Call<SignUpResponseBody>
+    @Headers("Content-Type:application/json")
+    @POST("api/kakao")
+    fun login(@Body authCode : String) : Call<String>
 
 }
