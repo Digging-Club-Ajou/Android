@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".intro.fragments.IntroFragment3">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="26dp">
 
         <ImageView
             android:id="@+id/backBtn"
@@ -23,121 +25,130 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="50dp"
-            android:gravity="top"
+            android:gravity="center"
             android:letterSpacing="-0.03"
             android:lineSpacingExtra="3sp"
-            android:text="거의 다 왔어요!\n닉네임을 설정해주세요."
+            android:text="편리한 디글 이용을 위해\n아래의 접근 권한 허용이 필요합니다."
             android:textColor="@color/textColor"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:translationY="-1.6sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/backBtn" />
 
-        <EditText
-            android:id="@+id/nickname"
-            android:layout_width="345dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="71dp"
-            android:background="#F4F4F4"
-            android:hint="guide_example"
-            android:paddingLeft="28dp"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/cameraicon"
+            android:layout_marginTop="94dp"
+            android:layout_marginLeft="22dp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="39dp"
+            android:layout_marginTop="94dp"
+            android:text="카메라/사진"
+            android:textColor="#191919"
+            android:textSize="16sp"
+            android:lineSpacingExtra="1sp"
+            android:translationY="-0.45sp"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:text="@"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/nickname"
-            app:layout_constraintStart_toStartOf="@+id/nickname"
-            app:layout_constraintTop_toTopOf="@+id/nickname" />
+            android:layout_marginTop="94dp"
+            android:text=" (선택)"
+            android:textColor="#999999"
+            android:textSize="16sp"
+            android:lineSpacingExtra="1sp"
+            android:translationY="-0.45sp"
+            app:layout_constraintStart_toEndOf="@+id/textView2"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
-        <ImageView
-            android:id="@+id/warning"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/warningicon"
-            android:layout_marginRight="40dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/nickname"
-            app:layout_constraintEnd_toEndOf="@+id/nickname"
-            app:layout_constraintTop_toTopOf="@+id/nickname" />
-        <ImageView
-            android:id="@+id/complete"
+        <TextView
+            android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/completeicon"
-            android:layout_marginRight="40dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/nickname"
-            app:layout_constraintEnd_toEndOf="@+id/nickname"
-            app:layout_constraintTop_toTopOf="@+id/nickname"/>
+            android:layout_marginLeft="39dp"
+            android:lineSpacingExtra="1sp"
+            android:text="앱 내 ‘앨범’, ‘멜로디카드’ 등의 게시물\n등록을 위해 사진 및 카메라 접근 권한이\n필요합니다."
+            android:textColor="#999999"
+            android:textSize="14sp"
+            android:translationY="-0.45sp"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
         <ImageView
-            android:id="@+id/removeBtn"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/removeicon"
-            app:layout_constraintBottom_toBottomOf="@+id/nickname"
-            app:layout_constraintEnd_toEndOf="@+id/nickname"
-            app:layout_constraintTop_toTopOf="@+id/nickname" />
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="44dp"
+            android:src="@drawable/locationicon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="1sp"
+            android:layout_marginTop="44dp"
+            android:text="위치"
+            android:layout_marginLeft="39dp"
+            android:textColor="#191919"
+            android:textSize="16sp"
+            android:translationY="-0.45sp"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="1sp"
+            android:layout_marginTop="44dp"
+            android:text=" (선택)"
+            android:textColor="#999999"
+            android:textSize="16sp"
+            android:translationY="-0.45sp"
+            app:layout_constraintStart_toEndOf="@+id/textView5"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginTop="8dp"
-            android:gravity="top"
-            android:lineSpacingExtra="8sp"
-            android:text="영문, 숫자, 밑줄(_), 마침표(.)를 포함하여 2~20자를 지원합니다."
-            android:textColor="#767676"
-            android:textSize="12sp"
-            android:translationY="-3.84sp"
-            app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/nickname" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="다른 유저와 중복되는 아이디입니다."
-            android:layout_alignParentLeft="true"
-            android:textColor="#D56461"
-            android:visibility="invisible"
-            android:layout_marginTop="8dp"
-            android:gravity="top"
-            android:lineSpacingExtra="8sp"
-            android:textSize="12sp"
-            android:translationY="-3.84sp"
-            app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/nickname"/>
+            android:lineSpacingExtra="1sp"
+            android:layout_marginLeft="39dp"
+            android:text="앱 내 ‘앨범’ 및 ‘멜로디카드’ 등의 게시물\n등록을 위해 위치 권한이 필요합니다."
+            android:textColor="#999999"
+            android:textSize="14sp"
+            android:translationY="-0.45sp"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="사용 가능한 아이디입니다."
-            android:layout_alignParentLeft="true"
-            android:textColor="#6A8EF0"
-            android:visibility="invisible"
-            android:layout_marginTop="8dp"
-            android:gravity="top"
-            android:lineSpacingExtra="8sp"
-            android:textSize="12sp"
-            android:translationY="-3.84sp"
-            app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/nickname"/>
-
+            android:text="• 위 접근권한은 더 나은 서비스를 제공하기 위해 사용됩니다.\n• 허용하지 않으셔도 해당 기능 외의 서비스 이용은 가능합니다.\n"
+            app:layout_constraintBottom_toTopOf="@+id/nextBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
         <Button
             android:id="@+id/nextBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/rectangle3"
+            android:background="@drawable/rectangle_2"
             android:text="다음"
-            android:textColor="#999999"
+            android:textColor="@color/textColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

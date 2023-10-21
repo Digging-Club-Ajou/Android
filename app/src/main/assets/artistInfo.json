@@ -1,0 +1,290 @@
+[
+  {
+    "id": 0,
+    "name":"NewJeans",
+    "imageUrl": "https://i.scdn.co/image/ab6761610000e5eb5da361915b1fa48895d4f23f",
+    "category": "여자 그룹"
+  },
+  {
+    "id": 1,
+    "name": "다비치",
+    "imageUrl":"https://i.scdn.co/image/ab6761610000e5eb60815ff18cb9f9f0fe12aa97",
+    "category": "여자 그룹"
+  },
+  {
+    "id": 2,
+    "name": "BLACKPINK",
+    "imageUrl": "https://i.scdn.co/image/ab6761610000e5ebc9690bc711d04b3d4fd4b87c",
+    "category": "여자 그룹"
+  },
+  {
+    "id": 3,
+    "name": "STAYC(스테이씨)",
+    "imageUrl": "https://i.scdn.co/image/ab6761610000e5eb784d2270653c1d5d1cf43778",
+    "category": "여자 그룹"
+  },
+  {
+    "id": 4,
+    "name": "프로미스나인",
+    "imageUrl": "https://i.scdn.co/image/ab6761610000e5ebcae99c0bae2247ad4cb0c904",
+    "category": "여자 그룹"
+  },
+  {
+    "id": 5,
+    "name": "Red Velvet (레드벨벳)",
+    "imageUrl": "https://i.scdn.co/image/ab6761610000e5eb5bf330a57b9dcffd8f7b2c14",
+    "category": "여자 그룹"
+  },
+  {
+    "id": 6,
+    "name": "NCT 127",
+    "imageUrl": "https://i.scdn.co/image/ab6761610000e5eb13881a5713d92eeda09e3956",
+    "category" : "남자 그룹"
+  },
+  {
+    "id": 7,
+    "name": "방탄소년단",
+    "imageUrl":"https://i.scdn.co/image/ab6761610000e5ebd642648235ebf3460d2d1f6a",
+    "category": "남자 그룹"
+  },
+  {
+    "id": 8,
+    "name": "세븐틴 (SEVENTEEN)",
+    "imageUrl": "https://i.scdn.co/image/ab6761610000e5eb95f5142b421466cf22028f6f",
+    "category": "남자 그룹"
+  },
+  {
+    "id": 9,
+    "name": "DAY6 (데이식스)",
+    "imageUrl": "https://i.scdn.co/image/ab6761610000e5eb2fba28d51fc972ed9d8fbaaa",
+    "category": "남자 그룹"
+  },
+  {
+    "id": 10,
+    "name": "몬스타엑스",
+    "imageUrl": "https://i.scdn.co/image/ab6761610000e5eb3806dc272074141b5f4ae00d",
+    "category": "남자 그룹"
+  },
+  {
+    "id": 11,
+    "name": "LUCY",
+    "imageUrl": "https://i.scdn.co/image/ab6761610000e5eb5841039db386f730e313ad94",
+    "category": "남자 그룹"
+  },
+  {
+    "id": 12,
+    "name": "아이유",
+    "imageUrl": "https://i.scdn.co/image/ab6761610000e5eb006ff3c0136a71bfb9928d34",
+    "category": "여자 솔로"
+  },
+  {
+    "id": 13,
+    "name": "에일리(Ailee)",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb1722d31b67b9f5a48e94e465",
+    "category" : "여자 솔로"
+  },
+  {
+    "id": 14,
+    "name": "이영지",
+    "imageUrl" : "https://i.scdn.co/image/ab67616d0000b2733e59f3e73b99ed248ab7bae2",
+    "category" : "여자 솔로"
+  },
+  {
+    "id": 15,
+    "name": "백예린 (Yerin Baek)",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb28f845b9a1c6e8bccb255f0c",
+    "category" : "여자 솔로"
+  },
+  {
+    "id": 16,
+    "name": "볼빨간사춘기",
+    "imageUrl":"https://i.scdn.co/image/ab6761610000e5ebfdb9292f006730a215b7bfcc",
+    "category": "여자 솔로"
+  },
+  {
+    "id": 17,
+    "name" : "태연 (TAEYEON)",
+    "imageUrl":"https://i.scdn.co/image/ab6761610000e5ebb29975f8b42bcba1eae62577",
+    "category": "여자 솔로"
+  },
+  {
+    "id": 18,
+    "name": "정국",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb0484b7280b02a3676b5adfb3",
+    "category" : "남자 솔로"
+  },
+  {
+    "id": 19,
+    "name": "성시경",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5ebb3c06b25c1c87dfcec00877d",
+    "category" : "남자 솔로"
+  },
+  {
+    "id": 20,
+    "name": "폴킴",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb07cbd6dd83df909c0e4aa798",
+    "category" : "남자 솔로"
+  },
+  {
+    "id": 21,
+    "name" : "박재범",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5ebb6ba89aff53eea0b5f0444e8",
+    "category" : "남자 솔로"
+  },
+  {
+    "id": 22,
+    "name" : "쿠기 (Coogie)",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb5c8fe4d8c72bbd833ceaf202",
+    "category" : "남자 솔로"
+  },
+  {
+    "id": 23,
+    "name" : "임한별",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb18f53034a71f23a550f0d39a",
+    "category" : "남자 솔로"
+  },
+  {
+    "id": 24,
+    "name" : "새소년",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eba869878b95fd94d6e6a5d5ac",
+    "category" : "인디 그룹"
+  },
+  {
+    "id": 25,
+    "name" : "DPR",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5ebe7cf64e17ae7a7ea4173f5ea",
+    "category" : "인디 그룹"
+  },
+  {
+    "id": 26,
+    "name" : "wave to earth",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5ebc3c28df50abf70a11d9f8063",
+    "category" : "인디 그룹"
+  },
+  {
+    "id": 27,
+    "name" : "잔나비",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5ebe5346373ce792a13045f3eed",
+    "category" : "인디 그룹"
+  },
+  {
+    "id": 28,
+    "name" : "검정치마",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb8609536d21beed6769d09d7f",
+    "category" : "인디 그룹"
+  },
+  {
+    "id": 29,
+    "name" : "쏜애플 (THORNAPPLE)",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb4506d70c02763753b03fd07b",
+    "category" : "인디 그룹"
+  },
+  {
+    "id": 30,
+    "name" : "10CM",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb4e5b278c1cc511598b96423c",
+    "category" : "인디 솔로"
+  },
+  {
+    "id": 31,
+    "name" : "우효",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb2cf663b4b0aed36b37058ca8",
+    "category" : "인디 솔로"
+  },
+  {
+    "id": 32,
+    "name" : "최유리",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb973523cbcd2973fa7d848c7b",
+    "category" : "인디 솔로"
+  },
+  {
+    "id": 33,
+    "name" : "CHEEZE (치즈)",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb2e5dfbe2daf59e210ebe57e6",
+    "category" : "인디 솔로"
+  },
+  {
+    "id": 34,
+    "name" : "Crush",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb8e9d1c8642df6f869631fe62",
+    "category" : "인디 솔로"
+  },
+  {
+    "id": 35,
+    "name" : "기리보이",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5ebad99e4f68ec97e65589dbbe1",
+    "category" : "인디 솔로"
+  },
+  {
+    "id": 36,
+    "name" : "Ariana Grande",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5ebcdce7620dc940db079bf4952",
+    "category" : "해외 여성"
+  },
+  {
+    "id": 37,
+    "name" : "Taylor Swift",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb6a224073987b930f99adc706",
+    "category" : "해외 여성"
+  },
+  {
+    "id": 38,
+    "name" : "Kelly Clarkson",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb305a7cc6760b53a67aaae19d",
+    "category" : "해외 여성"
+  },
+  {
+    "id": 39,
+    "name" : "Doja Cat",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb7f6d6cac38d494e87692af99",
+    "category" : "해외 여성"
+  },
+  {
+    "id": 40,
+    "name" : "Whitney Houston",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5ebcd9f60ab57585bf3b77ecc51",
+    "category" : "해외 여성"
+  },
+  {
+    "id": 41,
+    "name" : "Kehlani",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5ebd2657bcafcb300d90816523f",
+    "category" : "해외 여성"
+  },
+  {
+    "id": 42,
+    "name" : "Ed Sheeran",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb3bcef85e105dfc42399ef0ba",
+    "category" : "해외 남성"
+  },
+  {
+    "id": 43,
+    "name" : "Mac Miller",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5ebed3b89aa602145fde71a163a",
+    "category" : "해외 남성"
+  },
+  {
+    "id": 44,
+    "name" : "Coldplay",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb989ed05e1f0570cc4726c2d3",
+    "category" : "해외 남성"
+  },
+  {
+    "id": 45,
+    "name" : "Michael Jackson",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb0e08ea2c4d6789fbf5cbe0aa",
+    "category" : "해외 남성"
+  },
+  {
+    "id": 46,
+    "name" : "Charlie Puth",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5ebf83823555da55fd07555fbd0",
+    "category" : "해외 남성"
+  },
+  {
+    "id": 47,
+    "name" : "The Weeknd",
+    "imageUrl" : "https://i.scdn.co/image/ab6761610000e5eb214f3cf1cbe7139c1e26ffbb",
+    "category" : "해외 남성"
+  }
+]

@@ -5,31 +5,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".start.LandingActivity">
-
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:id="@+id/dots_indicator"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_marginTop="20dp"
+            app:dotsColor="@color/secondaryColor"
+            app:dotsCornerRadius="8dp"
+            app:dotsSize="16dp"
+            app:dotsSpacing="4dp"
+            app:dotsWidthFactor="2.5"
+            app:selectedDotColor="@color/primaryColor"
+            app:progressMode="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tabGravity="center"
-            app:tabIndicatorHeight="0dp"
-            app:tabMode="fixed"
-            android:elevation="2dp"/>
+            />
 
         <TextView
+            android:id="@+id/skip"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
+            android:elevation="4dp"
             android:text="건너뛰기"
+            android:gravity="center"
             android:textColor="#FBC4E4"
             android:textSize="16sp"
-            android:elevation="4dp"
-            android:layout_marginRight="30dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tabLayout"
-            app:layout_constraintEnd_toEndOf="@+id/tabLayout"
-            app:layout_constraintTop_toTopOf="@+id/tabLayout" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/dots_indicator"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/pager"

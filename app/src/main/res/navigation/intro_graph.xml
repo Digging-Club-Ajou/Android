@@ -6,23 +6,60 @@
     app:startDestination="@id/introFragment1">
 
     <fragment
-        android:id="@+id/introFragment4"
-        android:name="com.ajou.diggingclub.intro.fragments.IntroFragment4"
-        android:label="fragment_intro4"
-        tools:layout="@layout/fragment_intro4" />
+        android:id="@+id/introFragment5"
+        android:name="com.ajou.diggingclub.intro.fragments.IntroFragment5"
+        android:label="fragment_intro5"
+        tools:layout="@layout/fragment_intro5" >
+        <argument
+            android:name="nickname"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_introFragment5_to_introFragment4"
+            app:destination="@id/introFragment4" />
+    </fragment>
     <fragment
         android:id="@+id/introFragment1"
         android:name="com.ajou.diggingclub.intro.fragments.IntroFragment1"
         android:label="fragment_intro1"
-        tools:layout="@layout/fragment_intro1" />
-    <fragment
-        android:id="@+id/introFragment2"
-        android:name="com.ajou.diggingclub.intro.fragments.IntroFragment2"
-        android:label="fragment_intro2"
-        tools:layout="@layout/fragment_intro2" />
+        tools:layout="@layout/fragment_intro1" >
+        <action
+            android:id="@+id/action_introFragment1_to_introFragment2"
+            app:destination="@id/introFragment2" />
+    </fragment>
     <fragment
         android:id="@+id/introFragment3"
         android:name="com.ajou.diggingclub.intro.fragments.IntroFragment3"
         android:label="fragment_intro3"
-        tools:layout="@layout/fragment_intro3" />
+        tools:layout="@layout/fragment_intro3" >
+        <action
+            android:id="@+id/action_introFragment3_to_introFragment4"
+            app:destination="@id/introFragment4" />
+        <action
+            android:id="@+id/action_introFragment3_to_introFragment2"
+            app:destination="@id/introFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/introFragment4"
+        android:name="com.ajou.diggingclub.intro.fragments.IntroFragment4"
+        android:label="fragment_intro4"
+        tools:layout="@layout/fragment_intro4" >
+        <action
+            android:id="@+id/action_introFragment4_to_introFragment5"
+            app:destination="@id/introFragment5" />
+        <action
+            android:id="@+id/action_introFragment4_to_introFragment3"
+            app:destination="@id/introFragment3" />
+    </fragment>
+    <fragment
+        android:id="@+id/introFragment2"
+        android:name="com.ajou.diggingclub.intro.fragments.IntroFragment2"
+        android:label="fragment_intro2"
+        tools:layout="@layout/fragment_intro2" >
+        <action
+            android:id="@+id/action_introFragment2_to_introFragment3"
+            app:destination="@id/introFragment3" />
+        <action
+            android:id="@+id/action_introFragment2_to_introFragment1"
+            app:destination="@id/introFragment1" />
+    </fragment>
 </navigation>

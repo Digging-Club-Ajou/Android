@@ -2,11 +2,9 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
-
-//val properties = Properties().apply {
-//    load(FileInputStream(rootProject.file("apikey.properties")))
-//}
+apply plugin: "androidx.navigation.safeargs"
 
 Properties properties = new Properties()
 properties.load(project.rootProject.file('apikey.properties').newDataInputStream())
@@ -41,8 +39,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_9
-        targetCompatibility JavaVersion.VERSION_1_9
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     kotlinOptions {
         jvmTarget = '1.8'
@@ -61,6 +59,7 @@ dependencies {
     implementation 'com.kakao.sdk:v2-user:2.10.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -76,6 +75,7 @@ dependencies {
     // Navigation
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
+
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
 
@@ -97,5 +97,43 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
 
+    // viewpager
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+    // datastore
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+    implementation "androidx.datastore:datastore-core:1.0.0"
+
+    // SplashScreen
+    implementation 'androidx.core:core-splashscreen:1.0.0-beta02'
+
+    // Lottie
+    implementation 'com.airbnb.android:lottie:3.4.0'
+
+    // cookieJar
+    implementation "com.squareup.okhttp3:okhttp-urlconnection:4.9.1"
+
+    // viewpager2 indicator
+    implementation("com.tbuonomo:dotsindicator:4.3")
+
+    // CameraX
+    def camerax_version = "1.2.1"
+    implementation "androidx.camera:camera-core:${camerax_version}"
+    implementation "androidx.camera:camera-camera2:${camerax_version}"
+    implementation "androidx.camera:camera-lifecycle:${camerax_version}"
+    implementation "androidx.camera:camera-video:${camerax_version}"
+    implementation "androidx.camera:camera-view:${camerax_version}"
+    implementation "androidx.camera:camera-extensions:${camerax_version}"
+
+    // Color Lightness Picker
+    implementation "codes.side:andcolorpicker:0.6.2"
+
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
+
+    // GIF
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.22'
+
+
 }

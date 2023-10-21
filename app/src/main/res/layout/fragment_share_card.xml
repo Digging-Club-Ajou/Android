@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".melody.card.ShareCardFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/backarrow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:lineSpacingExtra="5sp"
+            android:text="멜로디카드 미리보기"
+            android:textColor="@color/textColor"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:translationY="-2.65sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/backBtn"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            app:cardCornerRadius="14.5dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardElevation="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView10">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/melody_frame" />
+            <ImageView
+                android:id="@+id/background"
+                android:layout_gravity="center_horizontal"
+                android:layout_height="345dp"
+                android:layout_width="345dp"
+                android:background="@color/secondaryColor"/>
+
+            <TextView
+                android:id="@+id/nickname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nickname"
+                android:gravity="top"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="13dp"
+                android:textColor="#f4f4f4"
+                android:textSize="14sp" />
+            <ImageView
+                android:id="@+id/locationIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/location_small"
+                android:layout_marginLeft="208dp"
+                android:layout_marginTop="8dp"/>
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="아주대학교 성호관"
+                android:gravity="top"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="232dp"
+                android:textColor="#f4f4f4"
+                android:textSize="14sp" />
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ETA"
+                android:layout_marginTop="365dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/textColor"/>
+            <TextView
+                android:id="@+id/artist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NewJeans"
+                android:layout_marginTop="389dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="12sp"
+                android:textColor="@color/paleTextColor"/>
+            <ImageView
+                android:id="@+id/playIcon"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="290dp"
+                android:layout_marginLeft="260dp"
+                android:background="@drawable/playicon"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/heart"
+                android:layout_marginTop="365dp"
+                android:layout_marginLeft="280dp"/>
+            <EditText
+                android:id="@+id/cardDescription"
+                android:layout_width="320dp"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:layout_marginTop="408dp"
+                android:layout_marginLeft="16dp"
+                android:hint="탭하여 함께 전하고 싶은 메시지를 작성해보세요!\n어떤 추억을 공유하는 음악인가요? :)"
+                android:lineSpacingExtra="8sp"
+                android:textSize="12sp"
+                android:textColor="@color/paleTextColor"/>
+        </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/shareBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="게시하기"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="52dp"
+                android:background="@drawable/rectangle_2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cardView"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

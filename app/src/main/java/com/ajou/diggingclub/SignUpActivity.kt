@@ -6,7 +6,7 @@ import android.text.TextWatcher
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.ajou.diggingclub.databinding.ActivitySignUpBinding
-import com.ajou.diggingclub.network.api.Api
+import com.ajou.diggingclub.network.api.UserApi
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.models.SignUpRequestBody
 import com.ajou.diggingclub.network.models.SignUpResponseBody
@@ -18,7 +18,7 @@ import retrofit2.Response
 class SignUpActivity : AppCompatActivity() {
     private var _binding : ActivitySignUpBinding ?= null
     private val binding get() = _binding!!
-    private val client = RetrofitInstance.getInstance().create(Api::class.java)
+    private val client = RetrofitInstance.getInstance().create(UserApi::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,20 +30,7 @@ class SignUpActivity : AppCompatActivity() {
         var gender : String = "MALE"
         var isFormatting : Boolean = false
         var phoneNumberFormat : String = ""
-//        binding.nickname.addTextChangedListener(object : TextWatcher {
-//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//                Log.d("before",p0.toString())
-//            }
-//
-//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//                Log.d("onTextChanged",p0.toString())
-//            }
-//
-//            override fun afterTextChanged(str: Editable?) {
-//                if(str!=null){
-//            }
-//
-//        })
+
         binding.femaleBtn.setOnClickListener {
             gender = "FEMALE"
         }

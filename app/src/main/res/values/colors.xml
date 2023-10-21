@@ -10,4 +10,10 @@
     <color name="textColor">#191919</color>
     <color name="paleTextColor">#999999</color>
     <color name="primaryColor">#FBC4E4</color>
+    <color name="secondaryColor">#F4F4F4</color>
+    <color name="backgroundColor">#D9D9D9</color>
+    <color name="descriptionColor">#767676</color>
+    <color name="inactiveColor">#E9E9EA</color>
+    <color name="errorColor">#D56461</color>
+    <color name="successColor">#6A8EF0</color>
 </resources>
