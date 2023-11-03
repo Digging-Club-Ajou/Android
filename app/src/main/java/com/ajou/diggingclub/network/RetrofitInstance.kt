@@ -13,7 +13,7 @@ import java.net.CookieManager
 
 object RetrofitInstance {
 
-    private const val BASE_URL =
+    private const val BASE_URL = "http://3.34.171.76:8080/api/"
 
     var builder = OkHttpClient().newBuilder()
     var okHttpClient = builder

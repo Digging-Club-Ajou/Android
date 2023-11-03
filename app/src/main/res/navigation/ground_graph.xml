@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ground_graph"
+    app:startDestination="@id/groundFragment">
+
+    <fragment
+        android:id="@+id/groundFragment"
+        android:name="com.ajou.diggingclub.ground.GroundFragment"
+        android:label="fragment_ground"
+        tools:layout="@layout/fragment_ground" >
+        <action
+            android:id="@+id/action_groundFragment_to_albumListFragment"
+            app:destination="@id/albumListFragment" />
+        <action
+            android:id="@+id/action_groundFragment_to_searchUserFragment"
+            app:destination="@id/searchUserFragment" />
+        <action
+            android:id="@+id/action_groundFragment_to_userArchiveFragment"
+            app:destination="@id/userArchiveFragment" />
+        <action
+            android:id="@+id/action_groundFragment_to_notificationFragment"
+            app:destination="@id/notificationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/albumListFragment"
+        android:name="com.ajou.diggingclub.ground.AlbumListFragment"
+        android:label="fragment_album_list"
+        tools:layout="@layout/fragment_album_list" >
+        <action
+            android:id="@+id/action_albumListFragment_to_groundFragment"
+            app:destination="@id/groundFragment" />
+        <action
+            android:id="@+id/action_albumListFragment_to_detailAlbumFragment"
+            app:destination="@id/detailAlbumFragment" />
+        <action
+            android:id="@+id/action_albumListFragment_to_userArchiveFragment"
+            app:destination="@id/userArchiveFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/searchUserFragment"
+        android:name="com.ajou.diggingclub.ground.SearchUserFragment"
+        android:label="fragment_search_user"
+        tools:layout="@layout/fragment_search_user" >
+        <action
+            android:id="@+id/action_searchUserFragment_to_groundFragment"
+            app:destination="@id/groundFragment" />
+        <action
+            android:id="@+id/action_searchUserFragment_to_userArchiveFragment"
+            app:destination="@id/userArchiveFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailAlbumFragment"
+        android:name="com.ajou.diggingclub.ground.DetailAlbumFragment"
+        android:label="fragment_detail_album"
+        tools:layout="@layout/fragment_detail_album" >
+        <argument
+            android:name="albumName"
+            app:argType="string" />
+        <argument
+            android:name="nickname"
+            app:argType="string" />
+        <argument
+            android:name="albumId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_detailAlbumFragment_to_userArchiveFragment"
+            app:destination="@id/userArchiveFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userArchiveFragment"
+        android:name="com.ajou.diggingclub.ground.UserArchiveFragment"
+        android:label="fragment_user_archive"
+        tools:layout="@layout/fragment_user_archive" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.ajou.diggingclub.ground.NotificationFragment"
+        android:label="fragment_notification"
+        tools:layout="@layout/fragment_notification" >
+        <action
+            android:id="@+id/action_notificationFragment_to_groundFragment"
+            app:destination="@id/groundFragment" />
+    </fragment>
+</navigation>

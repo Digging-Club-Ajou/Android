@@ -69,7 +69,6 @@ class MakeCardFragment3 : Fragment() {
         binding.title.text = args.music.title
 
         binding.done.setOnClickListener {
-            Log.d("color before ",cardColor)
             val action =
                 MakeCardFragment3Directions.actionMakeCardFragment3ToSearchLocationFragment(
                     args.uri,

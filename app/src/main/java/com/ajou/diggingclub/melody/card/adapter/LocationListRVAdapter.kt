@@ -19,7 +19,7 @@ class LocationListRVAdapter(val context: Context, val list : List<LocationModel>
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.location_list_item, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_location_list, parent, false)
         return ViewHolder(view)
     }
 

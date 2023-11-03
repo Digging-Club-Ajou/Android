@@ -17,7 +17,7 @@ import androidx.navigation.fragment.navArgs
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentShareCardBinding
-import com.ajou.diggingclub.melody.models.MelodyCardModel
+import com.ajou.diggingclub.melody.models.SendingMelodyCardModel
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.CardApi
 import com.ajou.diggingclub.start.LandingActivity
@@ -98,7 +98,6 @@ class ShareCardFragment : Fragment() {
         if(args.address==null){
             binding.location.visibility = View.GONE
             binding.locationIcon.visibility = View.GONE
-            binding.nickname.visibility = View.GONE
         }
 
         if(args.uri.isNotEmpty()){
@@ -134,43 +133,64 @@ class ShareCardFragment : Fragment() {
         })
 
         binding.shareBtn.setOnClickListener {
-            val data = MelodyCardModel(args.music.artist, args.music.title,"", args.music.previewUrl,args.address,cardDescription,args.color)
+            val data = SendingMelodyCardModel(args.music.artist, args.music.title,"", args.music.previewUrl,args.address,cardDescription,args.color)
             Log.d("data",data.toString())
-            val jsonObject = JsonObject().apply {
-                addProperty("artistName",args.music.artist)
-                addProperty("songTitle",args.music.title)
-                addProperty("genre",null as String?)
-                addProperty("previewUrl",args.music.previewUrl)
-                addProperty("address",args.address)
-                addProperty("cardDescription",cardDescription)
-                addProperty("color",args.color)
-            }
-            val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), jsonObject.toString())
-
-            client.createCard(accessToken!!,refreshToken!!,data,img).enqueue(object : Callback<ResponseBody> {
-                override fun onResponse(
-                    call: Call<ResponseBody>,
-                    response: Response<ResponseBody>
-                ) {
-                    if(response.isSuccessful){
-                        if(response.headers()["AccessToken"] != null) {
-                            CoroutineScope(Dispatchers.IO).launch {
-                                dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
+            Log.d("img",img.toString())
+            if(img!=null){
+                client.createCard(accessToken!!,refreshToken!!,data,img).enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                        if(response.isSuccessful){
+                            if(response.headers()["AccessToken"] != null) {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
+                                }
                             }
+                            Log.d("response",response.body().toString())
+                        }else{
+                            val errorBody = JSONObject(response.errorBody()?.string())
+                            Log.d("response not successsss",errorBody.toString())
+                            Log.d("responseeeee",errorBody.toString())
                         }
-                        Log.d("response",response.body().toString())
-                    }else{
-                        val errorBody = JSONObject(response.errorBody()?.string())
-                        Log.d("response not successsss",errorBody.toString())
-                        Log.d("responseeeee",errorBody.toString())
                     }
-                }
 
-                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Log.d("fail",t.message.toString())
-                }
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Log.d("fail",t.message.toString())
+                    }
 
-            })
+                })
+            }else{
+                val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), "")
+                img = MultipartBody.Part.createFormData("melodyImage", "", requestFile)
+
+                client.createCard(accessToken!!,refreshToken!!,data,img).enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                        if(response.isSuccessful){
+                            if(response.headers()["AccessToken"] != null) {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
+                                }
+                            }
+                            Log.d("response here",response.body().toString())
+                        }else{
+                            val errorBody = JSONObject(response.errorBody()?.string())
+                            Log.d("response not successsss here",errorBody.toString())
+                            Log.d("responseeeee here",errorBody.toString())
+                        }
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Log.d("fail",t.message.toString())
+                    }
+
+                })
+            }
+
         }
 
 

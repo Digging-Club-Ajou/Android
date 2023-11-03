@@ -19,6 +19,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.airbnb.lottie.LottieAnimationView
 import com.ajou.diggingclub.MainActivity
 import com.ajou.diggingclub.R
+import com.ajou.diggingclub.melody.MelodyActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.gif.GifDrawable
@@ -69,7 +70,7 @@ class SplashActivity : AppCompatActivity() {
            //  일정 시간 후에 다음 화면으로 이동
             Handler().postDelayed({
                 if(viewModel.first.value == true){
-                    val intent = Intent(this, MainActivity::class.java)
+                    val intent = Intent(this, MelodyActivity::class.java)
                     startActivity(intent)
                     finish() // 현재 액티비티 종료
                 }else{
