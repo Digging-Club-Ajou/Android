@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.intro.fragments.IntroFragment1
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -59,7 +60,7 @@ class IntroInnerArtistRVAdapter(val context: Context, val list : List<IntroSelec
             .into(holder.image)
 
 
-        holder.image.setOnClickListener {
+        holder.image.setOnSingleClickListener {
             if(enabled){
                 list[position].selected = !list[position].selected
                 link.getSelectedItem(list[position],position)

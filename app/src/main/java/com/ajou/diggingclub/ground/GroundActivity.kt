@@ -7,6 +7,7 @@ import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.ActivityGroundBinding
 import com.ajou.diggingclub.melody.MelodyActivity
 import com.ajou.diggingclub.profile.ProfileActivity
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 
 class GroundActivity : AppCompatActivity() {
 
@@ -17,11 +18,11 @@ class GroundActivity : AppCompatActivity() {
         binding = ActivityGroundBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tabProfile.setOnClickListener {
+        binding.tabProfile.setOnSingleClickListener {
             val intent = Intent(this, ProfileActivity::class.java)
             startActivity(intent)
         }
-        binding.tabMelody.setOnClickListener {
+        binding.tabMelody.setOnSingleClickListener {
             val intent = Intent(this, MelodyActivity::class.java)
             startActivity(intent)
         }

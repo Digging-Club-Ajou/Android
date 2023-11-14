@@ -1,5 +1,6 @@
 package com.ajou.diggingclub.melody.album
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -20,6 +21,7 @@ import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.AlbumApi
 import com.ajou.diggingclub.start.LandingActivity
 import com.ajou.diggingclub.utils.getMultipartFile
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -39,11 +41,16 @@ class MakeAlbumFragment3 : Fragment() {
 
     private var _binding: FragmentMakeAlbum3Binding? = null
     private val binding get() = _binding!!
+    private var mContext: Context? = null
     private var job: Job? = null
     private val client = RetrofitInstance.getInstance().create(AlbumApi::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onCreateView(
@@ -90,7 +97,7 @@ class MakeAlbumFragment3 : Fragment() {
 
         val img = getMultipartFile(parsedUri,requireActivity(),"albumImage")
 
-        binding.done.setOnClickListener {
+        binding.done.setOnSingleClickListener {
             val jsonObject = JsonObject().apply {
                 addProperty("albumName",binding.title.text.toString())
             }

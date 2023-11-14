@@ -1,11 +1,9 @@
 package com.ajou.diggingclub
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -21,6 +19,9 @@ class UserDataStore() {
         val ACCESS_TOKEN = stringPreferencesKey("access_token")
         val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         val NICKNAME = stringPreferencesKey("nickname")
+        val ALBUM_EXIST = booleanPreferencesKey("album_exist")
+        val MEMBER_ID = intPreferencesKey("member_id")
+        val ALBUM_ID = intPreferencesKey("album_id")
     }
 
     suspend fun saveAccessToken(token : String) {
@@ -75,14 +76,57 @@ class UserDataStore() {
 
     suspend fun getFirstFlag():Boolean {
         var flag = false
-
         withContext(Dispatchers.IO){
             dataStore.edit { pref ->
                 flag = pref[PreferencesKeys.FIRST_FLAG] ?: false
             }
         }
-
         return flag
+    }
+
+    suspend fun saveAlbumExistFlag(flag : Boolean) {
+        withContext(Dispatchers.IO) {
+            dataStore.edit { pref ->
+                pref[PreferencesKeys.ALBUM_EXIST] = flag
+            }
+        }
+    }
+
+    suspend fun getAlbumExistFlag():Boolean {
+        var flag = false
+        withContext(Dispatchers.IO) {
+            dataStore.edit { pref ->
+                flag = pref[PreferencesKeys.FIRST_FLAG] ?: false
+            }
+        }
+        return flag
+    }
+
+    suspend fun saveMemberId(id : Int) {
+        withContext(Dispatchers.IO){
+            dataStore.edit { pref ->
+                pref[PreferencesKeys.MEMBER_ID] = id
+            }
+        }
+    }
+
+    suspend fun getMemberId():Int? {
+        return withContext(Dispatchers.IO) {
+            dataStore.data.first()[PreferencesKeys.MEMBER_ID]
+        }
+    }
+    suspend fun saveAlbumId(id : Int) {
+        withContext(Dispatchers.IO){
+            dataStore.edit { pref ->
+                pref[PreferencesKeys.ALBUM_ID] = id
+            }
+        }
+    }
+
+    suspend fun getAlbumId():Int? {
+        return withContext(Dispatchers.IO) {
+            dataStore.data.first()[PreferencesKeys.ALBUM_ID]
+        }
     }
 
 }

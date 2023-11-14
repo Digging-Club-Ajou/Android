@@ -10,6 +10,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.ajou.diggingclub.auth.KakaoSignUpActivity
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.ActivityLandingBinding
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 
 class LandingActivity : AppCompatActivity() {
     private var _binding : ActivityLandingBinding ?= null
@@ -29,7 +30,7 @@ class LandingActivity : AppCompatActivity() {
         viewPager.adapter = viewPagerAdapter
         binding.dotsIndicator.attachTo(viewPager)
 
-        binding.skip.setOnClickListener {
+        binding.skip.setOnSingleClickListener {
             viewPager.currentItem = 3
         }
 
@@ -43,7 +44,7 @@ class LandingActivity : AppCompatActivity() {
                 }
             }
         })
-        binding.button.setOnClickListener {
+        binding.button.setOnSingleClickListener {
             val intent = Intent(this, KakaoSignUpActivity::class.java)
             startActivity(intent)
         }

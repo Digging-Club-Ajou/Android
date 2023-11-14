@@ -1,10 +1,10 @@
 package com.ajou.diggingclub.melody.card
 
+import android.content.Context
 import android.graphics.PorterDuff
 import android.graphics.drawable.LayerDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,6 +19,7 @@ import codes.side.andcolorpicker.model.IntegerHSLColor
 import codes.side.andcolorpicker.view.picker.ColorSeekBar
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.FragmentMakeCard3Binding
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -30,9 +31,14 @@ import kotlin.math.roundToInt
 class MakeCardFragment3 : Fragment() {
     private var _binding: FragmentMakeCard3Binding? = null
     private val binding get() = _binding!!
+    private var mContext: Context? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onCreateView(
@@ -68,7 +74,7 @@ class MakeCardFragment3 : Fragment() {
         binding.artist.text = args.music.artist
         binding.title.text = args.music.title
 
-        binding.done.setOnClickListener {
+        binding.done.setOnSingleClickListener {
             val action =
                 MakeCardFragment3Directions.actionMakeCardFragment3ToSearchLocationFragment(
                     args.uri,
@@ -84,68 +90,68 @@ class MakeCardFragment3 : Fragment() {
             it.setFromColorInt(resources.getColor(R.color.primaryColor))
         }
 
-        binding.color1.setOnClickListener {
+        binding.color1.setOnSingleClickListener {
             binding.hueSeekBar.pickedColor = IntegerHSLColor().also {
                 it.setFromColorInt(android.graphics.Color.parseColor("#FF0000"))
             }
         }
-        binding.color2.setOnClickListener {
+        binding.color2.setOnSingleClickListener {
             binding.hueSeekBar.pickedColor = IntegerHSLColor().also {
                 it.setFromColorInt(android.graphics.Color.parseColor("#FF5C00"))
             }
         }
-        binding.color3.setOnClickListener {
+        binding.color3.setOnSingleClickListener {
             binding.hueSeekBar.pickedColor = IntegerHSLColor().also {
                 it.setFromColorInt(android.graphics.Color.parseColor("#FFD600"))
             }
         }
-        binding.color4.setOnClickListener {
+        binding.color4.setOnSingleClickListener {
             binding.hueSeekBar.pickedColor = IntegerHSLColor().also {
                 it.setFromColorInt(android.graphics.Color.parseColor("#A9F900"))
             }
         }
-        binding.color5.setOnClickListener {
+        binding.color5.setOnSingleClickListener {
             binding.hueSeekBar.pickedColor = IntegerHSLColor().also {
                 it.setFromColorInt(android.graphics.Color.parseColor("#00D923"))
             }
         }
-        binding.color6.setOnClickListener {
+        binding.color6.setOnSingleClickListener {
             binding.hueSeekBar.pickedColor = IntegerHSLColor().also {
                 it.setFromColorInt(android.graphics.Color.parseColor("#00EAB2"))
             }
         }
-        binding.color7.setOnClickListener {
+        binding.color7.setOnSingleClickListener {
             binding.hueSeekBar.pickedColor = IntegerHSLColor().also {
                 it.setFromColorInt(android.graphics.Color.parseColor("#00C2FF"))
             }
         }
-        binding.color8.setOnClickListener {
+        binding.color8.setOnSingleClickListener {
             binding.hueSeekBar.pickedColor = IntegerHSLColor().also {
                 it.setFromColorInt(android.graphics.Color.parseColor("#1400FF"))
             }
         }
-        binding.color9.setOnClickListener {
+        binding.color9.setOnSingleClickListener {
             binding.hueSeekBar.pickedColor = IntegerHSLColor().also {
                 it.setFromColorInt(android.graphics.Color.parseColor("#9E00FF"))
             }
         }
-        binding.color10.setOnClickListener {
+        binding.color10.setOnSingleClickListener {
             binding.hueSeekBar.pickedColor = IntegerHSLColor().also {
                 it.setFromColorInt(android.graphics.Color.parseColor("#FF006B"))
             }
         }
-        binding.color11.setOnClickListener {
+        binding.color11.setOnSingleClickListener {
             binding.hueSeekBar.pickedColor = IntegerHSLColor().also {
                 it.setFromColorInt(android.graphics.Color.parseColor("#FBC4E4"))
             }
         }
-        binding.color12.setOnClickListener {
+        binding.color12.setOnSingleClickListener {
             binding.hueSeekBar.pickedColor = IntegerHSLColor().also {
                 it.setFromColorInt(android.graphics.Color.parseColor("#000000"))
             }
         }
 
-        val layerDrawable = ContextCompat.getDrawable(requireContext(),R.drawable.playicon)?.mutate() as LayerDrawable
+        val layerDrawable = ContextCompat.getDrawable(mContext!!,R.drawable.playingicon)?.mutate() as LayerDrawable
 
         binding.hueSeekBar.addListener(object : OnSeekBarChangeListener, ColorSeekBar.OnColorPickListener<ColorSeekBar<IntegerHSLColor>, IntegerHSLColor> {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {

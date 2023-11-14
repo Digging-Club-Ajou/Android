@@ -51,6 +51,8 @@
         <activity
             android:name=".auth.KakaoSignUpActivity"
             android:exported="false" />
+        <activity android:name=".MainActivity"
+            android:exported="false" />
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
             android:exported="true"

@@ -16,7 +16,7 @@ class IntroArtistRVAdapter(val context: Context, val categoryList: List<String>,
         .map { targetCategory ->
             artistInfoList
                 .filter { it.category == targetCategory }
-                .map { IntroSelectModel(it.name,null,it.imageUrl,false) }
+                .map { IntroSelectModel(it.name,null,it.imageUrl,false,null) }
         }
     private val adapterLink = AdapterToAdapter()
     private val adapterList: List<IntroInnerArtistRVAdapter> = List(categoryList.size) { index ->

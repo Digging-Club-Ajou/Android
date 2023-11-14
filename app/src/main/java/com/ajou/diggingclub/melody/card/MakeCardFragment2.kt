@@ -1,5 +1,6 @@
 package com.ajou.diggingclub.melody.card
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.FragmentMakeCard2Binding
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -21,11 +23,16 @@ class MakeCardFragment2 : Fragment() {
 
     private var _binding: FragmentMakeCard2Binding? = null
     private val binding get() = _binding!!
+    private var mContext: Context? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,14 +63,14 @@ class MakeCardFragment2 : Fragment() {
             .apply(RequestOptions.bitmapTransform(multiOptions))
             .into(binding.image)
 
-        binding.use.setOnClickListener {
+        binding.use.setOnSingleClickListener {
             val action = MakeCardFragment2Directions.actionMakeCardFragment2ToMakeCardFragment3(
                 args.uri,
                 args.music
             )
             findNavController().navigate(action)
         }
-        binding.rePhoto.setOnClickListener {
+        binding.rePhoto.setOnSingleClickListener {
             val action = MakeCardFragment2Directions.actionMakeCardFragment2ToCameraFragment("card",args.music)
             findNavController().navigate(action)
         }

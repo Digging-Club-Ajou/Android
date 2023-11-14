@@ -13,5 +13,6 @@ data class ReceivedMelodyCardModel(
     @SerializedName("imageUrl") val imageUrl: String,
     @SerializedName("address") val address: String?,
     @SerializedName("cardDescription") val cardDescription: String?,
-    @SerializedName("color") val color: String
+    @SerializedName("color") val color: String,
+    var isPlaying : Boolean = false
 )

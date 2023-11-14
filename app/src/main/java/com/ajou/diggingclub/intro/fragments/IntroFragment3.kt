@@ -1,6 +1,7 @@
 package com.ajou.diggingclub.intro.fragments
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -14,10 +15,12 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.FragmentIntro3Binding
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 
 class IntroFragment3 : Fragment() {
     private var _binding : FragmentIntro3Binding?= null
     private val binding get() = _binding!!
+    private var mContext : Context? = null
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -64,16 +67,21 @@ class IntroFragment3 : Fragment() {
             }
         }
     }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         fun requestPermissions(): Boolean {
-            if(ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(requireContext(),Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(requireContext(),Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(requireContext(),Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(mContext!!, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(mContext!!, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(mContext!!,Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(mContext!!,Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(mContext!!,Manifest.permission.READ_MEDIA_IMAGES) == PackageManager.PERMISSION_GRANTED){
                 return true
             }
 
@@ -104,10 +112,10 @@ class IntroFragment3 : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.nextBtn.setOnClickListener {
+        binding.nextBtn.setOnSingleClickListener {
             findNavController().navigate(R.id.action_introFragment3_to_introFragment4)
         }
-        binding.backBtn.setOnClickListener {
+        binding.backBtn.setOnSingleClickListener {
             findNavController().navigate(R.id.action_introFragment3_to_introFragment2)
         }
     }

@@ -8,6 +8,7 @@ import androidx.camera.core.ImageCapture
 import androidx.core.content.ContextCompat
 import android.Manifest
 import android.content.ContentValues
+import android.content.Context
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,6 +26,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.FragmentCameraBinding
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,6 +39,7 @@ class CameraFragment : Fragment() {
     private lateinit var cameraExecutor: ExecutorService
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
+    private var mContext: Context? = null
     val args: CameraFragmentArgs by navArgs()
 
     private var fragmentContainer: FragmentContainerView? = null
@@ -48,6 +51,11 @@ class CameraFragment : Fragment() {
     ): View {
         _binding = FragmentCameraBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -76,8 +84,8 @@ class CameraFragment : Fragment() {
             )
         }
 
-        binding.imageCaptureButton.setOnClickListener { takePhoto() }
-        binding.cancelBtn.setOnClickListener {
+        binding.imageCaptureButton.setOnSingleClickListener { takePhoto() }
+        binding.cancelBtn.setOnSingleClickListener {
             findNavController().popBackStack()
         }
     }
@@ -96,14 +104,14 @@ class CameraFragment : Fragment() {
         }
 
         val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(requireContext().contentResolver,
+            .Builder(mContext!!.contentResolver,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValues)
             .build()
 
         imageCapture.takePicture(
             outputOptions,
-            ContextCompat.getMainExecutor(requireContext()),
+            ContextCompat.getMainExecutor(mContext!!),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
                     Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
@@ -127,7 +135,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(mContext!!)
 
         cameraProviderFuture.addListener({
             try {
@@ -155,12 +163,12 @@ class CameraFragment : Fragment() {
             } catch (exc: Exception) {
                 Log.e(TAG, "Camera init error", exc)
             }
-        }, ContextCompat.getMainExecutor(requireContext()))
+        }, ContextCompat.getMainExecutor(mContext!!))
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
-            requireContext(), it
+            mContext!!, it
         ) == PackageManager.PERMISSION_GRANTED
     }
 
@@ -188,7 +196,7 @@ class CameraFragment : Fragment() {
                 startCamera()
             } else {
                 Toast.makeText(
-                    requireContext(),
+                    mContext,
                     "Permissions not granted by the user.",
                     Toast.LENGTH_SHORT
                 ).show()

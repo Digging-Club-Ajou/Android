@@ -15,18 +15,19 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/bottomTabLayout"
+        app:layout_constraintBottom_toTopOf="@id/bottomTab"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/melody_graph" />
 
     <LinearLayout
-        android:id="@+id/bottomTabLayout"
+        android:id="@+id/bottomTab"
         android:layout_width="0dp"
         android:layout_height="52dp"
         android:background="@drawable/rectangle_4"
         android:gravity="center"
+        android:elevation="3dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,6 +40,7 @@
             android:layout_weight="1"
             android:clickable="true"
             android:padding="8dp"
+            android:background="@android:color/transparent"
             android:src="@drawable/home_off" />
 
         <ImageView
@@ -48,6 +50,7 @@
             android:layout_weight="1"
             android:clickable="true"
             android:padding="8dp"
+            android:background="@android:color/transparent"
             android:src="@drawable/plus" />
 
         <ImageView
@@ -57,6 +60,7 @@
             android:layout_weight="1"
             android:clickable="true"
             android:padding="8dp"
+            android:background="@android:color/transparent"
             android:src="@drawable/profile_off" />
 
     </LinearLayout>

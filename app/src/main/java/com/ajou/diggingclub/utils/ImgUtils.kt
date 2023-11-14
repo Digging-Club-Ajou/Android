@@ -9,6 +9,7 @@ import android.util.Log
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 
 private fun absolutelyPath(path: Uri?, activity:Activity ): String {
@@ -24,7 +25,7 @@ private fun absolutelyPath(path: Uri?, activity:Activity ): String {
 
 fun getMultipartFile(imageUri: Uri, activity: Activity, key: String): MultipartBody.Part {
         val file = File(absolutelyPath(imageUri, activity)) // path 동일
-        val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+        val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
         val name = file.name
         return MultipartBody.Part.createFormData(key, name, requestFile)
     }

@@ -1,5 +1,6 @@
-package com.ajou.diggingclub.ground
+package com.ajou.diggingclub.ground.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -17,17 +18,13 @@ import com.ajou.diggingclub.ground.adapter.FollowingAlbumListRVAdapter
 import com.ajou.diggingclub.ground.adapter.MelodyCardRVAdapter
 import com.ajou.diggingclub.ground.models.ReceivedAlbumModel
 import com.ajou.diggingclub.ground.models.ReceivedMelodyCardModel
-import com.ajou.diggingclub.melody.card.adapter.LocationListRVAdapter
-import com.ajou.diggingclub.melody.card.adapter.MusicListRVAdapter
-import com.ajou.diggingclub.melody.models.LocationModel
-import com.ajou.diggingclub.melody.models.MusicSpotifyModel
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.AlbumApi
 import com.ajou.diggingclub.network.api.CardApi
 import com.ajou.diggingclub.network.models.FollwingAlbumResponse
 import com.ajou.diggingclub.network.models.MelodyCardResponse
 import com.ajou.diggingclub.start.LandingActivity
-import com.bumptech.glide.Glide
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,11 +36,16 @@ class GroundFragment : Fragment() {
 
     private var _binding: FragmentGroundBinding? = null
     private val binding get() = _binding!!
+    private var mContext : Context? = null
     private val cardApiClient = RetrofitInstance.getInstance().create(CardApi::class.java)
     private val albumApiClient = RetrofitInstance.getInstance().create(AlbumApi::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onCreateView(
@@ -63,14 +65,18 @@ class GroundFragment : Fragment() {
         var refreshToken : String? = null
         var nickname : String ?= null
 
-        binding.imageView10.setOnClickListener {
+        binding.imageView10.setOnSingleClickListener {
             findNavController().navigate(R.id.action_groundFragment_to_userArchiveFragment)
         }
-        binding.search.setOnClickListener {
+        binding.search.setOnSingleClickListener {
             findNavController().navigate(R.id.action_groundFragment_to_searchUserFragment)
         }
-        binding.notification.setOnClickListener {
-            findNavController().navigate(R.id.action_groundFragment_to_notificationFragment)
+        binding.notification.setOnSingleClickListener {
+//            findNavController().navigate(R.id.action_groundFragment_to_notificationFragment)
+            findNavController().navigate(R.id.action_groundFragment_to_followingListFragment)
+        }
+        binding.followingMore.setOnClickListener {
+            findNavController().navigate(R.id.action_groundFragment_to_albumListFragment)
         }
         CoroutineScope(Dispatchers.IO).launch {
             accessToken = dataStore.getAccessToken().toString()
@@ -78,7 +84,7 @@ class GroundFragment : Fragment() {
             nickname = dataStore.getNickname().toString()
             binding.name.text = "'"+nickname+"'"
             if(accessToken == null || refreshToken == null){
-                val intent = Intent(requireContext(), LandingActivity::class.java)
+                val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -97,7 +103,7 @@ class GroundFragment : Fragment() {
                         val cardList : List<ReceivedMelodyCardModel> = response.body()!!.melodyCardListResult
                         Log.d("success",cardList.toString())
 
-                        val cardViewPagerAdapter = MelodyCardRVAdapter(requireContext(),cardList)
+                        val cardViewPagerAdapter = MelodyCardRVAdapter(mContext!!,cardList)
                         binding.cardRV.adapter = cardViewPagerAdapter
                         binding.cardRV.orientation = ViewPager2.ORIENTATION_HORIZONTAL
                     }else {
@@ -109,35 +115,34 @@ class GroundFragment : Fragment() {
                     Log.d("failll",t.message.toString())
                 }
             })
+            albumApiClient.getFollowingAlbums(accessToken!!,refreshToken!!).enqueue(object :Callback<FollwingAlbumResponse>{
+                override fun onResponse(
+                    call: Call<FollwingAlbumResponse>,
+                    response: Response<FollwingAlbumResponse>
+                ) {
+                    if(response.isSuccessful){
+                        if(response.headers()["AccessToken"] != null) {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
+                            }
+                        }
+                        val list : List<ReceivedAlbumModel> = response.body()!!.albumListResult
+                        Log.d("success",list.toString())
+                        val albumListRVAdapter = FollowingAlbumListRVAdapter(mContext!!,list,"following")
+                        binding.followingRV.adapter = albumListRVAdapter
+                        binding.followingRV.layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
+                    }else{
+                        Log.d("response not successful",response.errorBody()?.string().toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<FollwingAlbumResponse>, t: Throwable) {
+                    Log.d("failll",t.message.toString())
+                }
+            })
         }
 
 
-
-//        albumApiClient.getFollowingAlbums(accessToken!!,refreshToken!!).enqueue(object :Callback<FollwingAlbumResponse>{
-//            override fun onResponse(
-//                call: Call<FollwingAlbumResponse>,
-//                response: Response<FollwingAlbumResponse>
-//            ) {
-//                if(response.isSuccessful){
-//                    if(response.headers()["AccessToken"] != null) {
-//                        CoroutineScope(Dispatchers.IO).launch {
-//                            dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
-//                        }
-//                    }
-//                val list : List<ReceivedAlbumModel> = response.body()!!.albumListResult
-//                Log.d("success",list.toString())
-//                val albumListRVAdapter = FollowingAlbumListRVAdapter(requireContext(),list,"following")
-//                binding.followingRV.adapter = albumListRVAdapter
-//                binding.followingRV.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
-//                }else{
-//                    Log.d("response not successful",response.errorBody()?.string().toString())
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<FollwingAlbumResponse>, t: Throwable) {
-//                Log.d("failll",t.message.toString())
-//            }
-//        })
 //
 //        albumApiClient.getFollowingAlbums(accessToken!!,refreshToken!!).enqueue(object :Callback<FollwingAlbumResponse>{
 //            override fun onResponse(
@@ -152,11 +157,11 @@ class GroundFragment : Fragment() {
 //                    }
 //                    val list : List<ReceivedAlbumModel> = response.body()!!.albumListResult
 //                    Log.d("success",list.toString())
-//                    val albumListRVAdapter = FollowingAlbumListRVAdapter(requireContext(),list,"recommend")
+//                    val albumListRVAdapter = FollowingAlbumListRVAdapter(mContext,list,"recommend")
 //                    binding.aiRecommendRV.adapter = albumListRVAdapter
-//                    binding.aiRecommendRV.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+//                    binding.aiRecommendRV.layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
 //                    binding.recommendRV.adapter = albumListRVAdapter
-//                    binding.recommendRV.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+//                    binding.recommendRV.layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
 //                }else{
 //                    Log.d("response not successful",response.errorBody()?.string().toString())
 //                }

@@ -71,23 +71,23 @@ class SignUpActivity : AppCompatActivity() {
                 binding.email.text.toString(),
                 gender
             )
-            client.signUpUser(userData).enqueue(object : Callback<SignUpResponseBody> {
-                override fun onResponse(
-                    call: Call<SignUpResponseBody>,
-                    response: Response<SignUpResponseBody>
-                ) {
-                    if(response.isSuccessful){
-                        Log.d("회원가입 성공",response.body().toString())
-                    }else{
-                        Log.d("userData",userData.toString())
-                        Log.d("회원가입 not successful",response.errorBody()?.string().toString())
-                    }
-                }
-
-                override fun onFailure(call: Call<SignUpResponseBody>, t: Throwable) {
-                    Log.d("회원가입 실패",t.message.toString())
-                }
-            })
+//            client.signUpUser(userData).enqueue(object : Callback<SignUpResponseBody> {
+//                override fun onResponse(
+//                    call: Call<SignUpResponseBody>,
+//                    response: Response<SignUpResponseBody>
+//                ) {
+//                    if(response.isSuccessful){
+//                        Log.d("회원가입 성공",response.body().toString())
+//                    }else{
+//                        Log.d("userData",userData.toString())
+//                        Log.d("회원가입 not successful",response.errorBody()?.string().toString())
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<SignUpResponseBody>, t: Throwable) {
+//                    Log.d("회원가입 실패",t.message.toString())
+//                }
+//            })
             // 리스트로 값 넣어서 넘기기
         }
     }

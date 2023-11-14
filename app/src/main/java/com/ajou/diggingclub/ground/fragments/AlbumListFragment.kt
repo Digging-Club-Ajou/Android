@@ -1,5 +1,6 @@
-package com.ajou.diggingclub.ground
+package com.ajou.diggingclub.ground.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -7,17 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentAlbumListBinding
 import com.ajou.diggingclub.ground.adapter.FollowingAlbumListRVAdapter
 import com.ajou.diggingclub.ground.adapter.HashtagRVAdapter
 import com.ajou.diggingclub.ground.models.ReceivedAlbumModel
-import com.ajou.diggingclub.intro.IntroGenreRVAdapter
-import com.ajou.diggingclub.melody.card.SearchLocationFragmentDirections
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.AlbumApi
 import com.ajou.diggingclub.network.models.FollwingAlbumResponse
@@ -33,6 +29,7 @@ import retrofit2.Response
 class AlbumListFragment : Fragment() {
     private var _binding : FragmentAlbumListBinding? = null
     private val binding get() = _binding!!
+    private var mContext : Context? = null
     private val client = RetrofitInstance.getInstance().create(AlbumApi::class.java)
 
     inner class AdapterToFragment {
@@ -52,7 +49,10 @@ class AlbumListFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
-
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -77,13 +77,13 @@ class AlbumListFragment : Fragment() {
             val tmp = "AI가 "+nickname+"님에게 추천하는 앨범이에요!"
             binding.name.text = tmp
             if(accessToken == null || refreshToken == null){
-                val intent = Intent(requireContext(), LandingActivity::class.java)
+                val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
         }
 
         val hashtagList : ArrayList<String> = arrayListOf("댄스","기분전환","여자","댄스","기분전환","여자","댄스","기분전환","여자")
-        val hashtagAdapter = HashtagRVAdapter(requireContext(),hashtagList)
+        val hashtagAdapter = HashtagRVAdapter(mContext!!,hashtagList)
         binding.hashtagRV.adapter = hashtagAdapter
         binding.hashtagRV.addItemDecoration(HashtagRVAdapter.GridSpacingItemDecoration(2,8f.fromDpToPx()))
 
@@ -101,9 +101,9 @@ class AlbumListFragment : Fragment() {
                     }
                     val list : List<ReceivedAlbumModel> = response.body()!!.albumListResult
                     Log.d("success",list.toString())
-                    val albumListRVAdapter = FollowingAlbumListRVAdapter(requireContext(),list,"following")
+                    val albumListRVAdapter = FollowingAlbumListRVAdapter(mContext!!,list,"following")
                     binding.albumRV.adapter = albumListRVAdapter
-                    val gridLayoutManager = GridLayoutManager(requireContext(),2)
+                    val gridLayoutManager = GridLayoutManager(mContext,2)
                     binding.albumRV.addItemDecoration(FollowingAlbumListRVAdapter.GridSpacingItemDecoration(2,8f.fromDpToPx()))
                     binding.albumRV.layoutManager = gridLayoutManager
 

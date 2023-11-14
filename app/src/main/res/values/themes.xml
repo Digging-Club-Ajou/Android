@@ -13,6 +13,7 @@
         <item name="android:radioButtonStyle">@style/PretendardRadioButtonStyle</item>
         <item name="android:checkboxStyle">@style/PretendardCheckboxStyle</item>
         <item name="android:textViewStyle">@style/PretendardTextViewStyle</item>
+        <item name="android:windowBackground">@color/white</item>
         <!-- Status bar color. -->
 <!--        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>-->
         <!-- Customize your theme here. -->

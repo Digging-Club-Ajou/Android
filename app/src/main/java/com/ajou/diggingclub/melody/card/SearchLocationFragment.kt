@@ -29,6 +29,7 @@ import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.LocationApi
 import com.ajou.diggingclub.network.models.LocationResponse
 import com.ajou.diggingclub.start.LandingActivity
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
@@ -49,6 +50,7 @@ class SearchLocationFragment : Fragment() {
 
     private var _binding: FragmentSearchLocationBinding? = null
     private val binding get() = _binding!!
+    private var mContext: Context? = null
     private var job: Job? = null
 
     private val client = RetrofitInstance.getInstance().create(LocationApi::class.java)
@@ -72,6 +74,11 @@ class SearchLocationFragment : Fragment() {
         mLocationRequest =  LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onCreateView(
@@ -122,14 +129,14 @@ class SearchLocationFragment : Fragment() {
             accessToken = dataStore.getAccessToken().toString()
             refreshToken = dataStore.getRefreshToken().toString()
             if(accessToken == null || refreshToken == null){
-                val intent = Intent(requireContext(), LandingActivity::class.java)
+                val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
         }
 
-        if(checkPermissionForLocation(requireContext())) startLocationUpdates()
+        if(checkPermissionForLocation(mContext!!)) startLocationUpdates()
 
-        binding.skip.setOnClickListener {
+        binding.skip.setOnSingleClickListener {
             val action =
                 SearchLocationFragmentDirections.actionSearchLocationFragmentToShareCardFragment(
                     args.uri,
@@ -176,9 +183,9 @@ class SearchLocationFragment : Fragment() {
                                         val list : List<LocationModel> = response.body()!!.locationListResult
                                         Log.d("success",list.toString())
                                         val link = AdapterToFragment()
-                                        val locationListRVAdapter = LocationListRVAdapter(requireContext(),list,link)
+                                        val locationListRVAdapter = LocationListRVAdapter(mContext!!,list,link)
                                         binding.listRV.adapter = locationListRVAdapter
-                                        binding.listRV.layoutManager = LinearLayoutManager(requireContext())
+                                        binding.listRV.layoutManager = LinearLayoutManager(mContext)
                                     }else {
                                         Log.d("response not successful",response.errorBody()?.string().toString())
                                     }
@@ -201,8 +208,8 @@ class SearchLocationFragment : Fragment() {
         //FusedLocationProviderClient의 인스턴스를 생성.
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(mContext!!, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(mContext!!, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return
         }
 
@@ -261,7 +268,7 @@ class SearchLocationFragment : Fragment() {
                 startLocationUpdates()
             } else {
                 Log.d("ttt", "onRequestPermissionsResult() _ 권한 허용 거부")
-                Toast.makeText(requireContext(), "권한이 없어 해당 기능을 실행할 수 없습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(mContext, "권한이 없어 해당 기능을 실행할 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
         }
     }

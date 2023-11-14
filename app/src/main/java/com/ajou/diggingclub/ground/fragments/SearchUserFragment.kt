@@ -1,5 +1,6 @@
-package com.ajou.diggingclub.ground
+package com.ajou.diggingclub.ground.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -9,25 +10,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentSearchUserBinding
 import com.ajou.diggingclub.ground.adapter.SearchUserRVAdapter
 import com.ajou.diggingclub.ground.models.MemberSearchModel
-import com.ajou.diggingclub.melody.card.adapter.MusicListRVAdapter
-import com.ajou.diggingclub.melody.models.MusicSpotifyModel
+import com.ajou.diggingclub.ground.models.ReceivedAlbumModel
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.MemberApi
-import com.ajou.diggingclub.network.api.TmpApi
+import com.ajou.diggingclub.network.api.AlbumApi
+import com.ajou.diggingclub.network.api.SearchApi
 import com.ajou.diggingclub.network.models.MemberSearchResponse
-import com.ajou.diggingclub.network.models.SpotifyResponse
 import com.ajou.diggingclub.start.LandingActivity
-import com.google.gson.JsonObject
 import kotlinx.coroutines.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -36,11 +31,17 @@ import retrofit2.Response
 class SearchUserFragment : Fragment() {
     private var _binding : FragmentSearchUserBinding ?= null
     private val binding get() = _binding!!
+    private var mContext : Context? = null
     private var job: Job? = null
-    private val client = RetrofitInstance.getInstance().create(TmpApi::class.java)
-
+    private val client = RetrofitInstance.getInstance().create(SearchApi::class.java)
+    private val albumClient = RetrofitInstance.getInstance().create(AlbumApi::class.java)
+    private var list : ArrayList<ReceivedAlbumModel> = arrayListOf()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onCreateView(
@@ -58,15 +59,17 @@ class SearchUserFragment : Fragment() {
         val dataStore = UserDataStore()
         var accessToken : String? = null
         var refreshToken : String? = null
+        val link = AdapterToFragment()
 
         CoroutineScope(Dispatchers.IO).launch {
             accessToken = dataStore.getAccessToken().toString()
             refreshToken = dataStore.getRefreshToken().toString()
             if(accessToken == null || refreshToken == null){
-                val intent = Intent(requireContext(), LandingActivity::class.java)
+                val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
         }
+
         binding.editText.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -83,40 +86,44 @@ class SearchUserFragment : Fragment() {
                             delay(1000)
                             accessToken = dataStore.getAccessToken().toString()
                             refreshToken = dataStore.getRefreshToken().toString()
-                            Log.d("str",str.toString())
-                            Log.d("accessToken",accessToken.toString())
-                            Log.d("refreshToken",refreshToken.toString())
-                            val jsonObject = JsonObject().apply {
-                                addProperty("keyword", str.toString())
-                            }
-                            val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), jsonObject.toString())
-                            client.searchMember(accessToken!!,refreshToken!!,requestBody).enqueue(object :
+                            client.searchMember(accessToken!!,refreshToken!!,str.toString()).enqueue(object :
                                 Callback<MemberSearchResponse> {
                                 override fun onResponse(
                                     call: Call<MemberSearchResponse>,
                                     response: Response<MemberSearchResponse>
                                 ) {
-                                    if(response.isSuccessful){
-                                        if(response.headers()["AccessToken"] != null) {
+                                    if(response.isSuccessful) {
+                                        if (response.headers()["AccessToken"] != null) {
                                             CoroutineScope(Dispatchers.IO).launch {
                                                 dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
                                             }
                                         }
-                                        val list : List<MemberSearchModel> = response.body()!!.memberSearchListResult
-                                        Log.d("success",list.toString())
-                                        val userListRVAdapter = SearchUserRVAdapter(requireContext(),list)
-                                        binding.listRV.adapter = userListRVAdapter
-                                        binding.listRV.layoutManager = LinearLayoutManager(requireContext())
-                                        // 이후에 api 추가해서 수정하기
-                                    }else {
+                                        val memberSearchListResult: List<MemberSearchModel> =
+                                            response.body()!!.memberSearchListResult
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            val userList = memberSearchListResult.map { memberSearchModel ->
+                                                    async {
+                                                        val albumResponse = albumClient.getAlbum(
+                                                            accessToken!!,
+                                                            refreshToken!!,
+                                                            memberSearchModel.albumId
+                                                        ).execute()
+                                                        albumResponse.body()
+                                                    }
+                                                }.awaitAll().filterNotNull()
+                                            list.addAll(userList)
+                                            withContext(Dispatchers.Main) {
+                                                val userListRVAdapter = SearchUserRVAdapter(mContext!!, userList,link)
+                                                binding.listRV.adapter = userListRVAdapter
+                                                binding.listRV.layoutManager = LinearLayoutManager(mContext)
+                                            }
+                                        }
+                                    }
+                                    else {
                                         Log.d("response not successful",response.errorBody()?.string().toString())
                                     }
                                 }
-
-                                override fun onFailure(
-                                    call: Call<MemberSearchResponse>,
-                                    t: Throwable
-                                ) {
+                                override fun onFailure(call: Call<MemberSearchResponse>, t: Throwable) {
                                     Log.d("fail",t.message.toString())
                                 }
                             })
@@ -126,7 +133,15 @@ class SearchUserFragment : Fragment() {
                     }
                 }
             }
-
         })
+    }
+    inner class AdapterToFragment {
+        fun getSelectedItem(position : Int) {
+            val data = list[position]
+            val item = ReceivedAlbumModel(data.memberId,data.albumId,data.nickname,data.albumName,data.imageUrl,data.artistNames)
+            val action =
+                SearchUserFragmentDirections.actionSearchUserFragmentToUserArchiveFragment(item)
+            findNavController().navigate(action)
+        }
     }
 }

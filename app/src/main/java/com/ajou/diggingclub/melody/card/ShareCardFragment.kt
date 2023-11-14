@@ -1,5 +1,6 @@
 package com.ajou.diggingclub.melody.card
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.drawable.LayerDrawable
@@ -17,17 +18,18 @@ import androidx.navigation.fragment.navArgs
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentShareCardBinding
+import com.ajou.diggingclub.ground.GroundActivity
 import com.ajou.diggingclub.melody.models.SendingMelodyCardModel
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.CardApi
 import com.ajou.diggingclub.start.LandingActivity
 import com.ajou.diggingclub.utils.getMultipartFile
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
-import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,11 +46,16 @@ class ShareCardFragment : Fragment() {
 
     private var _binding: FragmentShareCardBinding? = null
     private val binding get() = _binding!!
+    private var mContext: Context? = null
 
     private val client = RetrofitInstance.getInstance().create(CardApi::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onCreateView(
@@ -63,7 +70,7 @@ class ShareCardFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val layerDrawable = ContextCompat.getDrawable(requireContext(),R.drawable.playicon)?.mutate() as LayerDrawable
+        val layerDrawable = ContextCompat.getDrawable(mContext!!,R.drawable.playingicon)?.mutate() as LayerDrawable
         val args : ShareCardFragmentArgs by navArgs()
 
         val dataStore = UserDataStore()
@@ -78,7 +85,7 @@ class ShareCardFragment : Fragment() {
             refreshToken = dataStore.getRefreshToken().toString()
             nickname = dataStore.getNickname().toString()
             if(accessToken == null || refreshToken == null){
-                val intent = Intent(requireContext(), LandingActivity::class.java)
+                val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
             if(nickname !=null){
@@ -132,10 +139,8 @@ class ShareCardFragment : Fragment() {
             }
         })
 
-        binding.shareBtn.setOnClickListener {
+        binding.shareBtn.setOnSingleClickListener {
             val data = SendingMelodyCardModel(args.music.artist, args.music.title,"", args.music.previewUrl,args.address,cardDescription,args.color)
-            Log.d("data",data.toString())
-            Log.d("img",img.toString())
             if(img!=null){
                 client.createCard(accessToken!!,refreshToken!!,data,img).enqueue(object : Callback<ResponseBody> {
                     override fun onResponse(
@@ -148,11 +153,11 @@ class ShareCardFragment : Fragment() {
                                     dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
                                 }
                             }
-                            Log.d("response",response.body().toString())
+                            val intent = Intent(mContext, GroundActivity::class.java)
+                            startActivity(intent)
                         }else{
                             val errorBody = JSONObject(response.errorBody()?.string())
                             Log.d("response not successsss",errorBody.toString())
-                            Log.d("responseeeee",errorBody.toString())
                         }
                     }
 
@@ -176,11 +181,11 @@ class ShareCardFragment : Fragment() {
                                     dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
                                 }
                             }
-                            Log.d("response here",response.body().toString())
+                            val intent = Intent(mContext, GroundActivity::class.java)
+                            startActivity(intent)
                         }else{
                             val errorBody = JSONObject(response.errorBody()?.string())
                             Log.d("response not successsss here",errorBody.toString())
-                            Log.d("responseeeee here",errorBody.toString())
                         }
                     }
 

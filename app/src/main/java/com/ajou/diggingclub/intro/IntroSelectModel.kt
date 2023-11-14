@@ -4,5 +4,6 @@ data class IntroSelectModel(
     val text : String,
     val image : Int?,
     val imageUrl : String?,
-    var selected : Boolean = false
+    var selected : Boolean = false,
+    val genre : String?
 )

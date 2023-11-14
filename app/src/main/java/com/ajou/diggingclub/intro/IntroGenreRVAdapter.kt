@@ -13,6 +13,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.intro.fragments.IntroFragment1
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
@@ -59,7 +60,7 @@ class IntroGenreRVAdapter(val context: Context, val list : List<IntroSelectModel
             .into(holder.image)
 
 
-        holder.image.setOnClickListener {
+        holder.image.setOnSingleClickListener {
             if(enabled){
                 list[position].selected = !list[position].selected
                 link.getSelectedItem(list[position],position)
@@ -86,7 +87,6 @@ class IntroGenreRVAdapter(val context: Context, val list : List<IntroSelectModel
         private val spanCount: Int, // Grid의 column 수
         private val spacing: Int // 간격
     ) : RecyclerView.ItemDecoration() {
-
         override fun getItemOffsets(
             outRect: Rect,
             view: View,

@@ -1,5 +1,6 @@
 package com.ajou.diggingclub.intro.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +20,7 @@ import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.ArtistApi
 import com.ajou.diggingclub.start.LandingActivity
 import com.ajou.diggingclub.utils.getJsonDataFromAssets
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -40,6 +42,7 @@ class IntroFragment2 : Fragment() {
 
     private var _binding : FragmentIntro2Binding?= null
     private val binding get() = _binding!!
+    private var mContext : Context? = null
     var artistInfoList : List<ArtistInfoModel> = arrayListOf()
     var categoryList : ArrayList<String> = arrayListOf()
     var likedList : ArrayList<String> = arrayListOf()
@@ -60,6 +63,10 @@ class IntroFragment2 : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val jsonString = getJsonDataFromAssets(requireActivity())
@@ -90,7 +97,7 @@ class IntroFragment2 : Fragment() {
             accessToken = dataStore.getAccessToken().toString()
             refreshToken = dataStore.getRefreshToken().toString()
             if(accessToken == null || refreshToken == null){
-                val intent = Intent(requireContext(), LandingActivity::class.java)
+                val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -98,9 +105,9 @@ class IntroFragment2 : Fragment() {
         artistInfoList.map {
             if(!categoryList.contains(it.category)) categoryList.add(it.category)
         }
-        val adapter = IntroArtistRVAdapter(requireContext(),categoryList,artistInfoList,link)
+        val adapter = IntroArtistRVAdapter(mContext!!,categoryList,artistInfoList,link)
         binding.view.adapter = adapter
-        binding.view.layoutManager = LinearLayoutManager(requireContext())
+        binding.view.layoutManager = LinearLayoutManager(mContext)
 
         viewModel.artistArr.observe(requireActivity(), Observer {
             binding.nextBtn.text = "다음(${it.size}/5)"
@@ -115,7 +122,7 @@ class IntroFragment2 : Fragment() {
                 binding.nextBtn.setTextColor(resources.getColor(R.color.paleTextColor))
             }
         })
-        binding.nextBtn.setOnClickListener {
+        binding.nextBtn.setOnSingleClickListener {
             val jsonObject = JSONObject().apply {
                 put("artistNames", JSONArray(likedList))
             }

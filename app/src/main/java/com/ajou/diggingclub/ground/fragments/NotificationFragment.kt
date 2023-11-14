@@ -1,5 +1,6 @@
-package com.ajou.diggingclub.ground
+package com.ajou.diggingclub.ground.fragments
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,17 +20,21 @@ import com.ajou.diggingclub.start.LandingActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 
 class NotificationFragment : Fragment() {
     private var _binding : FragmentNotificationBinding? = null
     private val binding get() = _binding!!
+    private var mContext : Context? = null
     private val client = RetrofitInstance.getInstance().create(NotificationApi::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
 
     override fun onCreateView(
@@ -59,9 +64,9 @@ class NotificationFragment : Fragment() {
 //            "hyeongger12345님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
 //            "hy123님이 회원님의 멜로디카드를 좋아합니다. 20분 전"
 //        )
-//        val notiListRVAdapter = NotificationRVAdapter(requireContext(),list)
+//        val notiListRVAdapter = NotificationRVAdapter(mContext,list)
 //        binding.notiRV.adapter = notiListRVAdapter
-//        binding.notiRV.layoutManager = LinearLayoutManager(requireContext())
+//        binding.notiRV.layoutManager = LinearLayoutManager(mContext)
 
         val dataStore = UserDataStore()
         var accessToken : String? = null
@@ -71,7 +76,7 @@ class NotificationFragment : Fragment() {
             accessToken = dataStore.getAccessToken().toString()
             refreshToken = dataStore.getRefreshToken().toString()
             if (accessToken == null || refreshToken == null){
-                val intent = Intent(requireContext(), LandingActivity::class.java)
+                val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -88,9 +93,9 @@ class NotificationFragment : Fragment() {
                     }else{
                         val list : List<NotificationsModel> = response.body()!!.notificationsList
                         Log.d("list",list.toString())
-                        val notiListRVAdapter = NotificationRVAdapter(requireContext(),list)
+                        val notiListRVAdapter = NotificationRVAdapter(mContext!!,list)
                         binding.notiRV.adapter = notiListRVAdapter
-                        binding.notiRV.layoutManager = LinearLayoutManager(requireContext())
+                        binding.notiRV.layoutManager = LinearLayoutManager(mContext)
                     }
                 }
             }

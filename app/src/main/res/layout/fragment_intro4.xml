@@ -40,8 +40,11 @@
             android:layout_marginTop="108dp"
             android:background="#F4F4F4"
             android:hint="guide_example"
-            android:paddingLeft="28dp"
+            android:paddingStart="28dp"
             android:textSize="18sp"
+            android:maxLines="1"
+            android:inputType="text"
+            android:imeOptions="actionDone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView" />

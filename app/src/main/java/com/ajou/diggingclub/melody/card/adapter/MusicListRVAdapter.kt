@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.melody.card.SearchMusicFragment
 import com.ajou.diggingclub.melody.models.MusicSpotifyModel
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 
 class MusicListRVAdapter(val context: Context, val list : List<MusicSpotifyModel>, val link : SearchMusicFragment.AdapterToFragment) : RecyclerView.Adapter<MusicListRVAdapter.ViewHolder>() {
@@ -31,7 +32,7 @@ class MusicListRVAdapter(val context: Context, val list : List<MusicSpotifyModel
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.btn.setOnClickListener {
+        holder.btn.setOnSingleClickListener {
             link.getSelectedItem(list[position])
         }
         holder.artist.text = list[position].artist

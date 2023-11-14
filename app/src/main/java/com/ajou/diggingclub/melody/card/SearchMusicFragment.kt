@@ -1,5 +1,6 @@
 package com.ajou.diggingclub.melody.card
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -13,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentSearchMusicBinding
+import com.ajou.diggingclub.ground.GroundActivity
 import com.ajou.diggingclub.melody.card.adapter.MusicListRVAdapter
 import com.ajou.diggingclub.melody.models.MusicSpotifyModel
 import com.ajou.diggingclub.network.models.SpotifyResponse
@@ -26,6 +28,7 @@ import retrofit2.Response
 
 class SearchMusicFragment : Fragment() {
 
+    private var mContext: Context? = null
     private var _binding: FragmentSearchMusicBinding? = null
     private val binding get() = _binding!!
     private var job: Job? = null
@@ -37,6 +40,11 @@ class SearchMusicFragment : Fragment() {
             Log.d("data",data.toString())
             findNavController().navigate(action)
         }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,12 +71,17 @@ class SearchMusicFragment : Fragment() {
             accessToken = dataStore.getAccessToken().toString()
             refreshToken = dataStore.getRefreshToken().toString()
             if(accessToken == null || refreshToken == null){
-                val intent = Intent(requireContext(), LandingActivity::class.java)
+                val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
         }
         binding.removeBtn.setOnClickListener {
             binding.editText.setText("")
+        }
+
+        binding.backBtn.setOnClickListener {
+            val intent = Intent(mContext, GroundActivity::class.java)
+            startActivity(intent)
         }
 
         binding.editText.addTextChangedListener(object : TextWatcher{
@@ -102,9 +115,9 @@ class SearchMusicFragment : Fragment() {
                                         val list : List<MusicSpotifyModel> = response.body()!!.spotifyListResult
                                         Log.d("success",list.toString())
                                         val link = AdapterToFragment()
-                                        val musicListRVAdapter = MusicListRVAdapter(requireContext(),list,link)
+                                        val musicListRVAdapter = MusicListRVAdapter(mContext!!,list,link)
                                         binding.listRV.adapter = musicListRVAdapter
-                                        binding.listRV.layoutManager = LinearLayoutManager(requireContext())
+                                        binding.listRV.layoutManager = LinearLayoutManager(mContext)
                                     }else {
                                         Log.d("response not successful",response.errorBody()?.string().toString())
                                     }

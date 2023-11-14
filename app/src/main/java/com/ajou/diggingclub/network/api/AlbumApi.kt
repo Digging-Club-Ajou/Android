@@ -6,6 +6,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.*
 
 interface AlbumApi {
@@ -16,10 +17,10 @@ interface AlbumApi {
     ) : Call<ResponseBody>
 
     @POST("albums-validation")
-    fun checkAlbumsExist(
+    suspend fun checkAlbumsExist(
         @Header("AccessToken") accessToken : String,
-//        @Header("RefreshToken") refreshToken : String
-    ) : Call<ResponseBody>
+        @Header("RefreshToken") refreshToken : String
+    ) : Response<ResponseBody>
 
     @POST("albums/name-validation")
     fun checkAlbumsName(

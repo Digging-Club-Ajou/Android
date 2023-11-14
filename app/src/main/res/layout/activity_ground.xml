@@ -39,6 +39,7 @@
             android:layout_weight="1"
             android:clickable="true"
             android:padding="8dp"
+            android:background="@android:color/transparent"
             android:src="@drawable/home" />
 
         <ImageView
@@ -48,6 +49,7 @@
             android:layout_weight="1"
             android:clickable="true"
             android:padding="8dp"
+            android:background="@android:color/transparent"
             android:src="@drawable/plus_off" />
 
         <ImageView
@@ -57,6 +59,7 @@
             android:layout_weight="1"
             android:clickable="true"
             android:padding="8dp"
+            android:background="@android:color/transparent"
             android:src="@drawable/profile_off" />
 
     </LinearLayout>

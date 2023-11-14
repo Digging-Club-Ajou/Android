@@ -1,5 +1,6 @@
 package com.ajou.diggingclub.melody.card
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -14,12 +15,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.FragmentMakeCard1Binding
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MakeCardFragment1 : Fragment() {
 
     private var _binding: FragmentMakeCard1Binding? = null
     private val binding get() = _binding!!
+    private var mContext: Context? = null
 
     private lateinit var launcher: ActivityResultLauncher<Intent>
 
@@ -37,6 +40,10 @@ class MakeCardFragment1 : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,18 +62,18 @@ class MakeCardFragment1 : Fragment() {
         binding.artist.text = args.music.artist
         binding.title.text = args.music.title
 
-        binding.camera.setOnClickListener {
+        binding.camera.setOnSingleClickListener {
             val action = MakeCardFragment1Directions.actionMakeCardFragment1ToCameraFragment("card",args.music)
             findNavController().navigate(action)
         }
-        binding.gallery.setOnClickListener {
+        binding.gallery.setOnSingleClickListener {
             val intent = Intent().also { intent ->
                 intent.type = "image/"
                 intent.action = Intent.ACTION_GET_CONTENT
             }
             launcher.launch(intent)
         }
-        binding.palette.setOnClickListener {
+        binding.palette.setOnSingleClickListener {
             val action = MakeCardFragment1Directions.actionMakeCardFragment1ToMakeCardFragment3(
                 "",
                 args.music

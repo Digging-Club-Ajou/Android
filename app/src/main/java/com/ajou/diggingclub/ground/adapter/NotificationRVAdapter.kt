@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.ground.models.NotificationsModel
+import com.ajou.diggingclub.utils.setOnSingleClickListener
 
 class NotificationRVAdapter(val context: Context, val list: List<NotificationsModel>) : RecyclerView.Adapter<NotificationRVAdapter.ViewHolder>() {
 
@@ -30,7 +31,7 @@ class NotificationRVAdapter(val context: Context, val list: List<NotificationsMo
     }
 
     override fun onBindViewHolder(holder: NotificationRVAdapter.ViewHolder, position: Int) {
-        holder.removeBtn.setOnClickListener {
+        holder.removeBtn.setOnSingleClickListener {
             // TODO 눌렀을 때 fragment로 전달되도록 해서 삭제하기
         }
         val text = list[position].message+" "+list[position].minutes
