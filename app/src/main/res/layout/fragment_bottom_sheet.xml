@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/rectangle_5_background"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ground.fragments.BottomSheetFragment">
 
@@ -15,14 +16,14 @@
         android:id="@+id/backBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/backarrow"
+        android:background="@drawable/back_arrow_icon"
         android:rotation="270"
         android:layout_marginStart="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/userNickname"
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="LIKE PLAY"
@@ -41,7 +42,7 @@
             android:backgroundTint="@color/textColor"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toEndOf="@+id/backBtn"
-            app:layout_constraintTop_toBottomOf="@+id/userNickname" />
+            app:layout_constraintTop_toBottomOf="@+id/title" />
 
         <TextView
             android:id="@+id/nickname"
@@ -71,11 +72,14 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/cardRV"
             android:layout_width="0dp"
-            android:layout_height="480dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView18" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView18"
+            app:layout_constraintVertical_bias="0.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

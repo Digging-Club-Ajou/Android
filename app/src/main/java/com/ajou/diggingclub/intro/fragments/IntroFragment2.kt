@@ -17,14 +17,11 @@ import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentIntro2Binding
 import com.ajou.diggingclub.intro.*
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.ArtistApi
+import com.ajou.diggingclub.network.api.ArtistService
 import com.ajou.diggingclub.start.LandingActivity
 import com.ajou.diggingclub.utils.getJsonDataFromAssets
 import com.ajou.diggingclub.utils.setOnSingleClickListener
-import com.bumptech.glide.Glide
 import com.google.gson.Gson
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +44,7 @@ class IntroFragment2 : Fragment() {
     var categoryList : ArrayList<String> = arrayListOf()
     var likedList : ArrayList<String> = arrayListOf()
 
-    private val client = RetrofitInstance.getInstance().create(ArtistApi::class.java)
+    private val artistService = RetrofitInstance.getInstance().create(ArtistService::class.java)
     private val viewModel : IntroViewModel by viewModels()
     inner class AdapterToFragment {
         fun getSelectedItem(data : IntroSelectModel, position : Int) {
@@ -128,7 +125,7 @@ class IntroFragment2 : Fragment() {
             }
             Log.d("jsonObject",jsonObject.toString())
             val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), jsonObject.toString())
-            client.postArtists(accessToken!!,refreshToken!!,requestBody).enqueue(object : Callback<ResponseBody>{
+            artistService.postArtists(accessToken!!,refreshToken!!,requestBody).enqueue(object : Callback<ResponseBody>{
                 override fun onResponse(
                     call: Call<ResponseBody>,
                     response: Response<ResponseBody>

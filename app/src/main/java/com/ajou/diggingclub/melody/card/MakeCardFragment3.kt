@@ -68,11 +68,15 @@ class MakeCardFragment3 : Fragment() {
                 .load(parsedUri)
                 .centerCrop()
                 .apply(RequestOptions.bitmapTransform(multiOptions))
-                .into(binding.background)
+                .into(binding.image)
         }
 
         binding.artist.text = args.music.artist
         binding.title.text = args.music.title
+
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         binding.done.setOnSingleClickListener {
             val action =
@@ -169,7 +173,7 @@ class MakeCardFragment3 : Fragment() {
                 val hslColor = hslToHex(color.floatH, color.floatS, color.floatL)
                 layerDrawable.getDrawable(0).setColorFilter(android.graphics.Color.parseColor(hslColor),PorterDuff.Mode.SRC_IN)
                 binding.playIcon.setImageDrawable(layerDrawable)
-                binding.background.setBackgroundColor(android.graphics.Color.parseColor(hslColor))
+                binding.image.setBackgroundColor(android.graphics.Color.parseColor(hslColor))
                 cardColor = hslColor
             }
 

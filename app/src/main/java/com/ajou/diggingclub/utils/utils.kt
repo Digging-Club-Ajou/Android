@@ -1,7 +1,11 @@
 package com.ajou.diggingclub.utils
 
 import android.os.SystemClock
+import android.util.Log
 import android.view.View
+import androidx.navigation.fragment.findNavController
+import com.ajou.diggingclub.ground.fragments.GroundFragmentDirections
+import com.ajou.diggingclub.ground.models.ReceivedAlbumModel
 
 class OnSingleClickListener(
     private var interval: Int = 600,

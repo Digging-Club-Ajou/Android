@@ -18,9 +18,10 @@ import com.ajou.diggingclub.ground.adapter.SearchUserRVAdapter
 import com.ajou.diggingclub.ground.models.MemberSearchModel
 import com.ajou.diggingclub.ground.models.ReceivedAlbumModel
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.AlbumApi
-import com.ajou.diggingclub.network.api.SearchApi
+import com.ajou.diggingclub.network.api.AlbumService
+import com.ajou.diggingclub.network.api.SearchService
 import com.ajou.diggingclub.network.models.MemberSearchResponse
+import com.ajou.diggingclub.profile.ProfileActivity
 import com.ajou.diggingclub.start.LandingActivity
 import kotlinx.coroutines.*
 import retrofit2.Call
@@ -32,10 +33,13 @@ class SearchUserFragment : Fragment() {
     private var _binding : FragmentSearchUserBinding ?= null
     private val binding get() = _binding!!
     private var mContext : Context? = null
+
     private var job: Job? = null
-    private val client = RetrofitInstance.getInstance().create(SearchApi::class.java)
-    private val albumClient = RetrofitInstance.getInstance().create(AlbumApi::class.java)
+    private val searchService = RetrofitInstance.getInstance().create(SearchService::class.java)
+    private val albumClient = RetrofitInstance.getInstance().create(AlbumService::class.java)
+
     private var list : ArrayList<ReceivedAlbumModel> = arrayListOf()
+    var userId : String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -64,10 +68,15 @@ class SearchUserFragment : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             accessToken = dataStore.getAccessToken().toString()
             refreshToken = dataStore.getRefreshToken().toString()
+            userId = dataStore.getMemberId().toString()
             if(accessToken == null || refreshToken == null){
                 val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
+        }
+
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
         }
 
         binding.editText.addTextChangedListener(object : TextWatcher{
@@ -81,12 +90,13 @@ class SearchUserFragment : Fragment() {
                 job?.cancel()
                 if (str != null) {
                     if(str.isNotEmpty()) {
+                        list.clear()
                         binding.removeBtn.visibility = View.VISIBLE
                         job = CoroutineScope(Dispatchers.IO).launch {
                             delay(1000)
                             accessToken = dataStore.getAccessToken().toString()
                             refreshToken = dataStore.getRefreshToken().toString()
-                            client.searchMember(accessToken!!,refreshToken!!,str.toString()).enqueue(object :
+                            searchService.searchMember(accessToken!!,refreshToken!!,str.toString()).enqueue(object :
                                 Callback<MemberSearchResponse> {
                                 override fun onResponse(
                                     call: Call<MemberSearchResponse>,
@@ -111,6 +121,7 @@ class SearchUserFragment : Fragment() {
                                                         albumResponse.body()
                                                     }
                                                 }.awaitAll().filterNotNull()
+                                            Log.d("data userlist",userList.toString())
                                             list.addAll(userList)
                                             withContext(Dispatchers.Main) {
                                                 val userListRVAdapter = SearchUserRVAdapter(mContext!!, userList,link)
@@ -138,10 +149,21 @@ class SearchUserFragment : Fragment() {
     inner class AdapterToFragment {
         fun getSelectedItem(position : Int) {
             val data = list[position]
-            val item = ReceivedAlbumModel(data.memberId,data.albumId,data.nickname,data.albumName,data.imageUrl,data.artistNames)
-            val action =
-                SearchUserFragmentDirections.actionSearchUserFragmentToUserArchiveFragment(item)
-            findNavController().navigate(action)
+            val albumInfo = ReceivedAlbumModel(data.memberId,data.albumId,data.nickname,data.albumName,data.imageUrl,data.artistNames)
+            if(userId.toString() == data.memberId.toString()){
+                val intent = Intent(mContext, ProfileActivity::class.java)
+                intent.putExtra("albumInfo",data)
+                startActivity(intent)
+            }else{
+                val action =
+                    SearchUserFragmentDirections.actionSearchUserFragmentToUserArchiveFragment(albumInfo,data.albumId.toString(),data.memberId.toString())
+                findNavController().navigate(action)
+            }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        list.clear()
     }
 }

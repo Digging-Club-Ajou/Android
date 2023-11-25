@@ -26,12 +26,13 @@ class MakeAlbumFragment2 : Fragment() {
     private val binding get() = _binding!!
     private var mContext: Context? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -50,7 +51,7 @@ class MakeAlbumFragment2 : Fragment() {
         val parsedUri = Uri.parse(args.uri)
         val multiOptions = MultiTransformation(
             CenterCrop(),
-            RoundedCorners(10)
+            RoundedCorners(40)
         ) // glide 옵션
 
         Glide.with(requireActivity())
@@ -69,6 +70,10 @@ class MakeAlbumFragment2 : Fragment() {
                 MusicSpotifyModel("","","","")
             )
             findNavController().navigate(action)
+        }
+
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 

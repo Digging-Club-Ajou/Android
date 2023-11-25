@@ -13,7 +13,7 @@
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/backarrow"
+            android:src="@drawable/back_arrow_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,88 +44,137 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView10">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/melody_frame" />
-            <ImageView
-                android:id="@+id/background"
-                android:layout_gravity="center_horizontal"
-                android:layout_height="345dp"
-                android:layout_width="345dp"
-                android:background="@color/secondaryColor"/>
 
-            <TextView
-                android:id="@+id/nickname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/nickname"
-                android:gravity="top"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="13dp"
-                android:textColor="#f4f4f4"
-                android:textSize="14sp" />
-            <ImageView
-                android:id="@+id/locationIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/location_small"
-                android:layout_marginLeft="208dp"
-                android:layout_marginTop="8dp"/>
-            <TextView
-                android:id="@+id/location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="아주대학교 성호관"
-                android:gravity="top"
-                android:layout_marginTop="8dp"
-                android:layout_marginLeft="232dp"
-                android:textColor="#f4f4f4"
-                android:textSize="14sp" />
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ETA"
-                android:layout_marginTop="365dp"
-                android:layout_marginLeft="16dp"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/textColor"/>
-            <TextView
-                android:id="@+id/artist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="NewJeans"
-                android:layout_marginTop="389dp"
-                android:layout_marginLeft="16dp"
-                android:textSize="12sp"
-                android:textColor="@color/paleTextColor"/>
-            <ImageView
-                android:id="@+id/playIcon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="290dp"
-                android:layout_marginLeft="260dp"
-                android:background="@drawable/playingicon"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/heart"
-                android:layout_marginTop="365dp"
-                android:layout_marginLeft="280dp"/>
-            <EditText
-                android:id="@+id/cardDescription"
-                android:layout_width="320dp"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:layout_marginTop="408dp"
-                android:layout_marginLeft="16dp"
-                android:hint="탭하여 함께 전하고 싶은 메시지를 작성해보세요!\n어떤 추억을 공유하는 음악인가요? :)"
-                android:lineSpacingExtra="8sp"
-                android:textSize="12sp"
-                android:textColor="@color/paleTextColor"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imageView16"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/melody_frame"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="0dp"
+                    android:layout_height="348dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/secondaryColor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="ETA"
+                    android:textColor="@color/textColor"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/image" />
+
+                <TextView
+                    android:id="@+id/artist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="New Jeans"
+                    android:textColor="@color/paleTextColor"
+                    android:textSize="12sp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/title" />
+
+                <ImageView
+                    android:id="@+id/playIcon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/playingicon"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/image"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <ImageView
+                    android:id="@+id/likeBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/heart"
+                    app:layout_constraintEnd_toEndOf="@+id/playIcon"
+                    app:layout_constraintTop_toTopOf="@+id/title" />
+
+                <EditText
+                    android:id="@+id/cardDescription"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:lineSpacingExtra="8sp"
+                    android:hint="탭하여 함께 전하고 싶은 메시지를 작성해보세요!\n어떤 추억을 공유하는 음악인가요? :)"
+                    android:textColor="@color/paleTextColor"
+                    android:textSize="12sp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="28dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/artist" />
+
+                <ImageView
+                    android:id="@+id/profileIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/profile_small"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/nickname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:gravity="top"
+                    android:text="nickname"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/profileIcon"
+                    app:layout_constraintStart_toEndOf="@+id/profileIcon"
+                    app:layout_constraintTop_toTopOf="@+id/profileIcon" />
+
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:gravity="top"
+                    android:text="아주대학교 성호관"
+                    android:textColor="#f4f4f4"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/nickname"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/nickname" />
+
+                <ImageView
+                    android:id="@+id/locationIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/location_small"
+                    android:layout_marginEnd="4dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/profileIcon"
+                    app:layout_constraintEnd_toStartOf="@+id/location"
+                    app:layout_constraintTop_toTopOf="@+id/profileIcon" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
             <Button

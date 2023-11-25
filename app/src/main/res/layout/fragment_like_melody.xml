@@ -10,10 +10,10 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/imageView14"
+            android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/backarrow"
+            android:background="@drawable/back_arrow_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,14 +25,14 @@
             android:textColor="@color/textColor"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView14"
+            app:layout_constraintStart_toEndOf="@+id/backBtn"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/likeImage"
+            android:background="@drawable/likeimage_background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/likeimage_background"
             android:layout_marginTop="44dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -49,7 +49,7 @@
             app:layout_constraintEnd_toEndOf="@+id/likeImage" />
 
         <TextView
-            android:id="@+id/textView19"
+            android:id="@+id/record"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -63,7 +63,20 @@
             app:layout_constraintTop_toBottomOf="@+id/likeImage" />
 
         <TextView
-            android:id="@+id/textView20"
+            android:id="@+id/noRecordText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/no_record"
+            android:textSize="14sp"
+            android:textColor="@color/textColor"
+            android:layout_marginTop="128dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/likeImage" />
+
+        <TextView
+            android:id="@+id/likeListNickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
@@ -72,7 +85,7 @@
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView19" />
+            app:layout_constraintTop_toBottomOf="@+id/record" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/likeListRV"
@@ -81,7 +94,7 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView20" />
+            app:layout_constraintTop_toBottomOf="@+id/likeListNickname" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

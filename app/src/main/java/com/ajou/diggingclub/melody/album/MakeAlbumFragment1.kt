@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -20,19 +19,14 @@ import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentMakeAlbum1Binding
 import com.ajou.diggingclub.melody.models.MusicSpotifyModel
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.UserApi
+import com.ajou.diggingclub.network.api.UserService
 import com.ajou.diggingclub.start.StartViewModel
 import com.ajou.diggingclub.utils.setOnSingleClickListener
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.ResponseBody
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class MakeAlbumFragment1 : Fragment() {
 
@@ -42,7 +36,7 @@ class MakeAlbumFragment1 : Fragment() {
 
     private lateinit var launcher: ActivityResultLauncher<Intent>
 
-    private val client = RetrofitInstance.getInstance().create(UserApi::class.java)
+    private val userService = RetrofitInstance.getInstance().create(UserService::class.java)
     var accessToken : String? = null
     var refreshToken : String? = null
     private val viewModel : StartViewModel by viewModels()
@@ -83,7 +77,7 @@ class MakeAlbumFragment1 : Fragment() {
         CoroutineScope(Dispatchers.IO).launch {
             var accessToken = dataStore.getAccessToken().toString()
             var refreshToken = dataStore.getRefreshToken().toString()
-            val result = client.getNickname(accessToken,refreshToken)
+            val result = userService.getNickname(accessToken,refreshToken)
             if(result.isSuccessful){
                 val body = JSONObject(result.body()?.string())
                 nickname = body.get("nickname").toString()
@@ -95,6 +89,7 @@ class MakeAlbumFragment1 : Fragment() {
             }
             withContext(Dispatchers.Main){
                 var flag = dataStore.getAlbumExistFlag()
+                Log.d("flag",flag.toString())
                 if(flag){
                     findNavController().navigate(R.id.action_upload_to_findMusicFragment)
                 }else{
@@ -116,7 +111,7 @@ class MakeAlbumFragment1 : Fragment() {
 
         binding.backBtn.setOnSingleClickListener {
             findNavController().navigate(R.id.action_upload_to_findMusicFragment)
-        }
+        } // TODO 테스트용으로 연결해둔 것으로 다른 걸로 연결해야함
 
         binding.camera.setOnSingleClickListener {
             val action = MakeAlbumFragment1Directions.actionUploadToCameraFragment("album",

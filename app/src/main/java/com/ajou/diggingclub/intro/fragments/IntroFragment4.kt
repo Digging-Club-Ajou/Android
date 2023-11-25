@@ -13,10 +13,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
-import com.ajou.diggingclub.databinding.FragmentIntro3Binding
 import com.ajou.diggingclub.databinding.FragmentIntro4Binding
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.UserApi
+import com.ajou.diggingclub.network.api.UserService
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.google.gson.JsonObject
 import kotlinx.coroutines.*
@@ -34,7 +33,7 @@ class IntroFragment4 : Fragment() {
     private val binding get() = _binding!!
     private var mContext : Context? = null
     private var job: Job? = null
-    private val client = RetrofitInstance.getInstance().create(UserApi::class.java)
+    private val userService = RetrofitInstance.getInstance().create(UserService::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,7 +110,7 @@ class IntroFragment4 : Fragment() {
 
                         accessToken = dataStore.getAccessToken().toString()
 
-                        client.checkNickname(accessToken,refreshToken,requestBody).enqueue(object : Callback<ResponseBody> {
+                        userService.checkNickname(accessToken,refreshToken,requestBody).enqueue(object : Callback<ResponseBody> {
                             override fun onResponse(
                                 call: Call<ResponseBody>,
                                 response: Response<ResponseBody>
@@ -171,7 +170,7 @@ class IntroFragment4 : Fragment() {
         }
         val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), jsonObject.toString())
 
-        client.setNickname(accessToken,refreshToken,requestBody).enqueue(object : Callback<ResponseBody> {
+        userService.setNickname(accessToken,refreshToken,requestBody).enqueue(object : Callback<ResponseBody> {
             override fun onResponse(
                 call: Call<ResponseBody>,
                 response: Response<ResponseBody>

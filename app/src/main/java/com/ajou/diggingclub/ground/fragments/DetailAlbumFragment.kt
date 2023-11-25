@@ -16,7 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DetailAlbumFragment : Fragment() {
+class DetailAlbumFragment : Fragment() { // TODO 추후에 앨범 -> 멜로디카드 페이지 일반 페이지로 변경 시 사용하면 될 듯
     private var _binding : FragmentDetailAlbumBinding? = null
     private val binding get() = _binding!!
     private var mContext : Context? = null

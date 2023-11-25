@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:elevation="4dp"
-            android:src="@drawable/kakaologo"
+            android:src="@drawable/kakao_logo"
             android:layout_marginLeft="20dp"
             app:layout_constraintBottom_toBottomOf="@+id/button"
             app:layout_constraintStart_toStartOf="@+id/button"

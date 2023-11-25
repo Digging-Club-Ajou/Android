@@ -14,29 +14,24 @@ import androidx.activity.viewModels
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.ground.GroundActivity
-import com.ajou.diggingclub.melody.MelodyActivity
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.AlbumApi
-import com.ajou.diggingclub.network.api.UserApi
+import com.ajou.diggingclub.network.api.AlbumService
+import com.ajou.diggingclub.network.api.UserService
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.gif.GifDrawable
-import com.bumptech.glide.request.RequestOptions
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import okhttp3.ResponseBody
 import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class SplashActivity : AppCompatActivity() {
 
     private val viewModel : StartViewModel by viewModels()
-    private val client = RetrofitInstance.getInstance().create(AlbumApi::class.java)
-    private val userClient = RetrofitInstance.getInstance().create(UserApi::class.java)
+    private val client = RetrofitInstance.getInstance().create(AlbumService::class.java)
+    private val userClient = RetrofitInstance.getInstance().create(UserService::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -65,6 +60,7 @@ class SplashActivity : AppCompatActivity() {
 
         // 일정 시간 후에 두 번째 GIF 이미지로 변경
         Handler().postDelayed({
+            if(this.isDestroyed) throw Exception("액티비티가 종료되었습니다.") // TODO 추후 처리사항 좀 더 고민해보기 activity destroyed
             description.visibility = View.GONE
             Glide.with(this)
                 .asGif()
@@ -80,12 +76,10 @@ class SplashActivity : AppCompatActivity() {
             diggleText.visibility = View.VISIBLE
 
             if(viewModel.first.value == false){
-                Log.d("here1", "here1")
                 val intent = Intent(this@SplashActivity, LandingActivity::class.java)
                 startActivity(intent)
-                finish()
+//                finish()
             }
-            Log.d("here2", "here2")
             CoroutineScope(Dispatchers.IO).launch {
                 accessToken = dataStore.getAccessToken().toString()
                 refreshToken = dataStore.getRefreshToken().toString()
@@ -93,41 +87,50 @@ class SplashActivity : AppCompatActivity() {
                 if(accessToken == null || refreshToken == null){
                     val intent = Intent(this@SplashActivity, LandingActivity::class.java)
                     startActivity(intent)
-                    finish()
+//                    finish()
                 }
-                Log.d("here6", accessToken.toString())
-                val nicknameDeferred = async { userClient.getNickname(accessToken, refreshToken!!) }
-                val albumExistDeferred = async { client.checkAlbumsExist(accessToken!!, refreshToken!!) }
-                val userInfoDeferred = async { userClient.getUserInfo(accessToken!!, refreshToken!!) }
+                try {
+                    val nicknameDeferred = async { userClient.getNickname(accessToken, refreshToken!!) }
+                    val albumExistDeferred = async { client.checkAlbumExist(accessToken!!, refreshToken!!) }
+                    val userInfoDeferred = async { userClient.getUserInfo(accessToken!!, refreshToken!!) }
 
-                val nicknameResponse = nicknameDeferred.await()
-                val albumExistResponse = albumExistDeferred.await()
-                val userInfoResponse = userInfoDeferred.await()
+                    val nicknameResponse = nicknameDeferred.await()
+                    val albumExistResponse = albumExistDeferred.await()
+                    val userInfoResponse = userInfoDeferred.await()
 
-                if (nicknameResponse.isSuccessful && albumExistResponse.isSuccessful && userInfoResponse.isSuccessful) {
-                    val nicknameBody = JSONObject(nicknameResponse.body()?.string())
-                    dataStore.saveNickname(nicknameBody.get("nickname").toString())
-                    val albumExistBody = JSONObject(albumExistResponse.body()?.string())
-                    if (albumExistBody.get("alreadyExist") == false) dataStore.saveAlbumExistFlag(false)
-                    else dataStore.saveAlbumExistFlag(true)
-                    val userInfoBody = JSONObject(userInfoResponse.body()?.string())
-                    dataStore.saveMemberId(userInfoBody.get("memberId").toString().toInt())
-                    dataStore.saveAlbumId(userInfoBody.get("albumId").toString().toInt())
+                    if (nicknameResponse.isSuccessful && albumExistResponse.isSuccessful && userInfoResponse.isSuccessful) {
+                        if(nicknameResponse.headers()["AccessToken"] != null) dataStore.saveAccessToken(nicknameResponse.headers()["AccessToken"].toString())
+                        Log.d("accessToken",accessToken.toString())
+                        val nicknameBody = JSONObject(nicknameResponse.body()?.string())
+                        dataStore.saveNickname(nicknameBody.get("nickname").toString())
+                        val albumExistBody = JSONObject(albumExistResponse.body()?.string())
+                        if (albumExistBody.get("alreadyExist") == false) dataStore.saveAlbumExistFlag(false)
+                        else dataStore.saveAlbumExistFlag(true)
+                        val userInfoBody = JSONObject(userInfoResponse.body()?.string())
+                        dataStore.saveMemberId(userInfoBody.get("memberId").toString().toInt())
+                        dataStore.saveAlbumId(userInfoBody.get("albumId").toString().toInt())
+                        val intent = Intent(this@SplashActivity, GroundActivity::class.java)
+                        startActivity(intent)
+//                        finish()
+                    } else {
+                        // 처리 실패 시의 로직
+                        Log.d("tokens",refreshToken.toString())
+                        Log.d("tokenss",accessToken.toString())
+                        Log.d("API call failed", "Nickname: ${nicknameResponse.errorBody()?.string()}, Album Exist: ${albumExistResponse.errorBody()?.string()}")
+                        val intent = Intent(this@SplashActivity, LandingActivity::class.java)
+                        startActivity(intent)
+//                        finish()
+                    }
 
-                    val intent = Intent(this@SplashActivity, GroundActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    // 처리 실패 시의 로직
-                    Log.d("API call failed", "Nickname: ${nicknameResponse.errorBody()?.string()}, Album Exist: ${albumExistResponse.errorBody()?.string()}")
-                    val intent = Intent(this@SplashActivity, LandingActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                }catch (e:Exception){
+                    Log.d("fail in catch",e.message.toString())
+                    Firebase.crashlytics.recordException(e)
                 }
+
             }
-            Log.d("here3", "here3")
         }, 2000)
         viewModel.checkFirstFlag()
         viewModel.getExistFlag()
     }
+
 }

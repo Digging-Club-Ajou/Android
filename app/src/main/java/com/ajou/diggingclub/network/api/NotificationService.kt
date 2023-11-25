@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Path
 
-interface NotificationApi {
+interface NotificationService {
     @GET("notifications")
     fun getNotification(
         @Header("AccessToken") accessToken : String,

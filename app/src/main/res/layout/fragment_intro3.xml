@@ -15,7 +15,7 @@
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/backarrow"
+            android:src="@drawable/back_arrow_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -40,7 +40,7 @@
             android:id="@+id/imageView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/cameraicon"
+            android:src="@drawable/camera_intro_icon"
             android:layout_marginTop="94dp"
             android:layout_marginLeft="22dp"
             app:layout_constraintStart_toStartOf="parent"

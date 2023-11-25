@@ -8,12 +8,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.R
+import com.ajou.diggingclub.ground.models.FollowingModel
 import com.ajou.diggingclub.melody.card.SearchMusicFragment
 import com.ajou.diggingclub.melody.models.MusicSpotifyModel
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 
-class MusicListRVAdapter(val context: Context, val list : List<MusicSpotifyModel>, val link : SearchMusicFragment.AdapterToFragment) : RecyclerView.Adapter<MusicListRVAdapter.ViewHolder>() {
+class MusicListRVAdapter(val context: Context, var list : List<MusicSpotifyModel>, val link : SearchMusicFragment.AdapterToFragment) : RecyclerView.Adapter<MusicListRVAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val btn : ImageView = view.findViewById(R.id.selectBtn)
         val albumImg : ImageView = view.findViewById(R.id.albumImg)
@@ -44,5 +45,10 @@ class MusicListRVAdapter(val context: Context, val list : List<MusicSpotifyModel
 //            .error(defaultImage) // 로딩 에러 발생 시 표시할 이미지
 //            .fallback(defaultImage) // 로드할 url 이 비어있을(null 등) 경우 표시할 이미지
             .into(holder.albumImg)
+    }
+
+    fun updateList(newList: List<MusicSpotifyModel>) {
+        list = newList
+        notifyDataSetChanged()
     }
 }

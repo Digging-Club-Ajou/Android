@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
@@ -21,7 +22,7 @@ import com.ajou.diggingclub.databinding.FragmentShareCardBinding
 import com.ajou.diggingclub.ground.GroundActivity
 import com.ajou.diggingclub.melody.models.SendingMelodyCardModel
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.CardApi
+import com.ajou.diggingclub.network.api.CardService
 import com.ajou.diggingclub.start.LandingActivity
 import com.ajou.diggingclub.utils.getMultipartFile
 import com.ajou.diggingclub.utils.setOnSingleClickListener
@@ -48,7 +49,7 @@ class ShareCardFragment : Fragment() {
     private val binding get() = _binding!!
     private var mContext: Context? = null
 
-    private val client = RetrofitInstance.getInstance().create(CardApi::class.java)
+    private val cardService = RetrofitInstance.getInstance().create(CardService::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,7 +90,7 @@ class ShareCardFragment : Fragment() {
                 startActivity(intent)
             }
             if(nickname !=null){
-                binding.nickname.text = getString(R.string.nickname,nickname)
+                binding.nickname.text = nickname
             }
         }
 
@@ -100,7 +101,11 @@ class ShareCardFragment : Fragment() {
         layerDrawable.getDrawable(0).setColorFilter(android.graphics.Color.parseColor(args.color),
             PorterDuff.Mode.SRC_IN)
         binding.playIcon.setImageDrawable(layerDrawable)
-        binding.background.setBackgroundColor(android.graphics.Color.parseColor(args.color))
+        binding.image.setBackgroundColor(android.graphics.Color.parseColor(args.color))
+
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         if(args.address==null){
             binding.location.visibility = View.GONE
@@ -113,14 +118,14 @@ class ShareCardFragment : Fragment() {
 
             val multiOptions = MultiTransformation(
                 CenterCrop(),
-                RoundedCorners(10)
+                RoundedCorners(20)
             ) // glide 옵션
 
             Glide.with(requireActivity())
                 .load(parsedUri)
                 .centerCrop()
                 .apply(RequestOptions.bitmapTransform(multiOptions))
-                .into(binding.background)
+                .into(binding.image)
         }
         binding.cardDescription.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -140,9 +145,9 @@ class ShareCardFragment : Fragment() {
         })
 
         binding.shareBtn.setOnSingleClickListener {
-            val data = SendingMelodyCardModel(args.music.artist, args.music.title,"", args.music.previewUrl,args.address,cardDescription,args.color)
+            val data = SendingMelodyCardModel(args.music.artist, args.music.title,"", args.music.previewUrl,args.address,args.music.imageUrl,cardDescription,args.color)
             if(img!=null){
-                client.createCard(accessToken!!,refreshToken!!,data,img).enqueue(object : Callback<ResponseBody> {
+                cardService.createCard(accessToken!!,refreshToken!!,data,img).enqueue(object : Callback<ResponseBody> {
                     override fun onResponse(
                         call: Call<ResponseBody>,
                         response: Response<ResponseBody>
@@ -170,7 +175,7 @@ class ShareCardFragment : Fragment() {
                 val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), "")
                 img = MultipartBody.Part.createFormData("melodyImage", "", requestFile)
 
-                client.createCard(accessToken!!,refreshToken!!,data,img).enqueue(object : Callback<ResponseBody> {
+                cardService.createCard(accessToken!!,refreshToken!!,data,img).enqueue(object : Callback<ResponseBody> {
                     override fun onResponse(
                         call: Call<ResponseBody>,
                         response: Response<ResponseBody>

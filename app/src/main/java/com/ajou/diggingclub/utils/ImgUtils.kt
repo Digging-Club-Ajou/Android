@@ -6,6 +6,10 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
 import android.util.Log
+import com.bumptech.glide.load.MultiTransformation
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -14,7 +18,7 @@ import java.io.File
 
 private fun absolutelyPath(path: Uri?, activity:Activity ): String {
         var proj: Array<String> = arrayOf(MediaStore.Images.Media.DATA)
-        var c: Cursor? = activity?.contentResolver?.query(path!!, proj, null, null, null)
+        var c: Cursor? = activity.contentResolver?.query(path!!, proj, null, null, null)
         var index = c?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
         c?.moveToFirst()
 
@@ -31,3 +35,11 @@ fun getMultipartFile(imageUri: Uri, activity: Activity, key: String): MultipartB
     }
 fun Float.fromDpToPx(): Int =
         (this * Resources.getSystem().displayMetrics.density).toInt()
+
+val requestOptions = RequestOptions()
+        .transform(CenterCrop(), RoundedCorners(20))
+
+val multiOptions = RequestOptions().transform(
+        CenterCrop(),
+        RoundedCorners(40)
+)

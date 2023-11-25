@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item"
     android:layout_width="164dp"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="8dp"
-    android:id="@+id/item">
+    android:layout_marginEnd="8dp">
 
     <ImageView
         android:id="@+id/image"
@@ -16,9 +16,9 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView12"
-        android:layout_width="12dp"
-        android:layout_height="12dp"
+        android:id="@+id/profileIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/profile_small"
@@ -30,12 +30,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="12dp"
         android:text="kimkimjiye"
         android:textColor="@color/secondaryColor"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView12"
-        app:layout_constraintTop_toTopOf="@+id/image" />
+        android:textSize="12sp"
+        android:shadowColor="#80000000"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="2"
+        app:layout_constraintBottom_toBottomOf="@+id/profileIcon"
+        app:layout_constraintStart_toEndOf="@+id/profileIcon"
+        app:layout_constraintTop_toTopOf="@+id/profileIcon" />
 
     <TextView
         android:id="@+id/albumTitle"
@@ -47,67 +51,20 @@
         android:textColor="@color/secondaryColor"
         android:textSize="12sp"
         android:textStyle="bold"
+        android:shadowColor="#80000000"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="2"
         app:layout_constraintBottom_toBottomOf="@+id/image"
         app:layout_constraintStart_toStartOf="@id/image"
         app:layout_constraintTop_toBottomOf="@+id/nickname" />
 
-    <TextView
-        android:id="@+id/artistNames"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/hashtagRV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:lineBreakWordStyle="phrase"
-        android:text="사나, 모모, TWICE, Ariana Grande, 그란데 말입니다, 아티스트, 아티스트 목록"
-        android:textColor="@color/descriptionColor"
-        android:textSize="8sp"
-        app:layout_constraintBottom_toTopOf="@id/hashtag1"
+        app:layout_constraintTop_toBottomOf="@+id/image"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-        android:id="@+id/hashtag1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/hashtag_background"
-        android:gravity="center"
-        android:text="#댄스"
-        android:textColor="@color/descriptionColor"
-        android:textSize="12sp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/hashtag2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/artistNames" />
-
-    <TextView
-        android:id="@+id/hashtag2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/hashtag_background"
-        android:gravity="center"
-        android:text="#기분전환"
-        android:textColor="@color/descriptionColor"
-        android:textSize="12sp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/hashtag3"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/hashtag1"
-        app:layout_constraintTop_toBottomOf="@id/artistNames" />
-
-    <TextView
-        android:id="@+id/hashtag3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/hashtag_background"
-        android:gravity="center"
-        android:text="#여자"
-        android:textColor="@color/descriptionColor"
-        android:textSize="12sp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/hashtag2"
-        app:layout_constraintTop_toBottomOf="@id/artistNames" />
 </androidx.constraintlayout.widget.ConstraintLayout>

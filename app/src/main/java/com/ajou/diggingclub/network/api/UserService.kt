@@ -7,7 +7,7 @@ import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
-interface UserApi {
+interface UserService {
     @POST("kakao")
     fun login(@Body authCode: RequestBody) : Call<TokenResponse>
 

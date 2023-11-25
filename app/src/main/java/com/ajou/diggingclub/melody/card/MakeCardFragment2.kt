@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.FragmentMakeCard2Binding
+import com.ajou.diggingclub.utils.multiOptions
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -52,15 +53,11 @@ class MakeCardFragment2 : Fragment() {
         binding.title.text = args.music.title
 
         val parsedUri = Uri.parse(args.uri)
-        val multiOptions = MultiTransformation(
-            CenterCrop(),
-            RoundedCorners(10)
-        ) // glide 옵션
 
         Glide.with(requireActivity())
             .load(parsedUri)
             .centerCrop()
-            .apply(RequestOptions.bitmapTransform(multiOptions))
+            .apply(multiOptions)
             .into(binding.image)
 
         binding.use.setOnSingleClickListener {
@@ -73,6 +70,10 @@ class MakeCardFragment2 : Fragment() {
         binding.rePhoto.setOnSingleClickListener {
             val action = MakeCardFragment2Directions.actionMakeCardFragment2ToCameraFragment("card",args.music)
             findNavController().navigate(action)
+        }
+
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
         }
 
     }

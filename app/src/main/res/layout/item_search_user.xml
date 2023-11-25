@@ -4,6 +4,7 @@
     android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp">
 
     <ImageView
@@ -11,6 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/albumcover"
+        android:adjustViewBounds="true"
         app:layout_constraintBottom_toBottomOf="@+id/text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/nickname" />
@@ -24,41 +26,29 @@
         android:text="hyeongger"
         android:textColor="@color/textColor"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/name"
+        app:layout_constraintBottom_toTopOf="@+id/text"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
-        android:id="@+id/name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="이형기"
-        android:textColor="@color/descriptionColor"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/text"
-        app:layout_constraintStart_toStartOf="@+id/nickname"
-        app:layout_constraintTop_toBottomOf="@+id/nickname" />
-
-    <TextView
         android:id="@+id/text"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_marginTop="4dp"
         android:text="나를 팔로우합니다."
         android:textColor="@color/descriptionColor"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/name"
-        app:layout_constraintTop_toBottomOf="@+id/name" />
+        app:layout_constraintStart_toStartOf="@+id/nickname"
+        app:layout_constraintTop_toBottomOf="@+id/nickname" />
 
     <Button
         android:id="@+id/followingBtn"
+        android:visibility="gone"
         android:layout_width="104dp"
         android:layout_height="32dp"
-        android:visibility="gone"
         android:background="@drawable/following_wide"
         android:text="팔로우"
         android:textColor="@color/textColor"

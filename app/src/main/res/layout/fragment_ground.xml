@@ -31,7 +31,7 @@
             android:id="@+id/search"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:background="@drawable/search"
+            android:background="@drawable/search_icon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -73,7 +73,7 @@
             android:layout_height="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="44dp"
-            android:background="@drawable/back"
+            android:background="@drawable/more_icon"
             android:backgroundTint="@color/paleTextColor"
             app:layout_constraintEnd_toEndOf="@+id/cardRV"
             app:layout_constraintTop_toBottomOf="@+id/cardRV" />
@@ -126,7 +126,7 @@
             android:layout_height="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="24dp"
-            android:background="@drawable/back"
+            android:background="@drawable/more_icon"
             android:backgroundTint="@color/paleTextColor"
             app:layout_constraintEnd_toEndOf="@+id/followingRV"
             app:layout_constraintTop_toBottomOf="@+id/followingRV" />
@@ -168,7 +168,7 @@
             android:layout_height="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="24dp"
-            android:background="@drawable/back"
+            android:background="@drawable/more_icon"
             android:backgroundTint="@color/paleTextColor"
             app:layout_constraintEnd_toEndOf="@+id/aiRecommendRV"
             app:layout_constraintTop_toBottomOf="@+id/aiRecommendRV" />

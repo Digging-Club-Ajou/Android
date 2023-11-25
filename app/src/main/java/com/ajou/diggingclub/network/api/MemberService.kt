@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Query
 
-interface MemberApi {
+interface MemberService {
     @GET("member/search")
     fun searchMember(
         @Header("AccessToken") accessToken : String,

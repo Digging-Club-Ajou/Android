@@ -15,8 +15,8 @@ import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.ground.GroundActivity
 import com.ajou.diggingclub.intro.IntroActivity
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.AlbumApi
-import com.ajou.diggingclub.network.api.UserApi
+import com.ajou.diggingclub.network.api.AlbumService
+import com.ajou.diggingclub.network.api.UserService
 import com.ajou.diggingclub.network.models.TokenResponse
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
@@ -25,7 +25,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
@@ -39,14 +38,13 @@ class KakaoSignUpActivity : AppCompatActivity() {
 
     private lateinit var viewModel : KakaoSignUpViewModel
 
-    private val client = RetrofitInstance.getInstance().create(UserApi::class.java)
-    private val albumClient = RetrofitInstance.getInstance().create(AlbumApi::class.java)
+    private val userService = RetrofitInstance.getInstance().create(UserService::class.java)
+    private val albumService = RetrofitInstance.getInstance().create(AlbumService::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_kakao_sign_up)
         val dataStore = UserDataStore()
-
         viewModel = ViewModelProvider(this)[KakaoSignUpViewModel::class.java]
 
         val webview : WebView = findViewById(R.id.webview)
@@ -73,7 +71,7 @@ class KakaoSignUpActivity : AppCompatActivity() {
                 }
                 val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), jsonObject.toString())
                 var tokens : TokenResponse? = null
-                client.login(requestBody).enqueue(object : Callback<TokenResponse>{
+                userService.login(requestBody).enqueue(object : Callback<TokenResponse>{
                     override fun onResponse(
                         call: Call<TokenResponse>,
                         response: Response<TokenResponse>
@@ -89,25 +87,32 @@ class KakaoSignUpActivity : AppCompatActivity() {
                             startActivity(intent)
                             }else{
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    val nicknameDeferred = async { client.getNickname(tokens!!.accessToken, tokens!!.refreshToken) }
-                                    val albumExistDeferred = async { albumClient.checkAlbumsExist(tokens!!.accessToken, tokens!!.refreshToken) }
-                                    val userInfoDeferred = async { client.getUserInfo(tokens!!.accessToken, tokens!!.refreshToken) }
+                                    Log.d("here!!","here!!!")
+                                    val nicknameDeferred = async { userService.getNickname(tokens!!.accessToken, tokens!!.refreshToken) }
+                                    val albumExistDeferred = async { albumService.checkAlbumExist(tokens!!.accessToken, tokens!!.refreshToken) }
+                                    val userInfoDeferred = async { userService.getUserInfo(tokens!!.accessToken, tokens!!.refreshToken) }
 
                                     val nicknameResponse = nicknameDeferred.await()
                                     val albumExistResponse = albumExistDeferred.await()
                                     val userInfoResponse = userInfoDeferred.await()
 
                                     dataStore.saveFirstFlag(true)
+                                    Log.d("saved",tokens!!.refreshToken)
+                                    Log.d("saved!!",tokens!!.accessToken)
 
-                                    if (nicknameResponse.isSuccessful && albumExistResponse.isSuccessful) {
+                                    if (nicknameResponse.isSuccessful && albumExistResponse.isSuccessful && userInfoResponse.isSuccessful) {
                                         val nicknameBody = JSONObject(nicknameResponse.body()?.string())
                                         dataStore.saveNickname(nicknameBody.get("nickname").toString())
-                                        val albumExistBody = JSONObject(albumExistResponse.body()?.string())
-                                        if (albumExistBody.get("alreadyExist") == false) dataStore.saveAlbumExistFlag(false)
+                                        val albumExistObject = JSONObject(albumExistResponse.body()?.string())
+                                        if (albumExistObject.get("alreadyExist") == false) dataStore.saveAlbumExistFlag(false)
                                         else dataStore.saveAlbumExistFlag(true)
                                         val userInfoBody = JSONObject(userInfoResponse.body()?.string())
                                         dataStore.saveMemberId(userInfoBody.get("memberId").toString().toInt())
                                         dataStore.saveAlbumId(userInfoBody.get("albumId").toString().toInt())
+                                    }else{
+                                        Log.d("nicknameerror response",nicknameResponse.errorBody()?.string().toString())
+                                        Log.d("albumexisterror response",albumExistResponse.errorBody()?.string().toString())
+                                        Log.d("userinfoerror response",userInfoResponse.errorBody()?.string().toString())
                                     }
                                 }
                                 val intent = Intent(this@KakaoSignUpActivity, GroundActivity::class.java)

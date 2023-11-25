@@ -1,12 +1,14 @@
 package com.ajou.diggingclub.melody.card
 
 import android.Manifest
+import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -14,29 +16,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentSearchLocationBinding
 import com.ajou.diggingclub.melody.card.adapter.LocationListRVAdapter
 import com.ajou.diggingclub.melody.models.LocationModel
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.LocationApi
-import com.ajou.diggingclub.network.models.LocationResponse
+import com.ajou.diggingclub.network.api.LocationService
 import com.ajou.diggingclub.start.LandingActivity
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
-import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class SearchLocationFragment : Fragment() {
@@ -44,6 +43,7 @@ class SearchLocationFragment : Fragment() {
     private var mFusedLocationProviderClient: FusedLocationProviderClient? = null // 현재 위치를 가져오기 위한 변수
     lateinit var mLastLocation: Location // 위치 값을 가지고 있는 객체
     internal lateinit var mLocationRequest: LocationRequest // 위치 정보 요청의 매개변수를 저장하는
+    private lateinit var resolutionResultLauncher: ActivityResultLauncher<IntentSenderRequest>
 
     var x : String = "127.046250"
     var y : String = "37.282944"
@@ -53,8 +53,22 @@ class SearchLocationFragment : Fragment() {
     private var mContext: Context? = null
     private var job: Job? = null
 
-    private val client = RetrofitInstance.getInstance().create(LocationApi::class.java)
+    private val locationService = RetrofitInstance.getInstance().create(LocationService::class.java)
     val args : SearchLocationFragmentArgs by navArgs()
+
+    val list : ArrayList<LocationModel> = arrayListOf()
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(p0: LocationResult) {
+            super.onLocationResult(p0)
+            Log.d("latitude",p0.lastLocation?.latitude.toString())
+            onLocationChanged(p0.lastLocation!!)
+        }
+
+        override fun onLocationAvailability(p0: LocationAvailability) {
+            super.onLocationAvailability(p0)
+        }
+    }
 
     inner class AdapterToFragment {
         fun getSelectedItem(data : String) {
@@ -73,6 +87,13 @@ class SearchLocationFragment : Fragment() {
         super.onCreate(savedInstanceState)
         mLocationRequest =  LocationRequest.create().apply {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+
+        resolutionResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                startLocationUpdates()
+            }
         }
     }
 
@@ -98,32 +119,6 @@ class SearchLocationFragment : Fragment() {
         var accessToken : String? = null
         var refreshToken : String? = null
 
-        val locationRequest = LocationRequest.create().apply {
-            interval = 10000
-            fastestInterval = 5000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-
-        val builder = LocationSettingsRequest.Builder()
-            .addLocationRequest(locationRequest)
-
-        val locationClient: SettingsClient = LocationServices.getSettingsClient(requireActivity())
-        val task: Task<LocationSettingsResponse> = locationClient.checkLocationSettings(builder.build())
-
-        task.addOnFailureListener { exception ->
-            // GPS가 꺼져있을 경우
-            if (exception is ResolvableApiException) {
-                Log.d("gps", "OnFailure")
-                try {
-                    exception.startResolutionForResult(
-                        requireActivity(),
-                        100
-                    )
-                } catch (sendEx: IntentSender.SendIntentException) {
-                    Log.d("gps", sendEx.message.toString())
-                }
-            }
-        }
 
         CoroutineScope(Dispatchers.IO).launch {
             accessToken = dataStore.getAccessToken().toString()
@@ -134,8 +129,7 @@ class SearchLocationFragment : Fragment() {
             }
         }
 
-        if(checkPermissionForLocation(mContext!!)) startLocationUpdates()
-
+        checkPermissionForLocation(mContext!!)
         binding.skip.setOnSingleClickListener {
             val action =
                 SearchLocationFragmentDirections.actionSearchLocationFragmentToShareCardFragment(
@@ -150,6 +144,18 @@ class SearchLocationFragment : Fragment() {
         binding.removeBtn.setOnClickListener {
             binding.editText.setText("")
         }
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
+
+//        binding.listRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                super.onScrolled(recyclerView, dx, dy)
+//                if(!binding.listRV.canScrollVertically(1)){
+//
+//                }
+//            }
+//        })
 
         binding.editText.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -166,66 +172,75 @@ class SearchLocationFragment : Fragment() {
                         job = CoroutineScope(Dispatchers.IO).launch {
                             accessToken = dataStore.getAccessToken().toString()
                             refreshToken = dataStore.getRefreshToken().toString()
-                            delay(1000)
-                            Log.d("location x y",x+"   "+y)
-                            client.searchLocation(accessToken!!,refreshToken!!,str.toString(),x,y).enqueue(object :
-                                Callback<LocationResponse> {
-                                override fun onResponse(
-                                    call: Call<LocationResponse>,
-                                    response: Response<LocationResponse>
-                                ) {
-                                    if(response.isSuccessful){
-                                        if(response.headers()["AccessToken"] != null) {
-                                            CoroutineScope(Dispatchers.IO).launch {
-                                                dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
-                                            }
+                            delay(500)
+                            var page = 1
+                            var end = false
+                            while(!end){
+                                val response = locationService.searchLocation(accessToken!!,refreshToken!!,str.toString(),x,y,page.toString())
+                                if(response.isSuccessful){
+                                    if(response.headers()["AccessToken"] != null) {
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
                                         }
-                                        val list : List<LocationModel> = response.body()!!.locationListResult
-                                        Log.d("success",list.toString())
-                                        val link = AdapterToFragment()
-                                        val locationListRVAdapter = LocationListRVAdapter(mContext!!,list,link)
-                                        binding.listRV.adapter = locationListRVAdapter
-                                        binding.listRV.layoutManager = LinearLayoutManager(mContext)
-                                    }else {
-                                        Log.d("response not successful",response.errorBody()?.string().toString())
                                     }
+                                    val data : List<LocationModel> = response.body()!!.locationListResult
+                                    if(data.isEmpty()){
+                                        end = true
+                                        break
+                                    }else{
+                                        list.addAll(data)
+                                        page++
+                                    }
+                                }else{
+                                    Log.d("error",response.errorBody()?.string().toString())
+                                    end = true
+                                    break
                                 }
-
-                                override fun onFailure(call: Call<LocationResponse>, t: Throwable) {
-                                    Log.d("fail",t.message.toString())
-                                }
-                            })
+                            }
+                            withContext(Dispatchers.Main){
+                                val link = AdapterToFragment()
+                                val locationListRVAdapter = LocationListRVAdapter(mContext!!,list,link)
+                                binding.listRV.adapter = locationListRVAdapter
+                                binding.listRV.layoutManager = LinearLayoutManager(mContext)
+                            }
                         }
                     }else{
                         binding.removeBtn.visibility = View.GONE
                     }
                 }
             }
-
         })
     }
     private fun startLocationUpdates() {
-        //FusedLocationProviderClient의 인스턴스를 생성.
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        val locationRequest = LocationRequest.create().apply {
+            interval = 10000
+            fastestInterval = 5000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        val builder = LocationSettingsRequest.Builder()
+            .addLocationRequest(locationRequest)
 
         if (ActivityCompat.checkSelfPermission(mContext!!, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
             && ActivityCompat.checkSelfPermission(mContext!!, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return
         }
-
-        mFusedLocationProviderClient!!.lastLocation.addOnSuccessListener {location: Location? ->
-            location?.let {
-                onLocationChanged(it)
-                binding.curLocBtn.setBackgroundColor(resources.getColor(R.color.primaryColor))
-                binding.curLocBtn.setTextColor(resources.getColor(R.color.textColor))
-                binding.linearLayout.visibility = View.GONE
-                binding.scrollview.visibility = View.VISIBLE
-            } ?: run {
-                Log.d("check","Location not available")
+        LocationServices.getSettingsClient(mContext!!).checkLocationSettings(builder.build()).run {
+            addOnSuccessListener { response ->
+                mFusedLocationProviderClient?.requestLocationUpdates(locationRequest,locationCallback, Looper.getMainLooper())
+            }
+            addOnFailureListener { exception ->
+                if (exception is ResolvableApiException) {
+                    try {
+                        val intentSenderRequest = IntentSenderRequest.Builder(exception.resolution).build()
+                        resolutionResultLauncher!!.launch(intentSenderRequest)
+                    } catch (sendEx: IntentSender.SendIntentException) {
+                        Log.d("gps", sendEx.message.toString())
+                    }
+                }
             }
         }
     }
-
     // 시스템으로 부터 받은 위치정보를 화면에 갱신해주는 메소드
     fun onLocationChanged(location: Location) {
         mLastLocation = location
@@ -233,6 +248,7 @@ class SearchLocationFragment : Fragment() {
         y = mLastLocation.longitude.toString()
         Log.d("location",x)
         Log.d("location",y)
+        mFusedLocationProviderClient?.removeLocationUpdates(locationCallback)
     }
 
 
@@ -266,8 +282,8 @@ class SearchLocationFragment : Fragment() {
 
             if (allPermissionsGranted) {
                 startLocationUpdates()
+                Log.d("location permission granted","permission granted")
             } else {
-                Log.d("ttt", "onRequestPermissionsResult() _ 권한 허용 거부")
                 Toast.makeText(mContext, "권한이 없어 해당 기능을 실행할 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
         }

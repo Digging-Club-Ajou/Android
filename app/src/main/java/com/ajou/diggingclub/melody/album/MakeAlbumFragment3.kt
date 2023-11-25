@@ -18,7 +18,7 @@ import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentMakeAlbum3Binding
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.AlbumApi
+import com.ajou.diggingclub.network.api.AlbumService
 import com.ajou.diggingclub.start.LandingActivity
 import com.ajou.diggingclub.utils.getMultipartFile
 import com.ajou.diggingclub.utils.setOnSingleClickListener
@@ -43,7 +43,7 @@ class MakeAlbumFragment3 : Fragment() {
     private val binding get() = _binding!!
     private var mContext: Context? = null
     private var job: Job? = null
-    private val client = RetrofitInstance.getInstance().create(AlbumApi::class.java)
+    private val albumService = RetrofitInstance.getInstance().create(AlbumService::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,7 +103,7 @@ class MakeAlbumFragment3 : Fragment() {
             }
             val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), jsonObject.toString())
 
-            client.createAlbum(accessToken!!,refreshToken!!,requestBody,img).enqueue(object :
+            albumService.createAlbum(accessToken!!,refreshToken!!,requestBody,img).enqueue(object :
                 Callback<ResponseBody> {
                 override fun onResponse(
                     call: Call<ResponseBody>,
@@ -123,6 +123,9 @@ class MakeAlbumFragment3 : Fragment() {
             })
         }
 
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
 
         binding.title.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -144,7 +147,7 @@ class MakeAlbumFragment3 : Fragment() {
                         accessToken = dataStore.getAccessToken().toString()
                         refreshToken = dataStore.getRefreshToken().toString()
 
-                        client.checkAlbumsName(accessToken!!,refreshToken!!,requestBody).enqueue(object :
+                        albumService.checkAlbumsName(accessToken!!,refreshToken!!,requestBody).enqueue(object :
                             Callback<ResponseBody> {
                             override fun onResponse(
                                 call: Call<ResponseBody>,

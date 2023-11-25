@@ -12,8 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.ground.fragments.SearchUserFragment
 import com.ajou.diggingclub.ground.models.ReceivedAlbumModel
+import com.ajou.diggingclub.utils.requestOptions
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 
 class SearchUserRVAdapter(val context: Context, val list : List<ReceivedAlbumModel>, val link : SearchUserFragment.AdapterToFragment) : RecyclerView.Adapter<SearchUserRVAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -33,9 +37,9 @@ class SearchUserRVAdapter(val context: Context, val list : List<ReceivedAlbumMod
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.nickname.text = list[position].nickname
-        Log.d("image", list[position].imageUrl)
         Glide.with(context)
             .load(list[position].imageUrl)
+            .apply(requestOptions)
             .into(holder.image)
         holder.item.setOnSingleClickListener {
             link.getSelectedItem(position)

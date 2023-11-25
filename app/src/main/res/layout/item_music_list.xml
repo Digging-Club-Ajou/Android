@@ -11,7 +11,7 @@
         android:id="@+id/albumImg"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/removeicon_dark"
+        android:src="@drawable/remove_icon_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -44,7 +44,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:rotation="180"
-        android:src="@drawable/backarrow"
+        android:src="@drawable/back_arrow_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

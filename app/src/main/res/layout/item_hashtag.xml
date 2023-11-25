@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_margin="4dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <TextView
         android:id="@+id/hashtag"
@@ -9,9 +10,11 @@
         android:layout_height="wrap_content"
         android:background="@drawable/hashtag_background"
         android:gravity="center"
-        android:text="#댄스"
+        android:text="#Taylor Swift"
         android:textColor="@color/descriptionColor"
         android:textSize="12sp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

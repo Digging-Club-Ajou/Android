@@ -10,9 +10,12 @@ data class ReceivedMelodyCardModel(
     @SerializedName("artistName") val artistName: String,
     @SerializedName("songTitle") val songTitle: String,
     @SerializedName("previewUrl") val previewUrl: String,
-    @SerializedName("imageUrl") val imageUrl: String,
+    @SerializedName("imageUrl") val imageUrl: String?,
+    @SerializedName("albumCoverImageUrl") val albumCoverImageUrl: String,
     @SerializedName("address") val address: String?,
     @SerializedName("cardDescription") val cardDescription: String?,
     @SerializedName("color") val color: String,
+    @SerializedName("isImageUrl") val isImageUrl: Boolean,
+    @SerializedName("isLike") val isLike: Boolean,
     var isPlaying : Boolean = false
 )

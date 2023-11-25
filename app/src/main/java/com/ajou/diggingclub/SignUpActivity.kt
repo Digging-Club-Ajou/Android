@@ -6,19 +6,15 @@ import android.text.TextWatcher
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.ajou.diggingclub.databinding.ActivitySignUpBinding
-import com.ajou.diggingclub.network.api.UserApi
+import com.ajou.diggingclub.network.api.UserService
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.models.SignUpRequestBody
-import com.ajou.diggingclub.network.models.SignUpResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 
 class SignUpActivity : AppCompatActivity() {
     private var _binding : ActivitySignUpBinding ?= null
     private val binding get() = _binding!!
-    private val client = RetrofitInstance.getInstance().create(UserApi::class.java)
+    private val client = RetrofitInstance.getInstance().create(UserService::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

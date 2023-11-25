@@ -8,18 +8,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentNotificationBinding
 import com.ajou.diggingclub.ground.adapter.NotificationRVAdapter
 import com.ajou.diggingclub.ground.models.NotificationsModel
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.NotificationApi
+import com.ajou.diggingclub.network.api.NotificationService
 import com.ajou.diggingclub.network.models.NotificationsResponse
 import com.ajou.diggingclub.start.LandingActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
 
@@ -27,7 +29,10 @@ class NotificationFragment : Fragment() {
     private var _binding : FragmentNotificationBinding? = null
     private val binding get() = _binding!!
     private var mContext : Context? = null
-    private val client = RetrofitInstance.getInstance().create(NotificationApi::class.java)
+    private val notificationService = RetrofitInstance.getInstance().create(NotificationService::class.java)
+
+    var accessToken : String? = null
+    var refreshToken : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,30 +53,9 @@ class NotificationFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        val list : List<String> = arrayListOf(
-//           "hyeonn님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//           "hyeonn님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//            "hyeonn님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//            "hyeonn님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//            "hyeonn님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//            "hyeonn님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//           "hyeongger12345님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//          "hy123님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//            "hyeongger12345님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//            "hy123님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//            "hyeongger12345님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//            "hy123님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//            "hyeongger12345님이 회원님의 멜로디카드를 좋아합니다. 20분 전",
-//            "hy123님이 회원님의 멜로디카드를 좋아합니다. 20분 전"
-//        )
-//        val notiListRVAdapter = NotificationRVAdapter(mContext,list)
-//        binding.notiRV.adapter = notiListRVAdapter
-//        binding.notiRV.layoutManager = LinearLayoutManager(mContext)
 
         val dataStore = UserDataStore()
-        var accessToken : String? = null
-        var refreshToken : String? = null
-
+        val link = DeleteNotification()
         CoroutineScope(Dispatchers.IO).launch {
             accessToken = dataStore.getAccessToken().toString()
             refreshToken = dataStore.getRefreshToken().toString()
@@ -79,31 +63,56 @@ class NotificationFragment : Fragment() {
                 val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
-        }
-        client.getNotification(accessToken!!,refreshToken!!).enqueue(object : retrofit2.Callback<NotificationsResponse>{
-            override fun onResponse(
-                call: Call<NotificationsResponse>,
-                response: Response<NotificationsResponse>
-            ) {
-                if(response.isSuccessful){
-                    if(response.headers()["AccessToken"] != null) {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
+            notificationService.getNotification(accessToken!!,refreshToken!!).enqueue(object : retrofit2.Callback<NotificationsResponse>{
+                override fun onResponse(
+                    call: Call<NotificationsResponse>,
+                    response: Response<NotificationsResponse>
+                ) {
+                    if(response.isSuccessful){
+                        if(response.headers()["AccessToken"] != null) {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
+                            }
+                        }else{
+                            val list : List<NotificationsModel> = response.body()!!.notificationsList
+                            Log.d("list",list.toString())
+                            val notiListRVAdapter = NotificationRVAdapter(mContext!!,list,link)
+                            binding.notiRV.adapter = notiListRVAdapter
+                            binding.notiRV.layoutManager = LinearLayoutManager(mContext)
                         }
-                    }else{
-                        val list : List<NotificationsModel> = response.body()!!.notificationsList
-                        Log.d("list",list.toString())
-                        val notiListRVAdapter = NotificationRVAdapter(mContext!!,list)
-                        binding.notiRV.adapter = notiListRVAdapter
-                        binding.notiRV.layoutManager = LinearLayoutManager(mContext)
                     }
                 }
-            }
 
-            override fun onFailure(call: Call<NotificationsResponse>, t: Throwable) {
-                Log.d("fail",t.message.toString())
-            }
+                override fun onFailure(call: Call<NotificationsResponse>, t: Throwable) {
+                    Log.d("fail",t.message.toString())
+                }
+            })
+        }
 
-        })
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
+    inner class DeleteNotification{
+        // TODO 삭제 버튼 클릭 시 바로 사라지도록 해야할 듯
+        fun deleteNotification(notificationId : String){
+            notificationService.deleteNotification(accessToken!!,refreshToken!!,notificationId).enqueue(object : retrofit2.Callback<ResponseBody>{
+                override fun onResponse(
+                    call: Call<ResponseBody>,
+                    response: Response<ResponseBody>
+                ) {
+                    if(response.isSuccessful){
+                        Log.d("success",response.body().toString())
+                    }else{
+                        Log.d("error",response.errorBody()?.string().toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                    Log.d("fail",t.message.toString())
+                }
+            })
+        }
     }
 }

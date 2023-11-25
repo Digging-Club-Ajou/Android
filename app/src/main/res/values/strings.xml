@@ -3,6 +3,8 @@
     <string name="nickname">\@%s</string>
     <string name="melody_nickname">%s 님이 좋아하는 멜로디</string>
     <string name="likelist_nickname">%s 님의 좋아요 멜로디 리스트</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="following">%s 팔로잉</string>
+    <string name="follower">%s 팔로워</string>
+    <string name="record">%1$s 님은 %2$s 장르에 가장 큰 관심이 있어요!\n가장 많이 들은 아티스트는 %3$s고\n%4$s를 가장 많이 재생했어요!</string>
+    <string name="no_record">%s 님은 아직 좋아하는 멜로디가 없어요.\n다른 유저의 멜로디 카드를 탐색하고 좋아요를 눌러보세요!</string>
 </resources>

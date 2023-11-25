@@ -4,7 +4,7 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface KakaoAuthApi {
+interface KakaoAuthService {
     @GET("oauth/authorize")
     fun kakaoAuthorize(
         @Query("client_id") clientId : String,

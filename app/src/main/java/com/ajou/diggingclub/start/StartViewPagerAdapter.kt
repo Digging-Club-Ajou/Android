@@ -14,7 +14,6 @@ class StartViewPagerAdapter(fragmentActivity: FragmentActivity): FragmentStateAd
         SwipeFragment2(),
         SwipeFragment3(),
         SwipeFragment4()
-
     )
 
     override fun getItemCount() = fragments.size

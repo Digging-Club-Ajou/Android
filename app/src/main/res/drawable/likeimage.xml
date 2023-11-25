@@ -1,12 +1,15 @@
 <!-- res/drawable/layered_images.xml -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- 제일 아래에 오는 이미지 -->
-    <item android:drawable="@drawable/genrefolk"
+    <item
+        android:id="@+id/item1"
+        android:drawable="@drawable/genrefolk"
         android:width="120dp"
         android:height="120dp"/>
 
     <!-- 그 위에 오는 이미지 -->
     <item
+        android:id="@+id/item2"
         android:drawable="@drawable/genredance"
         android:left="100dp"
         android:width="120dp"
@@ -14,6 +17,7 @@
 
     <!-- 그 위에 오는 이미지 -->
     <item
+        android:id="@+id/item3"
         android:drawable="@drawable/genreballad"
         android:left="200dp"
         android:width="120dp"

@@ -22,9 +22,6 @@
         <action
             android:id="@+id/action_groundFragment_to_notificationFragment"
             app:destination="@id/notificationFragment" />
-        <action
-            android:id="@+id/action_groundFragment_to_followingListFragment"
-            app:destination="@id/followingListFragment" />
     </fragment>
     <fragment
         android:id="@+id/albumListFragment"
@@ -78,10 +75,20 @@
         tools:layout="@layout/fragment_user_archive" >
         <argument
             android:name="albumInfo"
-            app:argType="com.ajou.diggingclub.ground.models.ReceivedAlbumModel" />
+            app:argType="com.ajou.diggingclub.ground.models.ReceivedAlbumModel"
+            app:nullable="true" />
         <action
             android:id="@+id/action_userArchiveFragment_to_likeMelodyFragment"
             app:destination="@id/likeMelodyFragment" />
+        <argument
+            android:name="albumId"
+            app:argType="string" />
+        <argument
+            android:name="memberId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_userArchiveFragment_to_followingListFragment"
+            app:destination="@id/followingListFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
@@ -96,7 +103,17 @@
         android:id="@+id/followingListFragment"
         android:name="com.ajou.diggingclub.ground.fragments.FollowingListFragment"
         android:label="fragment_following_list"
-        tools:layout="@layout/fragment_following_list" />
+        tools:layout="@layout/fragment_following_list" >
+        <argument
+            android:name="followings"
+            app:argType="com.ajou.diggingclub.ground.models.FollowingModel[]" />
+        <argument
+            android:name="followers"
+            app:argType="com.ajou.diggingclub.ground.models.FollowingModel[]" />
+        <argument
+            android:name="nickname"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/likeMelodyFragment"
         android:name="com.ajou.diggingclub.ground.fragments.LikeMelodyFragment"
@@ -105,17 +122,12 @@
         <action
             android:id="@+id/action_likeMelodyFragment_to_userArchiveFragment"
             app:destination="@id/userArchiveFragment" />
-        <action
-            android:id="@+id/action_likeMelodyFragment_to_bottomSheetFragment"
-            app:destination="@id/bottomSheetFragment" />
+        <argument
+            android:name="nickname"
+            app:argType="string" />
+        <argument
+            android:name="id"
+            app:argType="string" />
     </fragment>
-    <fragment
-        android:id="@+id/bottomSheetFragment"
-        android:name="com.ajou.diggingclub.ground.fragments.BottomSheetFragment"
-        android:label="fragment_bottom_sheet"
-        tools:layout="@layout/fragment_bottom_sheet" >
-        <action
-            android:id="@+id/action_bottomSheetFragment_to_likeMelodyFragment"
-            app:destination="@id/likeMelodyFragment" />
-    </fragment>
+
 </navigation>

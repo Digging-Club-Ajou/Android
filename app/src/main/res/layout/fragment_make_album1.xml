@@ -12,7 +12,7 @@
         android:id="@+id/backBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/backarrow"
+        android:src="@drawable/back_arrow_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -115,10 +115,9 @@
             android:id="@+id/gallery"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:scaleType="fitXY"
             android:adjustViewBounds="true"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/gallery_icon"/>
+            android:background="@drawable/gallery_album_icon"/>
     </LinearLayout>
 
 

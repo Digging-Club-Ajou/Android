@@ -80,5 +80,9 @@ class MakeCardFragment1 : Fragment() {
             )
             findNavController().navigate(action)
         }
+
+        binding.backBtn.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 }

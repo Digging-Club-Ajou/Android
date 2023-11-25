@@ -19,7 +19,7 @@ import com.ajou.diggingclub.intro.IntroGenreRVAdapter
 import com.ajou.diggingclub.intro.IntroSelectModel
 import com.ajou.diggingclub.intro.IntroViewModel
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.GenreApi
+import com.ajou.diggingclub.network.api.GenreService
 import com.ajou.diggingclub.start.LandingActivity
 import com.ajou.diggingclub.utils.fromDpToPx
 import com.ajou.diggingclub.utils.setOnSingleClickListener
@@ -30,7 +30,6 @@ import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,7 +38,7 @@ class IntroFragment1 : Fragment() {
     private var _binding : FragmentIntro1Binding? = null
     private val binding get() = _binding!!
     private var mContext : Context? = null
-    private val client = RetrofitInstance.getInstance().create(GenreApi::class.java)
+    private val genreService = RetrofitInstance.getInstance().create(GenreService::class.java)
     private val viewModel : IntroViewModel by viewModels()
 
     inner class AdapterToFragment {
@@ -113,7 +112,7 @@ class IntroFragment1 : Fragment() {
             }
             Log.d("genreObject",genreObject.toString())
             val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), genreObject.toString())
-            client.postGenre(accessToken!!,refreshToken!!,requestBody).enqueue(object :
+            genreService.postGenre(accessToken!!,refreshToken!!,requestBody).enqueue(object :
                 Callback<ResponseBody> {
                 override fun onResponse(
                     call: Call<ResponseBody>,

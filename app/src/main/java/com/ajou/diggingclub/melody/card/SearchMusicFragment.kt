@@ -10,16 +10,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentSearchMusicBinding
 import com.ajou.diggingclub.ground.GroundActivity
+import com.ajou.diggingclub.SearchDataViewModel
 import com.ajou.diggingclub.melody.card.adapter.MusicListRVAdapter
 import com.ajou.diggingclub.melody.models.MusicSpotifyModel
 import com.ajou.diggingclub.network.models.SpotifyResponse
 import com.ajou.diggingclub.network.RetrofitInstance
-import com.ajou.diggingclub.network.api.MusicApi
+import com.ajou.diggingclub.network.api.MusicService
 import com.ajou.diggingclub.start.LandingActivity
 import kotlinx.coroutines.*
 import retrofit2.Call
@@ -32,7 +35,15 @@ class SearchMusicFragment : Fragment() {
     private var _binding: FragmentSearchMusicBinding? = null
     private val binding get() = _binding!!
     private var job: Job? = null
-    private val client = RetrofitInstance.getInstance().create(MusicApi::class.java)
+    private val musicService = RetrofitInstance.getInstance().create(MusicService::class.java)
+    private lateinit var viewModel : SearchDataViewModel
+    private lateinit var adapter : MusicListRVAdapter
+
+    val list : ArrayList<MusicSpotifyModel> = arrayListOf()
+    var isEnd = false
+    val dataStore = UserDataStore()
+    var page = 1
+    var isLoading = false
 
     inner class AdapterToFragment {
         fun getSelectedItem(data : MusicSpotifyModel) {
@@ -63,9 +74,17 @@ class SearchMusicFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val dataStore = UserDataStore()
         var accessToken : String? = null
         var refreshToken : String? = null
+        var keyword = ""
+
+        viewModel = ViewModelProvider(requireActivity())[SearchDataViewModel::class.java]
+        viewModel.setEmptyList()
+
+        val link = AdapterToFragment()
+        adapter = MusicListRVAdapter(mContext!!, emptyList(),link)
+        binding.listRV.adapter = adapter
+        binding.listRV.layoutManager = LinearLayoutManager(mContext)
 
         CoroutineScope(Dispatchers.IO).launch {
             accessToken = dataStore.getAccessToken().toString()
@@ -84,6 +103,16 @@ class SearchMusicFragment : Fragment() {
             startActivity(intent)
         }
 
+        binding.listRV.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if(!binding.listRV.canScrollVertically(1)&&!isEnd&&!isLoading){
+                        getData(accessToken!!,refreshToken!!,keyword)
+                    isLoading = true
+                }
+            }
+        })
+
         binding.editText.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
@@ -94,39 +123,16 @@ class SearchMusicFragment : Fragment() {
                 job?.cancel()
                 if (str != null) {
                     if(str.isNotEmpty()) {
+                        viewModel.setEmptyList()
+                        page = 1
                         binding.textView12.visibility = View.GONE
                         binding.removeBtn.visibility = View.VISIBLE
                         job = CoroutineScope(Dispatchers.IO).launch {
-                            delay(1000)
+                            delay(500)
                             accessToken = dataStore.getAccessToken().toString()
                             refreshToken = dataStore.getRefreshToken().toString()
-                            
-                            client.searchMusic(accessToken!!,refreshToken!!,str.toString()).enqueue(object : Callback<SpotifyResponse> {
-                                override fun onResponse(
-                                    call: Call<SpotifyResponse>,
-                                    response: Response<SpotifyResponse>
-                                ) {
-                                    if(response.isSuccessful){
-                                        if(response.headers()["AccessToken"] != null) {
-                                            CoroutineScope(Dispatchers.IO).launch {
-                                                dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
-                                            }
-                                        }
-                                        val list : List<MusicSpotifyModel> = response.body()!!.spotifyListResult
-                                        Log.d("success",list.toString())
-                                        val link = AdapterToFragment()
-                                        val musicListRVAdapter = MusicListRVAdapter(mContext!!,list,link)
-                                        binding.listRV.adapter = musicListRVAdapter
-                                        binding.listRV.layoutManager = LinearLayoutManager(mContext)
-                                    }else {
-                                        Log.d("response not successful",response.errorBody()?.string().toString())
-                                    }
-                                }
-
-                                override fun onFailure(call: Call<SpotifyResponse>, t: Throwable) {
-                                    Log.d("fail",t.message.toString())
-                                }
-                            })
+                            keyword = str.toString()
+                            getData(accessToken!!,refreshToken!!,keyword)
                         }
                     }else{
                         binding.removeBtn.visibility = View.GONE
@@ -134,5 +140,43 @@ class SearchMusicFragment : Fragment() {
                 }
             }
         })
+    }
+    private fun getData(accessToken : String, refreshToken : String, keyword : String){
+        musicService.searchMusic(accessToken,refreshToken,keyword, page.toString()).enqueue(object : Callback<SpotifyResponse>{
+            override fun onResponse(
+                call: Call<SpotifyResponse>,
+                response: Response<SpotifyResponse>
+            ) {
+                if(response.isSuccessful){
+                    if(response.headers()["AccessToken"] != null) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
+                        }
+                    }
+                    val data : List<MusicSpotifyModel> = response.body()!!.spotifyListResult
+                    Log.d("success",data.toString())
+                    if(data.isEmpty()){
+                        isEnd = true
+                    }else{
+                        viewModel.addSearchList(data)
+                        adapter.updateList(viewModel.list.value!!)
+                        page++
+                        isLoading = false
+                    }
+                }else{
+                    Log.d("response not successful",response.errorBody()?.string().toString())
+                }
+            }
+
+            override fun onFailure(call: Call<SpotifyResponse>, t: Throwable) {
+                Log.d("fail",t.message.toString())
+            }
+
+        })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.setEmptyList()
     }
 }

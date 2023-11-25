@@ -2,26 +2,38 @@ package com.ajou.diggingclub.ground.adapter
 
 import android.content.Context
 import android.graphics.Rect
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.ground.models.ReceivedAlbumModel
+import com.ajou.diggingclub.utils.AdapterToFragment
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 
-class FollowingAlbumListRVAdapter(val context: Context, val list : List<ReceivedAlbumModel>,val type:String): RecyclerView.Adapter<FollowingAlbumListRVAdapter.ViewHolder>() {
+class FollowingAlbumListRVAdapter(val context: Context, val list : List<ReceivedAlbumModel>,val type:String, val link : AdapterToFragment): RecyclerView.Adapter<FollowingAlbumListRVAdapter.ViewHolder>() {
+
+    private val requestOptions = RequestOptions()
+        .transform(CenterCrop(), RoundedCorners(20))
 
     inner class ViewHolder(view : View):RecyclerView.ViewHolder(view){
         val image : ImageView = view.findViewById(R.id.image)
         val nickname : TextView = view.findViewById(R.id.nickname)
         val albumTitle : TextView = view.findViewById(R.id.albumTitle)
-        val artistNames : TextView = view.findViewById(R.id.artistNames)
-        val hashtag1 : TextView = view.findViewById(R.id.hashtag1)
-        val hashtag2 : TextView = view.findViewById(R.id.hashtag2)
-        val hashtag3 : TextView = view.findViewById(R.id.hashtag3)
+        val item : ConstraintLayout = view.findViewById(R.id.item)
+        val profileIcon : ImageView = view.findViewById(R.id.profileIcon)
+        val hashtagRV : RecyclerView = view.findViewById(R.id.hashtagRV)
     }
 
     override fun onCreateViewHolder(
@@ -33,19 +45,29 @@ class FollowingAlbumListRVAdapter(val context: Context, val list : List<Received
     }
 
     override fun onBindViewHolder(holder: FollowingAlbumListRVAdapter.ViewHolder, position: Int) {
+        val artistList = list[position].artistNames.take(4)
         holder.nickname.text = list[position].nickname
         holder.albumTitle.text = list[position].albumName
         Glide.with(context)
             .load(list[position].imageUrl)
+            .apply(requestOptions)
             .into(holder.image)
-        val artistNamesString = list.joinToString(", ") { it.artistNames.joinToString(", ") }
-        holder.artistNames.text = artistNamesString
-        if(type!="following"){
-            // 해시태그 받으면 값 넣어서 띄우기
-        }else{
-            holder.hashtag1.visibility = View.GONE
-            holder.hashtag2.visibility = View.GONE
-            holder.hashtag3.visibility = View.GONE
+
+        val layoutManager = FlexboxLayoutManager(context)
+        layoutManager.flexWrap = FlexWrap.WRAP
+        layoutManager.flexDirection = FlexDirection.ROW
+        layoutManager.justifyContent = JustifyContent.FLEX_START
+        holder.hashtagRV.adapter = HashtagRVAdapter(context, artistList)
+        holder.hashtagRV.layoutManager = layoutManager
+
+        holder.item.setOnClickListener {
+            link.getSelectedId(list[position].memberId.toString(), list[position].albumId.toString(), list[position].albumName,"album")
+        }
+        holder.profileIcon.setOnClickListener {
+            link.getSelectedItem(list[position])
+        }
+        holder.nickname.setOnClickListener {
+            link.getSelectedItem(list[position])
         }
     }
 

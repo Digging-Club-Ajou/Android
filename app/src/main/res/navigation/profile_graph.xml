@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/profile_graph">
-
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_graph"
+    app:startDestination="@id/myArchiveFragment">
+    <fragment
+        android:id="@+id/editAlbumFragment"
+        android:name="com.ajou.diggingclub.profile.fragments.EditAlbumFragment"
+        android:label="fragment_edit_album"
+        tools:layout="@layout/fragment_edit_album" >
+        <action
+            android:id="@+id/action_editAlbumFragment_to_editSelectImageFragment"
+            app:destination="@id/editSelectImageFragment" />
+        <action
+            android:id="@+id/action_editAlbumFragment_to_cameraFragment"
+            app:destination="@id/cameraFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editSelectImageFragment"
+        android:name="com.ajou.diggingclub.profile.fragments.EditSelectImageFragment"
+        android:label="fragment_edit_select_image"
+        tools:layout="@layout/fragment_edit_select_image" >
+        <argument
+            android:name="uri"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.ajou.diggingclub.profile.CameraFragment"
+        android:label="fragment_camera"
+        tools:layout="@layout/fragment_camera" >
+        <action
+            android:id="@+id/action_cameraFragment_to_editSelectImageFragment"
+            app:destination="@id/editSelectImageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/followingListFragment"
+        android:name="com.ajou.diggingclub.profile.fragments.FollowingListFragment"
+        android:label="fragment_following_list"
+        tools:layout="@layout/fragment_following_list" >
+        <argument
+            android:name="followings"
+            app:argType="com.ajou.diggingclub.ground.models.FollowingModel[]" />
+        <argument
+            android:name="followers"
+            app:argType="com.ajou.diggingclub.ground.models.FollowingModel[]" />
+    </fragment>
+    <fragment
+        android:id="@+id/myArchiveFragment"
+        android:name="com.ajou.diggingclub.profile.fragments.MyArchiveFragment"
+        android:label="fragment_my_archive"
+        tools:layout="@layout/fragment_my_archive" >
+        <action
+            android:id="@+id/action_myArchiveFragment_to_editAlbumFragment"
+            app:destination="@id/editAlbumFragment" />
+        <action
+            android:id="@+id/action_myArchiveFragment_to_followingListFragment"
+            app:destination="@id/followingListFragment" />
+    </fragment>
 </navigation>
