@@ -24,6 +24,7 @@ import com.ajou.diggingclub.network.models.SpotifyResponse
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.MusicService
 import com.ajou.diggingclub.start.LandingActivity
+import com.ajou.diggingclub.utils.hideKeyboard
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -67,8 +68,11 @@ class SearchMusicFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentSearchMusicBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        binding.root.setOnClickListener{
+            Log.d("clicked!","clicked!")
+            hideKeyboard(requireActivity())
+        }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -96,6 +100,7 @@ class SearchMusicFragment : Fragment() {
         }
         binding.removeBtn.setOnClickListener {
             binding.editText.setText("")
+            viewModel.setEmptyList()
         }
 
         binding.backBtn.setOnClickListener {
@@ -118,7 +123,6 @@ class SearchMusicFragment : Fragment() {
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
-
             override fun afterTextChanged(str: Editable?) {
                 job?.cancel()
                 if (str != null) {
@@ -165,11 +169,13 @@ class SearchMusicFragment : Fragment() {
                     }
                 }else{
                     Log.d("response not successful",response.errorBody()?.string().toString())
+                    isEnd = true
                 }
             }
 
             override fun onFailure(call: Call<SpotifyResponse>, t: Throwable) {
                 Log.d("fail",t.message.toString())
+                isEnd = true
             }
 
         })
@@ -177,6 +183,6 @@ class SearchMusicFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.setEmptyList()
+        if(::viewModel.isInitialized) viewModel.setEmptyList()
     }
 }

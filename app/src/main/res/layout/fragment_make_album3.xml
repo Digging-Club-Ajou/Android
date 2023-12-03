@@ -13,6 +13,8 @@
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
             android:src="@drawable/back_arrow_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -30,7 +32,7 @@
             android:textStyle="bold"
             android:translationY="-2.65sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/backBtn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
@@ -64,9 +66,10 @@
             android:id="@+id/image"
             android:layout_width="0dp"
             android:layout_height="345dp"
+            android:layout_marginTop="4dp"
             android:src="@drawable/rectangle_5"
-            android:layout_marginTop="7dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
@@ -84,11 +87,12 @@
             android:id="@+id/nickname"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="kimkimjiye"
+            android:text=""
             android:gravity="top"
             android:layout_marginTop="16dp"
             android:textColor="#f4f4f4"
             android:textSize="14sp"
+            android:layout_marginStart="4dp"
             app:layout_constraintStart_toEndOf="@+id/imageView5"
             app:layout_constraintTop_toTopOf="@+id/image" />
 
@@ -96,14 +100,17 @@
             android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="앨범의 이름을 입력해주세요"
             android:layout_marginLeft="16dp"
             android:layout_marginBottom="24dp"
-            android:textColorHint="#f4f4f4"
-            android:textColor="#F4F4F4"
-            android:textStyle="bold"
             android:background="@android:color/transparent"
+            android:hint="앨범의 이름을 입력해주세요"
+            android:textColor="#F4F4F4"
+            android:textColorHint="#f4f4f4"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:inputType="text"
             app:layout_constraintBottom_toBottomOf="@+id/image"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/image" />
 
         <TextView

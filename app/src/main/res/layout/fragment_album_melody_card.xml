@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".profile.fragments.AlbumMelodyCardFragment">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp"
+        android:src="@drawable/back_arrow_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/albumName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="@color/textColor"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/profileIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/profile_small"
+        android:backgroundTint="@color/textColor"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/albumName" />
+
+    <TextView
+        android:id="@+id/nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text=""
+        android:textColor="@color/textColor"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profileIcon"
+        app:layout_constraintStart_toEndOf="@+id/profileIcon"
+        app:layout_constraintTop_toTopOf="@+id/profileIcon" />
+
+    <Button
+        android:id="@+id/editBtn"
+        android:visibility="gone"
+        android:layout_width="54dp"
+        android:layout_height="32dp"
+        android:background="@drawable/following"
+        android:text="수정"
+        android:textColor="@color/textColor"
+        android:textSize="12sp"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/profileIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/profileIcon" />
+
+    <Button
+        android:id="@+id/followingBtn"
+        android:visibility="gone"
+        android:layout_width="54dp"
+        android:layout_height="32dp"
+        android:background="@drawable/following"
+        android:text="팔로우"
+        android:textColor="@color/textColor"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profileIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/profileIcon" />
+
+    <Button
+        android:id="@+id/cancelBtn"
+        android:visibility="gone"
+        android:layout_width="54dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/following"
+        android:text="취소"
+        android:textColor="@color/textColor"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/editBtn"
+        app:layout_constraintEnd_toStartOf="@+id/confirmBtn"
+        app:layout_constraintTop_toTopOf="@+id/editBtn" />
+
+    <Button
+        android:id="@+id/confirmBtn"
+        android:visibility="gone"
+        android:layout_width="54dp"
+        android:layout_height="32dp"
+        android:background="@drawable/following"
+        android:text="완료"
+        android:textColor="@color/textColor"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/profileIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/profileIcon" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cardRV"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profileIcon" />
+
+    <ImageView
+        android:id="@+id/noDataImage"
+        android:visibility="gone"
+        android:layout_width="240dp"
+        android:layout_height="208dp"
+        android:src="@drawable/like_card_tmp_image"
+        android:layout_marginTop="76dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/albumName" />
+
+    <TextView
+        android:id="@+id/noDataText1"
+        android:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="생성한 멜로디 카드가 없어요!"
+        android:textSize="18sp"
+        android:textColor="@color/textColor"
+        android:textStyle="bold"
+        android:layout_marginTop="98dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noDataImage" />
+
+    <TextView
+        android:id="@+id/noDataText2"
+        android:visibility="gone"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="다른 유저의 멜로디카드를 탐색하고 좋아요를 눌러보세요"
+        android:textSize="14sp"
+        android:textColor="@color/textColor"
+        android:gravity="center"
+        android:layout_marginTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noDataText1"/>
+
+    <Button
+        android:id="@+id/moveBtn"
+        android:visibility="gone"
+        android:layout_width="200dp"
+        android:layout_height="40dp"
+        android:background="@drawable/rectangle_5_btn"
+        android:text="멜로디 카드 탐색하러 가기"
+        android:textColor="@color/textColor"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/noDataText2" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

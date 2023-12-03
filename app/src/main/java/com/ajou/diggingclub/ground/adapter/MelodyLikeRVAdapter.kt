@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.databinding.ItemMusicListBinding
 import com.ajou.diggingclub.ground.models.FavoritesModel
+import com.ajou.diggingclub.utils.requestOptions
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -14,8 +15,6 @@ import com.bumptech.glide.request.RequestOptions
 
 class MelodyLikeRVAdapter(val context: Context, val list: List<FavoritesModel>) : RecyclerView.Adapter<MelodyLikeRVAdapter.ViewHolder>() {
 
-    private val requestOptions = RequestOptions()
-        .transform(CenterCrop(), RoundedCorners(20))
     inner class ViewHolder(private val binding: ItemMusicListBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(item : FavoritesModel) {
             binding.title.text = item.songTitle

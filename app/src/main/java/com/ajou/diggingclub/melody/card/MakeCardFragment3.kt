@@ -19,6 +19,7 @@ import codes.side.andcolorpicker.model.IntegerHSLColor
 import codes.side.andcolorpicker.view.picker.ColorSeekBar
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.FragmentMakeCard3Binding
+import com.ajou.diggingclub.utils.requestOptions
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -56,10 +57,6 @@ class MakeCardFragment3 : Fragment() {
 
         var cardColor : String = resources.getColor(R.color.primaryColor).toString()
 
-        val multiOptions = MultiTransformation(
-            CenterCrop(),
-            RoundedCorners(10)
-        ) // glide 옵션
         val args : MakeCardFragment3Args by navArgs()
 
         if(args.uri.isNotEmpty()){
@@ -67,7 +64,6 @@ class MakeCardFragment3 : Fragment() {
             Glide.with(requireActivity())
                 .load(parsedUri)
                 .centerCrop()
-                .apply(RequestOptions.bitmapTransform(multiOptions))
                 .into(binding.image)
         }
 
@@ -155,7 +151,7 @@ class MakeCardFragment3 : Fragment() {
             }
         }
 
-        val layerDrawable = ContextCompat.getDrawable(mContext!!,R.drawable.playingicon)?.mutate() as LayerDrawable
+        val layerDrawable = ContextCompat.getDrawable(mContext!!,R.drawable.playicon)?.mutate() as LayerDrawable
 
         binding.hueSeekBar.addListener(object : OnSeekBarChangeListener, ColorSeekBar.OnColorPickListener<ColorSeekBar<IntegerHSLColor>, IntegerHSLColor> {
             override fun onProgressChanged(p0: SeekBar?, p1: Int, p2: Boolean) {

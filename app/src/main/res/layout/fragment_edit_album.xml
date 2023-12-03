@@ -14,6 +14,8 @@
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
             android:src="@drawable/back_arrow_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -29,9 +31,8 @@
             android:textColor="@color/textColor"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:translationY="-2.65sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/backBtn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
@@ -39,24 +40,34 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
-            android:enabled="false"
             android:gravity="right"
             android:text="완료"
-            android:textColor="@color/paleTextColor"
+            android:textColor="@color/textColor"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView10"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/editBtn"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/edit_icon"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView10"/>
+
+        <ImageView
             android:id="@+id/image"
             android:layout_width="0dp"
             android:layout_height="345dp"
-            android:layout_marginTop="76dp"
+            android:layout_marginTop="20dp"
             android:src="@drawable/rectangle_5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+            app:layout_constraintTop_toBottomOf="@+id/editBtn" />
 
         <ImageView
             android:id="@+id/imageView5"
@@ -72,13 +83,17 @@
             android:id="@+id/nickname"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:gravity="top"
-            android:text="kimkimjiye"
             android:textColor="#f4f4f4"
             android:textSize="14sp"
+            android:shadowColor="#80000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="2"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView5"
             app:layout_constraintStart_toEndOf="@+id/imageView5"
-            app:layout_constraintTop_toTopOf="@+id/image" />
+            app:layout_constraintTop_toTopOf="@+id/imageView5" />
 
         <EditText
             android:id="@+id/title"
@@ -88,9 +103,15 @@
             android:layout_marginBottom="24dp"
             android:background="@android:color/transparent"
             android:hint="앨범의 이름을 입력해주세요"
+            android:typeface="normal"
+            android:textSize="24sp"
             android:textColor="#F4F4F4"
             android:textColorHint="#f4f4f4"
             android:textStyle="bold"
+            android:shadowColor="#80000000"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="2"
             app:layout_constraintBottom_toBottomOf="@+id/image"
             app:layout_constraintStart_toStartOf="@+id/image" />
 
@@ -111,7 +132,7 @@
             android:id="@+id/camera"
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:layout_marginTop="116dp"
+            android:layout_marginTop="80dp"
             android:layout_marginRight="20dp"
             android:elevation="4dp"
             android:src="@drawable/camera_album_icon"
@@ -131,7 +152,6 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/camera"
             app:layout_constraintTop_toTopOf="@+id/camera" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

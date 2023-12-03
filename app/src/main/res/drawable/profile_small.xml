@@ -1,12 +1,39 @@
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="18dp"
-    android:height="18dp"
-    android:viewportWidth="18"
-    android:viewportHeight="18">
-  <path
-      android:pathData="M9,5.25m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"
-      android:fillColor="#F4F4F4"/>
-  <path
-      android:pathData="M3,14.625C3,11.518 5.518,9 8.625,9H9.375C12.482,9 15,11.518 15,14.625C15,15.246 14.496,15.75 13.875,15.75L4.125,15.75C3.504,15.75 3,15.246 3,14.625Z"
-      android:fillColor="#F4F4F4"/>
-</vector>
+<layer-list>
+  <item>
+    <vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="18dp"
+        android:height="18dp"
+        android:viewportWidth="18"
+        android:viewportHeight="18">
+      <group android:translateY="1">
+        <clip-path
+            android:pathData="M0,0h18v18h-18z"/>
+        <path
+            android:pathData="M9,5.25m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"
+            android:fillColor="#C0C0C0"/>
+        <path
+            android:pathData="M3,14.625C3,11.518 5.518,9 8.625,9H9.375C12.482,9 15,11.518 15,14.625V14.625C15,15.246 14.496,15.75 13.875,15.75H4.125C3.504,15.75 3,15.246 3,14.625V14.625Z"
+            android:fillColor="#C0C0C0"/>
+      </group>
+    </vector>
+  </item>
+  <item>
+    <vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="18dp"
+        android:height="18dp"
+        android:viewportWidth="18"
+        android:viewportHeight="18">
+      <group>
+        <clip-path
+            android:pathData="M0,0h18v18h-18z"/>
+        <path
+            android:pathData="M9,5.25m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0"
+            android:fillColor="#F4F4F4"/>
+        <path
+            android:pathData="M3,14.625C3,11.518 5.518,9 8.625,9H9.375C12.482,9 15,11.518 15,14.625V14.625C15,15.246 14.496,15.75 13.875,15.75H4.125C3.504,15.75 3,15.246 3,14.625V14.625Z"
+            android:fillColor="#F4F4F4"/>
+      </group>
+    </vector>
+
+  </item>
+</layer-list>

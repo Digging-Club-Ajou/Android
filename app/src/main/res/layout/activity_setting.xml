@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".setting.SettingActivity">
+
+    <ImageView
+        android:id="@+id/backBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/back_arrow_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="내 설정"
+        android:textColor="@color/textColor"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/backBtn" />
+
+    <View
+        android:id="@+id/rectangle1"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="12dp"
+        android:background="@color/secondaryColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <TextView
+        android:id="@+id/textAccount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:letterSpacing="-0.03"
+        android:text="로그인 계정"
+        android:textColor="@color/textColor"
+        android:textSize="16sp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rectangle1" />
+
+    <ImageView
+        android:id="@+id/imageView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/kakaotalk_small"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textAccount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textAccount" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:text="-"
+        android:textColor="@color/textColor"
+        android:textSize="12sp"
+        android:textStyle="bold"
+
+        app:layout_constraintBottom_toBottomOf="@+id/imageView14"
+        app:layout_constraintEnd_toStartOf="@+id/imageView14"
+        app:layout_constraintTop_toTopOf="@+id/imageView14" />
+
+    <TextView
+        android:id="@+id/textNoti"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="푸쉬 알림"
+        android:textColor="@color/textColor"
+        android:textSize="16sp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textAccount" />
+
+    <ImageView
+        android:id="@+id/switchBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/diggle_switch"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textNoti"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textNoti" />
+
+    <TextView
+        android:id="@+id/textVersion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="버전정보"
+        android:textColor="@color/textColor"
+        android:textSize="16sp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textNoti" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ver1.0.1"
+        android:textColor="@color/textColor"
+        android:textSize="14sp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textVersion"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textVersion" />
+
+    <View
+        android:id="@+id/rectangle2"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="12dp"
+        android:background="#F4F4F4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textVersion" />
+
+    <TextView
+        android:id="@+id/textProfile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="프로필 관리"
+        android:textColor="@color/textColor"
+        android:textSize="16sp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rectangle2" />
+
+    <TextView
+        android:id="@+id/textNickname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="닉네임"
+        android:textColor="@color/textColor"
+        android:textSize="12sp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textProfile" />
+
+    <TextView
+        android:id="@+id/nickname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-12dp"
+        android:text="닉네임"
+        android:textColor="@color/descriptionColor"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textProfile"
+        app:layout_constraintTop_toTopOf="@+id/textNickname" />
+
+    <TextView
+        android:id="@+id/textPhoneNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="휴대전화"
+        android:textColor="@color/textColor"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/textProfile" />
+
+    <TextView
+        android:id="@+id/phoneNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:text="휴대전화"
+        android:textColor="@color/descriptionColor"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/title"
+        app:layout_constraintTop_toTopOf="@+id/textNickname" />
+
+    <TextView
+        android:id="@+id/textGender"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="성별"
+        android:textColor="@color/textColor"
+        android:textSize="12sp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textNickname" />
+
+    <TextView
+        android:id="@+id/gender"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-12dp"
+        android:text="남성"
+        android:textColor="@color/descriptionColor"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/textProfile"
+        app:layout_constraintTop_toTopOf="@+id/textGender" />
+
+    <TextView
+        android:id="@+id/textEmail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="이메일"
+        android:textColor="@color/textColor"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/textPhoneNumber" />
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:text="abcdef@gmail.com"
+        android:textColor="@color/descriptionColor"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@+id/title"
+        app:layout_constraintTop_toTopOf="@+id/textEmail" />
+
+    <View
+        android:id="@+id/rectangle3"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="36dp"
+        android:background="@color/secondaryColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textGender" />
+
+    <TextView
+        android:id="@+id/guide"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:text="DIGGLE 사용 가이드"
+        android:textColor="@color/textColor"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/guideMove"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rectangle3" />
+
+    <ImageView
+        android:id="@+id/guideMove"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/more_icon"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/guide"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guide" />
+
+    <View
+        android:id="@+id/rectangle4"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:background="@color/secondaryColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guide" />
+
+    <TextView
+        android:id="@+id/tos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:text="서비스 이용 약관"
+        android:textColor="@color/textColor"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/tosMove"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rectangle4" />
+
+    <ImageView
+        android:id="@+id/tosMove"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/more_icon"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tos" />
+
+    <TextView
+        android:id="@+id/privacyPolicy"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:text="개인정보 처리 방침"
+        android:textColor="@color/textColor"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/privacyPolicyMove"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tos" />
+
+    <ImageView
+        android:id="@+id/privacyPolicyMove"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/more_icon"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/privacyPolicy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/privacyPolicy" />
+
+    <View
+        android:id="@+id/rectangle5"
+        android:layout_width="0dp"
+        android:layout_height="8dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="20dp"
+        android:background="@color/secondaryColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/privacyPolicy" />
+
+    <TextView
+        android:id="@+id/logout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:text="로그아웃 및 회원 탈퇴"
+        android:textColor="@color/descriptionColor"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/logoutMove"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rectangle5" />
+
+    <ImageView
+        android:id="@+id/logoutMove"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/more_icon"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/logout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/logout" />
+
+    <LinearLayout
+        android:id="@+id/bottomTabLayout"
+        android:layout_width="0dp"
+        android:layout_height="74dp"
+        android:background="@drawable/bottom_navigation"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/tabGround"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:layout_marginTop="4dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/home_off" />
+
+        <ImageView
+            android:id="@+id/tabMelody"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:layout_marginTop="4dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/plus_off" />
+
+        <ImageView
+            android:id="@+id/tabProfile"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:background="@android:color/transparent"
+            android:src="@drawable/profile" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

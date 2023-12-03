@@ -42,11 +42,6 @@ class IntroInnerArtistRVAdapter(val context: Context, val list : List<IntroSelec
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.text.text = list[position].text
 
-        val multiOptions = MultiTransformation(
-            CircleCrop(),
-            RoundedCorners(10)
-        ) // glide 옵션
-
         if(list[position].selected){
             holder.overlay.visibility = View.VISIBLE
         }else{
@@ -56,7 +51,7 @@ class IntroInnerArtistRVAdapter(val context: Context, val list : List<IntroSelec
 
         Glide.with(this.context)
             .load(list[position].imageUrl)
-            .apply(RequestOptions.bitmapTransform(multiOptions))
+            .circleCrop()
             .into(holder.image)
 
 

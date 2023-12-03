@@ -11,15 +11,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ajou.diggingclub.R
+import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentFollowingBinding
 import com.ajou.diggingclub.ground.FollowDataViewModel
 import com.ajou.diggingclub.ground.adapter.FollowRVAdapter
+import com.ajou.diggingclub.utils.ManageFollow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Thread.sleep
 
-class FollowingFragment : Fragment() {
+class FollowingFragment : Fragment(), ManageFollow {
     private var mContext : Context? = null
     private lateinit var viewModel : FollowDataViewModel
     private var _binding : FragmentFollowingBinding? = null
@@ -44,15 +46,23 @@ class FollowingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val dataStore = UserDataStore()
+        var adapter : FollowRVAdapter
         viewModel = ViewModelProvider(requireActivity())[FollowDataViewModel::class.java]
-        val adapter = FollowRVAdapter(mContext!!, emptyList(),viewModel.userId.value)
-
-        binding.followingRV.adapter = adapter
-        binding.followingRV.layoutManager = LinearLayoutManager(mContext)
-
-        viewModel.followingList.observe(viewLifecycleOwner) { followings ->
-            adapter.updateList(followings)
+        CoroutineScope(Dispatchers.Main).launch {
+            val userId = dataStore.getMemberId()
+            adapter = FollowRVAdapter(mContext!!, emptyList(),viewModel.memberId.value, userId, "following",this@FollowingFragment)
+            binding.followingRV.adapter = adapter
+            binding.followingRV.layoutManager = LinearLayoutManager(mContext)
+            viewModel.followingList.observe(viewLifecycleOwner) { followings ->
+                adapter.updateList(followings)
+            }
         }
 
     }
+
+    override fun getFollowId(id: String, connect: Boolean, myFollower: Boolean) {
+        Log.d("here??","here??")
+    }
+
 }

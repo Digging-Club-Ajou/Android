@@ -9,13 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentFollowingListBinding
 import com.ajou.diggingclub.ground.FollowDataViewModel
-import com.ajou.diggingclub.ground.GroundActivity
 import com.ajou.diggingclub.ground.adapter.FollowListViewPagerAdapter
+import com.ajou.diggingclub.ground.models.FollowingModel
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.AlbumService
+import com.ajou.diggingclub.profile.ProfileActivity
 import com.ajou.diggingclub.start.LandingActivity
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.*
@@ -50,10 +53,11 @@ class FollowingListFragment : Fragment() {
         val dataStore = UserDataStore()
         var accessToken: String? = null
         var refreshToken: String? = null
-//        val args : FollowingListFragmentArgs by navArgs()
+        var nickname : String? = null
+        val args : FollowingListFragmentArgs by navArgs()
         var userId : String ?= null
-//        val followingsList : List<FollowingModel> = args.followings.toList()
-//        val followersList : List<FollowingModel> = args.followers.toList()
+        val followingsList : List<FollowingModel> = args.followings.toList()
+        val followersList : List<FollowingModel> = args.followers.toList()
 
         binding.backBtn.setOnClickListener {
             findNavController().popBackStack()
@@ -62,37 +66,42 @@ class FollowingListFragment : Fragment() {
             accessToken = dataStore.getAccessToken().toString()
             refreshToken = dataStore.getRefreshToken().toString()
             userId = dataStore.getMemberId().toString()
-//            binding.userNickname.text = String.format(resources.getString(R.string.nickname),args.nickname)
+            nickname = dataStore.getNickname().toString()
+            binding.userNickname.text = String.format(resources.getString(R.string.nickname),nickname)
             if (accessToken == null || refreshToken == null) {
                 val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
-//           followingsList.map { item ->
-//               async {
-//                   val response = client.getAlbum(
-//                       accessToken!!, refreshToken!!, item.albumId
-//                   ).execute()
-//                   item.imageUrl = response.body()?.imageUrl.toString()
-//               }
-//           }.awaitAll()
-//            followersList.map { item ->
-//                async {
-//                    val response = client.getAlbum(
-//                        accessToken!!, refreshToken!!, item.albumId
-//                    ).execute()
-//                    item.imageUrl = response.body()?.imageUrl.toString()
-//                }
-//            }.awaitAll()
-//            withContext(Dispatchers.Main){
-//                viewModel.setFollowingList(followingsList)
-//                viewModel.setFollowerList(followersList)
-//                viewModel.userId.value = userId
-//            }
+           followingsList.map { item ->
+               async {
+                   if(item.albumId!=null){
+                       val response = albumService.getAlbum(
+                           accessToken!!, refreshToken!!, item.albumId
+                       ).execute()
+                       item.imageUrl = response.body()?.imageUrl.toString()
+                   }
+               }
+           }.awaitAll()
+            followersList.map { item ->
+                async {
+                    if(item.albumId != null){
+                        val response = albumService.getAlbum(
+                            accessToken!!, refreshToken!!, item.albumId
+                        ).execute()
+                        item.imageUrl = response.body()?.imageUrl.toString()
+                    }
+                }
+            }.awaitAll()
+            withContext(Dispatchers.Main){
+                viewModel.setFollowingList(followingsList)
+                viewModel.setFollowerList(followersList)
+                viewModel.setMemberId(userId!!)
+            }
         }
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("팔로잉"))
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("팔로워"))
 
-        binding.list.adapter = FollowListViewPagerAdapter(requireActivity() as GroundActivity)
+        binding.list.adapter = FollowListViewPagerAdapter(requireActivity() as ProfileActivity)
 
         TabLayoutMediator(binding.tabLayout, binding.list){ tab, position ->
             tab.text = if (position == 0) "팔로잉" else "팔로워"

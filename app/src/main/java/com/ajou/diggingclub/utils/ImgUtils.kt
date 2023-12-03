@@ -43,3 +43,4 @@ val multiOptions = RequestOptions().transform(
         CenterCrop(),
         RoundedCorners(40)
 )
+

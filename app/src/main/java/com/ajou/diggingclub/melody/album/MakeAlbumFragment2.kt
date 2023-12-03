@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.FragmentMakeAlbum2Binding
 import com.ajou.diggingclub.melody.models.MusicSpotifyModel
+import com.ajou.diggingclub.utils.multiOptions
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -49,15 +50,10 @@ class MakeAlbumFragment2 : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val args: MakeAlbumFragment2Args by navArgs()
         val parsedUri = Uri.parse(args.uri)
-        val multiOptions = MultiTransformation(
-            CenterCrop(),
-            RoundedCorners(40)
-        ) // glide 옵션
 
         Glide.with(requireActivity())
             .load(parsedUri)
-            .centerCrop()
-            .apply(RequestOptions.bitmapTransform(multiOptions))
+            .apply(multiOptions)
             .into(binding.image)
 
         binding.use.setOnSingleClickListener {

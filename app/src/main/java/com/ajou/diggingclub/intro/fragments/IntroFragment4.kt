@@ -16,6 +16,7 @@ import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentIntro4Binding
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.UserService
+import com.ajou.diggingclub.utils.hideKeyboard
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.google.gson.JsonObject
 import kotlinx.coroutines.*
@@ -51,6 +52,9 @@ class IntroFragment4 : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentIntro4Binding.inflate(inflater,container,false)
         val view = binding.root
+        binding.root.setOnClickListener{
+            hideKeyboard(requireActivity())
+        }
         return view
     }
 
@@ -158,6 +162,15 @@ class IntroFragment4 : Fragment() {
                             }
                         })
                     }
+                }else{
+                    binding.nickname.setBackgroundResource(R.drawable.rectangle_3_error)
+                    binding.warning.visibility = View.VISIBLE
+                    binding.complete.visibility = View.GONE
+                    binding.duplicate.visibility = View.GONE
+                    binding.possible.visibility = View.GONE
+                    binding.nextBtn.isEnabled = false
+                    binding.description.visibility = View.VISIBLE
+                    binding.nextBtn.setBackgroundResource(R.drawable.rectangle_3)
                 }
 
             }

@@ -59,7 +59,9 @@ class IntroFragment2 : Fragment() {
             Log.d("likedList",likedList.toString())
         }
     }
-
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+    }
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
@@ -112,18 +114,18 @@ class IntroFragment2 : Fragment() {
                 adapter.setBlock(false)
                 binding.nextBtn.setBackgroundResource(R.drawable.rectangle_2)
                 binding.nextBtn.setTextColor(resources.getColor(R.color.textColor))
-                Log.d("it",it.size.toString())
+                binding.nextBtn.isEnabled = true
             }else{
                 adapter.setBlock(true)
                 binding.nextBtn.setBackgroundResource(R.drawable.rectangle_3)
                 binding.nextBtn.setTextColor(resources.getColor(R.color.paleTextColor))
+                binding.nextBtn.isEnabled = false
             }
         })
         binding.nextBtn.setOnSingleClickListener {
             val jsonObject = JSONObject().apply {
                 put("artistNames", JSONArray(likedList))
             }
-            Log.d("jsonObject",jsonObject.toString())
             val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), jsonObject.toString())
             artistService.postArtists(accessToken!!,refreshToken!!,requestBody).enqueue(object : Callback<ResponseBody>{
                 override fun onResponse(
@@ -152,6 +154,16 @@ class IntroFragment2 : Fragment() {
 
             })
         }
+        if(viewModel.artistArr.value?.isNotEmpty() == true){
+            for(i in 0 until viewModel.artistArr.value!!.size) {
+                Log.d("viewModel", viewModel.artistArr.value!![i].toString())
+                // TODO 어떻게 값에 따라 클릭된 상태로 보여줄지 생각해보기
+            }
+        }
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.setEmptyArtistArr()
+    }
 }

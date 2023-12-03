@@ -41,6 +41,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+            <ImageView
+                android:id="@+id/deleteOverlay"
+                android:visibility="gone"
+                android:layout_width="0dp"
+                android:layout_height="348dp"
+                android:layout_gravity="center_horizontal"
+                android:background="#66797979"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/title"
@@ -70,7 +80,7 @@
                 android:id="@+id/playIcon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/playingicon"
+                android:background="@drawable/playicon"
                 android:layout_marginBottom="16dp"
                 android:layout_marginEnd="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/image"
@@ -91,7 +101,7 @@
                 android:background="@android:color/transparent"
                 android:lineSpacingExtra="8sp"
                 android:text=""
-                android:textColor="@color/paleTextColor"
+                android:textColor="@color/textColor"
                 android:textSize="12sp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
@@ -117,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:gravity="top"
-                android:text="nickname"
+                android:text=""
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:shadowColor="#80000000"
@@ -134,9 +144,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="12dp"
                 android:gravity="top"
-                android:text="아주대학교 성호관"
+                android:text=""
                 android:textColor="#f4f4f4"
                 android:textSize="14sp"
+                android:shadowColor="#80000000"
+                android:shadowDx="0"
+                android:shadowDy="0"
+                android:shadowRadius="2"
                 app:layout_constraintBottom_toBottomOf="@+id/nickname"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/nickname" />
@@ -150,6 +164,30 @@
                 app:layout_constraintBottom_toBottomOf="@+id/profileIcon"
                 app:layout_constraintEnd_toStartOf="@+id/location"
                 app:layout_constraintTop_toTopOf="@+id/profileIcon" />
+
+            <ImageView
+                android:id="@+id/deleteBtn"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/delete_icon"
+                app:layout_constraintBottom_toBottomOf="@+id/image"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/imageView16" />
+
+            <TextView
+                android:id="@+id/deleteText"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="삭제하기"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/deleteBtn" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>

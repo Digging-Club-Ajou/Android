@@ -41,8 +41,9 @@
 
         <Button
             android:id="@+id/nextBtn"
-            android:layout_width="345dp"
+            android:layout_width="0dp"
             android:layout_height="56dp"
+            android:enabled="false"
             android:gravity="center"
             android:lineSpacingExtra="-3sp"
             android:text="다음(0/5)"

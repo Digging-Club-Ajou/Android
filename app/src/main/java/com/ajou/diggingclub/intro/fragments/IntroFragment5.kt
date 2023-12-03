@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import com.ajou.diggingclub.MainActivity
+import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.FragmentIntro4Binding
 import com.ajou.diggingclub.databinding.FragmentIntro5Binding
 import com.ajou.diggingclub.melody.MelodyActivity
@@ -38,7 +39,7 @@ class IntroFragment5 : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val args: IntroFragment5Args by navArgs()
-        binding.welcome.text = "@${args.nickname} 님의 가입을 환영합니다."
+        binding.welcome.text = String.format(resources.getString(R.string.welcome),args.nickname)
 
         binding.nextBtn.setOnSingleClickListener {
             val intent = Intent(mContext,MelodyActivity::class.java)

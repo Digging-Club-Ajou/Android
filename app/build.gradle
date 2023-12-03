@@ -5,6 +5,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'dagger.hilt.android.plugin'
 }
 apply plugin: "androidx.navigation.safeargs"
 
@@ -50,6 +51,9 @@ android {
     buildFeatures {
         viewBinding true
     }
+    kapt {
+        correctErrorTypes true
+    }
 }
 
 dependencies {
@@ -72,6 +76,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.5.1"
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
 
     // LiveData
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1")
@@ -145,7 +150,6 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.2.3')
     implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.5'
     implementation 'com.google.firebase:firebase-analytics-ktx:21.2.0'
-
 
 
 }

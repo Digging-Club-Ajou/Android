@@ -3,7 +3,8 @@
     android:width="280dp"
     android:height="120dp"
     android:viewportWidth="280"
-    android:viewportHeight="120">
+    android:viewportHeight="120"
+    android:alpha="0">
     <group>
         <clip-path android:pathData="M10 0H270C275.523 0 280 4.47715 280 10V110C280 115.523 275.523 120 270 120H10C4.47715 120 0 115.523 0 110V10C0 4.47715 4.47715 0 10 0Z" />
         <path

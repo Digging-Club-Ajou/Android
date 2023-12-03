@@ -28,11 +28,15 @@ class FollowDataViewModel : ViewModel() {
     val followerList : LiveData<List<FollowingModel>>
         get() = _followerList
 
-    private val _userId = MutableLiveData<String>()
-    val userId : LiveData<String>
-        get() = _userId
+    private val _memberId = MutableLiveData<String>()
+    val memberId : LiveData<String>
+        get() = _memberId
 
 
+    fun setEmptyList(){
+        _followingList.postValue(listOf())
+        _followerList.postValue(listOf())
+    }
     fun setFollowingList(list : List<FollowingModel>){
         _followingList.value = list
     }
@@ -41,8 +45,8 @@ class FollowDataViewModel : ViewModel() {
         _followerList.value = list
     }
 
-    fun setUserId(id : String){
-        _userId.value = id
+    fun setMemberId(id : String){
+        _memberId.value = id
     }
     fun postFollowing(accessToken : String, refreshToken : String, memberId : String){
         val jsonObject = JsonObject().apply {
@@ -68,10 +72,10 @@ class FollowDataViewModel : ViewModel() {
         })
     }
 
-    fun deleteFollowing(accessToken : String, refreshToken : String, memberId : String, userId : String){
+    fun deleteFollowing(accessToken : String, refreshToken : String, followingId : String, followedId : String){
         val jsonObject = JsonObject().apply {
-            addProperty("followingId", userId)
-            addProperty("followedId", memberId)
+            addProperty("followingId", followingId)
+            addProperty("followedId", followedId)
         }
         val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), jsonObject.toString())
         client.deleteFollowing(accessToken, refreshToken, requestBody).enqueue(object : Callback<ResponseBody>{

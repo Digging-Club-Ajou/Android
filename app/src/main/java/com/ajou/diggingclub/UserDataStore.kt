@@ -20,8 +20,8 @@ class UserDataStore() {
         val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         val NICKNAME = stringPreferencesKey("nickname")
         val ALBUM_EXIST = booleanPreferencesKey("album_exist")
-        val MEMBER_ID = intPreferencesKey("member_id")
-        val ALBUM_ID = intPreferencesKey("album_id")
+        val MEMBER_ID = stringPreferencesKey("member_id")
+        val ALBUM_ID = stringPreferencesKey("album_id")
     }
 
     suspend fun saveAccessToken(token : String) {
@@ -95,15 +95,13 @@ class UserDataStore() {
 
     suspend fun getAlbumExistFlag():Boolean {
         var flag = false
-        withContext(Dispatchers.IO) {
             dataStore.edit { pref ->
                 flag = pref[PreferencesKeys.ALBUM_EXIST] ?: false
-            }
         }
         return flag
     }
 
-    suspend fun saveMemberId(id : Int) {
+    suspend fun saveMemberId(id : String) {
         withContext(Dispatchers.IO){
             dataStore.edit { pref ->
                 pref[PreferencesKeys.MEMBER_ID] = id
@@ -111,12 +109,12 @@ class UserDataStore() {
         }
     }
 
-    suspend fun getMemberId():Int? {
+    suspend fun getMemberId():String? {
         return withContext(Dispatchers.IO) {
             dataStore.data.first()[PreferencesKeys.MEMBER_ID]
         }
     }
-    suspend fun saveAlbumId(id : Int) {
+    suspend fun saveAlbumId(id : String) {
         withContext(Dispatchers.IO){
             dataStore.edit { pref ->
                 pref[PreferencesKeys.ALBUM_ID] = id
@@ -124,9 +122,17 @@ class UserDataStore() {
         }
     }
 
-    suspend fun getAlbumId():Int? {
+    suspend fun getAlbumId():String? {
         return withContext(Dispatchers.IO) {
             dataStore.data.first()[PreferencesKeys.ALBUM_ID]
+        }
+    }
+
+    suspend fun deleteAll() {
+        withContext(Dispatchers.IO) {
+            dataStore.edit { pref ->
+                pref.clear()
+            }
         }
     }
 

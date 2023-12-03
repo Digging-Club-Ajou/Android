@@ -35,8 +35,6 @@ class IntroArtistRVAdapter(val context: Context, val categoryList: List<String>,
 
     inner class AdapterToAdapter {
         fun getSelectedItem(data : IntroSelectModel, position : Int) {
-//            if(data.selected)
-            Log.d("data",data.toString())
             link.getSelectedItem(data,position)
         }
     }
@@ -45,7 +43,6 @@ class IntroArtistRVAdapter(val context: Context, val categoryList: List<String>,
         adapterList.forEach {
             it.blockAdd(enabled)
         }
-    // 여기서 innerAdapter의 enabled 값 false든 true로 변경해야함
    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -58,8 +55,7 @@ class IntroArtistRVAdapter(val context: Context, val categoryList: List<String>,
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("categoryLists",categoryLists[position].toString())
-        Log.d("category",categoryList[position])
+
         holder.bind(adapterList[position],categoryList[position])
 
     }}

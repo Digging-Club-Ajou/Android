@@ -29,9 +29,6 @@
         android:label="fragment_make_album2"
         tools:layout="@layout/fragment_make_album2" >
         <action
-            android:id="@+id/action_makeAlbumFragment2_to_makeAlbumFragment1"
-            app:destination="@id/upload" />
-        <action
             android:id="@+id/action_makeAlbumFragment2_to_makeAlbumFragment3"
             app:destination="@id/makeAlbumFragment3" />
         <argument
@@ -39,7 +36,9 @@
             app:argType="string" />
         <action
             android:id="@+id/action_makeAlbumFragment2_to_cameraFragment"
-            app:destination="@id/cameraFragment" />
+            app:destination="@id/cameraFragment"
+            app:popUpTo="@id/upload"
+            app:popUpToInclusive="false"/>
     </fragment>
     <fragment
         android:id="@+id/makeAlbumFragment3"
@@ -51,7 +50,9 @@
             app:destination="@id/makeAlbumFragment2" />
         <action
             android:id="@+id/action_makeAlbumFragment3_to_findMusicFragment"
-            app:destination="@id/findMusicFragment" />
+            app:destination="@id/findMusicFragment"
+            app:popUpTo="@id/findMusicFragment"
+            app:popUpToInclusive="false"/>
         <argument
             android:name="uri"
             app:argType="string" />
@@ -89,8 +90,9 @@
             android:id="@+id/action_makeCardFragment2_to_makeCardFragment3"
             app:destination="@id/makeCardFragment3" />
         <action
-            android:id="@+id/action_makeCardFragment2_to_makeCardFragment1"
-            app:destination="@id/makeCardFragment1" />
+            android:id="@+id/action_popup_to_makeCardFragment1"
+            app:destination="@id/makeCardFragment1"
+        />
         <argument
             android:name="uri"
             app:argType="string" />
@@ -100,6 +102,9 @@
         <action
             android:id="@+id/action_makeCardFragment2_to_cameraFragment"
             app:destination="@id/cameraFragment" />
+        <action
+            android:id="@+id/action_makeCardFragment2_to_makeCardFragment13"
+            app:destination="@id/makeCardFragment1" />
     </fragment>
     <fragment
         android:id="@+id/makeCardFragment3"
@@ -147,13 +152,17 @@
         tools:layout="@layout/fragment_camera" >
         <action
             android:id="@+id/action_cameraFragment_to_makeAlbumFragment2"
-            app:destination="@id/makeAlbumFragment2" />
+            app:destination="@id/makeAlbumFragment2"
+            app:popUpTo="@id/upload"
+            app:popUpToInclusive="false"/>
         <argument
             android:name="type"
             app:argType="string" />
         <action
             android:id="@+id/action_cameraFragment_to_makeCardFragment2"
-            app:destination="@id/makeCardFragment2" />
+            app:destination="@id/makeCardFragment2"
+            app:popUpTo="@id/makeCardFragment1"
+            app:popUpToInclusive="false"/>
         <argument
             android:name="music"
             app:argType="com.ajou.diggingclub.melody.models.MusicSpotifyModel" />

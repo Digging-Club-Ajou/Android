@@ -42,14 +42,20 @@ class CameraFragment : Fragment() {
     private val binding get() = _binding!!
     private var mContext: Context? = null
     val args: CameraFragmentArgs by navArgs()
+    private val TAG = CameraFragment::class.java.simpleName
 
     private var fragmentContainer: FragmentContainerView? = null
     private var layoutParams: ViewGroup.MarginLayoutParams? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d(TAG, "onCreateView")
         requireActivity().findViewById<LinearLayout>(R.id.bottomTab).visibility = View.GONE
 
         fragmentContainer = requireActivity().findViewById(R.id.fragmentContainerView)
@@ -58,10 +64,12 @@ class CameraFragment : Fragment() {
         layoutParams = fragmentContainer?.layoutParams as? ViewGroup.MarginLayoutParams
 
         fragmentContainer?.let { container ->
+            Log.d(TAG,"before margin ${layoutParams?.marginStart} ${layoutParams?.marginEnd} ${layoutParams?.topMargin} ${layoutParams?.bottomMargin}")
             layoutParams?.setMargins(0, 0, 0, 0)
+            Log.d(TAG,"after margin ${layoutParams?.marginStart} ${layoutParams?.marginEnd} ${layoutParams?.topMargin} ${layoutParams?.bottomMargin}")
             container.requestLayout()
-        }
-        
+            }
+
         _binding = FragmentCameraBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -175,12 +183,13 @@ class CameraFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        Log.d(TAG, "onDestroyView")
         requireActivity().findViewById<LinearLayout>(R.id.bottomTab).visibility = View.VISIBLE
 
         val density = resources.displayMetrics.density
         val sideMargin = (24*density).toInt()
         val topMargin = (26*density).toInt()
-        val bottomMargin = (22*density).toInt()
+        val bottomMargin = (66*density).toInt()
 
         fragmentContainer?.let { container ->
             layoutParams?.setMargins(sideMargin, topMargin, sideMargin, bottomMargin)

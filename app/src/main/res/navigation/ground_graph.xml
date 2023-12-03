@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_groundFragment_to_notificationFragment"
             app:destination="@id/notificationFragment" />
+        <action
+            android:id="@+id/action_groundFragment_to_albumMelodyCardFragment"
+            app:destination="@id/albumMelodyCardFragment" />
     </fragment>
     <fragment
         android:id="@+id/albumListFragment"
@@ -37,6 +40,12 @@
         <action
             android:id="@+id/action_albumListFragment_to_userArchiveFragment"
             app:destination="@id/userArchiveFragment" />
+        <argument
+            android:name="type"
+            app:argType="string" />
+        <argument
+            android:name="albums"
+            app:argType="com.ajou.diggingclub.ground.models.ReceivedAlbumModel[]" />
     </fragment>
     <fragment
         android:id="@+id/searchUserFragment"
@@ -89,6 +98,9 @@
         <action
             android:id="@+id/action_userArchiveFragment_to_followingListFragment"
             app:destination="@id/followingListFragment" />
+        <action
+            android:id="@+id/action_userArchiveFragment_to_albumMelodyCardFragment"
+            app:destination="@id/albumMelodyCardFragment" />
     </fragment>
     <fragment
         android:id="@+id/notificationFragment"
@@ -113,6 +125,9 @@
         <argument
             android:name="nickname"
             app:argType="string" />
+        <argument
+            android:name="memberId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/likeMelodyFragment"
@@ -127,6 +142,28 @@
             app:argType="string" />
         <argument
             android:name="id"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_likeMelodyFragment_to_albumMelodyCardFragment"
+            app:destination="@id/albumMelodyCardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/albumMelodyCardFragment"
+        android:name="com.ajou.diggingclub.profile.fragments.AlbumMelodyCardFragment"
+        android:label="fragment_album_melody_card"
+        tools:layout="@layout/fragment_album_melody_card" >
+        <argument
+            android:name="memberId"
+            app:argType="string" />
+        <argument
+            android:name="albumId"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="name"
+            app:argType="string" />
+        <argument
+            android:name="type"
             app:argType="string" />
     </fragment>
 

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.ground.models.FollowingModel
@@ -16,7 +17,7 @@ import com.bumptech.glide.Glide
 
 class MusicListRVAdapter(val context: Context, var list : List<MusicSpotifyModel>, val link : SearchMusicFragment.AdapterToFragment) : RecyclerView.Adapter<MusicListRVAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
-        val btn : ImageView = view.findViewById(R.id.selectBtn)
+        val item : ConstraintLayout = view.findViewById(R.id.item)
         val albumImg : ImageView = view.findViewById(R.id.albumImg)
         val title : TextView = view.findViewById(R.id.title)
         val artist : TextView = view.findViewById(R.id.artist)
@@ -33,7 +34,7 @@ class MusicListRVAdapter(val context: Context, var list : List<MusicSpotifyModel
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.btn.setOnSingleClickListener {
+        holder.item.setOnSingleClickListener {
             link.getSelectedItem(list[position])
         }
         holder.artist.text = list[position].artist

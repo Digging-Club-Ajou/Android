@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.os.Looper
@@ -22,20 +23,29 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.ajou.diggingclub.SearchDataViewModel
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentSearchLocationBinding
 import com.ajou.diggingclub.melody.card.adapter.LocationListRVAdapter
 import com.ajou.diggingclub.melody.models.LocationModel
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.LocationService
+import com.ajou.diggingclub.network.models.LocationResponse
 import com.ajou.diggingclub.start.LandingActivity
+import com.ajou.diggingclub.utils.hideKeyboard
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import kotlinx.coroutines.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.util.*
 
 
 class SearchLocationFragment : Fragment() {
@@ -52,16 +62,23 @@ class SearchLocationFragment : Fragment() {
     private val binding get() = _binding!!
     private var mContext: Context? = null
     private var job: Job? = null
+    private lateinit var viewModel : SearchDataViewModel
+    private lateinit var adapter : LocationListRVAdapter
+    private val TAG = SearchLocationFragment::class.java.simpleName
 
     private val locationService = RetrofitInstance.getInstance().create(LocationService::class.java)
     val args : SearchLocationFragmentArgs by navArgs()
 
-    val list : ArrayList<LocationModel> = arrayListOf()
+    var page = 1
+    var isLoading = false
+    var isEnd = false
+    val dataStore = UserDataStore()
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(p0: LocationResult) {
             super.onLocationResult(p0)
             Log.d("latitude",p0.lastLocation?.latitude.toString())
+            binding.curLocBtn.isActivated = true
             onLocationChanged(p0.lastLocation!!)
         }
 
@@ -109,16 +126,28 @@ class SearchLocationFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentSearchLocationBinding.inflate(inflater, container, false)
         val view = binding.root
+        binding.root.setOnClickListener{
+            hideKeyboard(requireActivity())
+        }
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val dataStore = UserDataStore()
         var accessToken : String? = null
         var refreshToken : String? = null
+        var keyword = ""
 
+        viewModel = ViewModelProvider(requireActivity())[SearchDataViewModel::class.java]
+        viewModel.setEmptyList()
+
+        checkPermissionForLocation(mContext!!)
+
+        val link = AdapterToFragment()
+        adapter = LocationListRVAdapter(mContext!!, emptyList(),link)
+        binding.listRV.adapter = adapter
+        binding.listRV.layoutManager = LinearLayoutManager(mContext)
 
         CoroutineScope(Dispatchers.IO).launch {
             accessToken = dataStore.getAccessToken().toString()
@@ -129,7 +158,6 @@ class SearchLocationFragment : Fragment() {
             }
         }
 
-        checkPermissionForLocation(mContext!!)
         binding.skip.setOnSingleClickListener {
             val action =
                 SearchLocationFragmentDirections.actionSearchLocationFragmentToShareCardFragment(
@@ -143,19 +171,22 @@ class SearchLocationFragment : Fragment() {
 
         binding.removeBtn.setOnClickListener {
             binding.editText.setText("")
+            viewModel.setEmptyList()
+            adapter.updateList(viewModel.locationList.value!!)
         }
         binding.backBtn.setOnClickListener {
             findNavController().popBackStack()
         }
 
-//        binding.listRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-//                super.onScrolled(recyclerView, dx, dy)
-//                if(!binding.listRV.canScrollVertically(1)){
-//
-//                }
-//            }
-//        })
+        binding.listRV.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if(!binding.listRV.canScrollVertically(1)&&!isEnd&&!isLoading){
+                    getData(accessToken!!, refreshToken!!, keyword, x, y)
+                    isLoading = true
+                }
+            }
+        })
 
         binding.editText.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -167,42 +198,16 @@ class SearchLocationFragment : Fragment() {
                 job?.cancel()
                 if (str != null) {
                     if(str.isNotEmpty()) {
+                        viewModel.setEmptyList()
+                        page = 1
                         binding.removeBtn.visibility = View.VISIBLE
                         binding.curLocBtn.visibility = View.GONE
                         job = CoroutineScope(Dispatchers.IO).launch {
                             accessToken = dataStore.getAccessToken().toString()
                             refreshToken = dataStore.getRefreshToken().toString()
                             delay(500)
-                            var page = 1
-                            var end = false
-                            while(!end){
-                                val response = locationService.searchLocation(accessToken!!,refreshToken!!,str.toString(),x,y,page.toString())
-                                if(response.isSuccessful){
-                                    if(response.headers()["AccessToken"] != null) {
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
-                                        }
-                                    }
-                                    val data : List<LocationModel> = response.body()!!.locationListResult
-                                    if(data.isEmpty()){
-                                        end = true
-                                        break
-                                    }else{
-                                        list.addAll(data)
-                                        page++
-                                    }
-                                }else{
-                                    Log.d("error",response.errorBody()?.string().toString())
-                                    end = true
-                                    break
-                                }
-                            }
-                            withContext(Dispatchers.Main){
-                                val link = AdapterToFragment()
-                                val locationListRVAdapter = LocationListRVAdapter(mContext!!,list,link)
-                                binding.listRV.adapter = locationListRVAdapter
-                                binding.listRV.layoutManager = LinearLayoutManager(mContext)
-                            }
+                            keyword = str.toString()
+                            getData(accessToken!!, refreshToken!!, keyword, x, y)
                         }
                     }else{
                         binding.removeBtn.visibility = View.GONE
@@ -210,6 +215,10 @@ class SearchLocationFragment : Fragment() {
                 }
             }
         })
+//
+//        binding.curLocBtn.setOnSingleClickListener {
+//            checkPermissionForLocation(mContext!!)
+//        }
     }
     private fun startLocationUpdates() {
         val locationRequest = LocationRequest.create().apply {
@@ -244,11 +253,59 @@ class SearchLocationFragment : Fragment() {
     // 시스템으로 부터 받은 위치정보를 화면에 갱신해주는 메소드
     fun onLocationChanged(location: Location) {
         mLastLocation = location
-        x = mLastLocation.latitude.toString()
-        y = mLastLocation.longitude.toString()
+        x = mLastLocation.longitude.toString()
+        y = mLastLocation.latitude.toString()
         Log.d("location",x)
         Log.d("location",y)
+        val address = Geocoder(mContext!!, Locale.KOREAN).getFromLocation(mLastLocation.latitude,mLastLocation.longitude,1)?.first()?.getAddressLine(0)
+        Log.d("address",address.toString()) // 도로명 주소
         mFusedLocationProviderClient?.removeLocationUpdates(locationCallback)
+    }
+
+    private fun getData(accessToken : String, refreshToken : String, keyword : String, x : String, y : String) {
+        Log.d(TAG,"page : $page")
+        locationService.searchLocation(accessToken,refreshToken,keyword,x,y,page.toString()).enqueue(object :
+            Callback<LocationResponse> {
+            override fun onResponse(
+                call: Call<LocationResponse>,
+                response: Response<LocationResponse>
+            ) {
+                if(response.isSuccessful){
+                    if(response.headers()["AccessToken"] != null) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
+                        }
+                    }
+                    val data : List<LocationModel> = response.body()!!.locationListResult
+                    if(data.isEmpty()){
+                        Log.d(TAG,"isEnd is true")
+                        isEnd = true
+                    }else{
+                        Log.d(TAG,"isEnd is false")
+                        viewModel.addLocationList(data)
+                        adapter.updateList(viewModel.locationList.value!!)
+                        page++
+                        isLoading = false
+
+                    }
+                }else{
+                    Log.d("error",response.errorBody()?.string().toString())
+                    isEnd = true
+                }
+            }
+
+            override fun onFailure(call: Call<LocationResponse>, t: Throwable) {
+                Log.d("fail",t.message.toString())
+                isEnd = true
+            }
+
+        })
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.setEmptyList()
     }
 
 

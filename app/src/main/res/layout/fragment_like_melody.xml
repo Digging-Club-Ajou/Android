@@ -13,7 +13,9 @@
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/back_arrow_icon"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
+            android:src="@drawable/exit_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -21,11 +23,11 @@
             android:id="@+id/userNickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/melody_nickname"
+            android:text=""
             android:textColor="@color/textColor"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/backBtn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -39,7 +41,18 @@
             app:layout_constraintTop_toBottomOf="@+id/userNickname" />
 
         <ImageView
+            android:id="@+id/logo"
+            android:visibility="gone"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/logo_black"
+            app:layout_constraintBottom_toBottomOf="@+id/likeImage"
+            app:layout_constraintEnd_toEndOf="@+id/likeImage"
+            app:layout_constraintStart_toStartOf="@+id/likeImage"
+            app:layout_constraintTop_toTopOf="@+id/likeImage" />
+        <ImageView
             android:id="@+id/playIcon"
+            android:visibility="gone"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:src="@drawable/playicon"
@@ -50,27 +63,30 @@
 
         <TextView
             android:id="@+id/record"
-            android:layout_width="wrap_content"
+            android:visibility="invisible"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="24dp"
+            android:lineSpacingExtra="3sp"
             android:text="dlwlrma 님은 댄스 장르에 가장 큰 관심이 있어요!\n가장 많이 들은 아티스트는 New Jeans고\nSuper Shy를 가장 많이 재생했어요!"
             android:textColor="@color/textColor"
             android:textSize="12sp"
-            android:gravity="center"
-            android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/likeImage"
+            app:layout_constraintStart_toStartOf="@+id/likeImage"
             app:layout_constraintTop_toBottomOf="@+id/likeImage" />
 
         <TextView
             android:id="@+id/noRecordText"
+            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/no_record"
-            android:textSize="14sp"
+            android:text=""
             android:textColor="@color/textColor"
-            android:layout_marginTop="128dp"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/likeImage" />
@@ -79,22 +95,107 @@
             android:id="@+id/likeListNickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:text="@string/likelist_nickname"
+            android:layout_marginTop="30dp"
+            android:text=""
             android:textColor="@color/textColor"
             android:textSize="15sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/record" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/likeListRV"
+        <TextView
+            android:id="@+id/noLikeText1"
+            android:visibility="gone"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="아직 좋아하는 멜로디가 없어요!"
+            android:textSize="18sp"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:layout_marginTop="98dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/likeListNickname" />
+
+        <TextView
+            android:id="@+id/noLikeText2"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="다른 유저의 멜로디카드를 탐색하고 좋아요를 눌러보세요"
+            android:textSize="14sp"
+            android:textColor="@color/textColor"
+            android:gravity="center"
+            android:layout_marginTop="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noLikeText1"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/likeListRV"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/likeListNickname" />
+
+        <ImageView
+            android:id="@+id/noDataImage"
+            android:visibility="gone"
+            android:layout_width="240dp"
+            android:layout_height="208dp"
+            android:src="@drawable/like_card_tmp_image"
+            android:layout_marginTop="76dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/userNickname" />
+
+        <TextView
+            android:id="@+id/noDataText1"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="아직 좋아하는 멜로디가 없어요!"
+            android:textSize="18sp"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            android:layout_marginTop="98dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noDataImage" />
+
+        <TextView
+            android:id="@+id/noDataText2"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="다른 유저의 멜로디카드를 탐색하고 좋아요를 눌러보세요"
+            android:textSize="14sp"
+            android:textColor="@color/textColor"
+            android:gravity="center"
+            android:layout_marginTop="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noDataText1"/>
+
+        <Button
+            android:id="@+id/moveBtn"
+            android:visibility="gone"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:background="@drawable/rectangle_5_btn"
+            android:text="멜로디 카드 탐색하러 가기"
+            android:textColor="@color/textColor"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/noDataText2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

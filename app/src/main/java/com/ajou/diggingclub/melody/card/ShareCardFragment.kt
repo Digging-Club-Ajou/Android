@@ -23,8 +23,11 @@ import com.ajou.diggingclub.ground.GroundActivity
 import com.ajou.diggingclub.melody.models.SendingMelodyCardModel
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.CardService
+import com.ajou.diggingclub.profile.ProfileActivity
 import com.ajou.diggingclub.start.LandingActivity
 import com.ajou.diggingclub.utils.getMultipartFile
+import com.ajou.diggingclub.utils.hideKeyboard
+import com.ajou.diggingclub.utils.multiOptions
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -65,13 +68,16 @@ class ShareCardFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentShareCardBinding.inflate(inflater, container, false)
+        binding.root.setOnClickListener{
+            hideKeyboard(requireActivity())
+        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val layerDrawable = ContextCompat.getDrawable(mContext!!,R.drawable.playingicon)?.mutate() as LayerDrawable
+        val layerDrawable = ContextCompat.getDrawable(mContext!!,R.drawable.playicon)?.mutate() as LayerDrawable
         val args : ShareCardFragmentArgs by navArgs()
 
         val dataStore = UserDataStore()
@@ -116,16 +122,16 @@ class ShareCardFragment : Fragment() {
             val parsedUri = Uri.parse(args.uri)
             img = getMultipartFile(parsedUri,requireActivity(),"melodyImage")
 
-            val multiOptions = MultiTransformation(
-                CenterCrop(),
-                RoundedCorners(20)
-            ) // glide 옵션
-
             Glide.with(requireActivity())
                 .load(parsedUri)
                 .centerCrop()
-                .apply(RequestOptions.bitmapTransform(multiOptions))
                 .into(binding.image)
+            // TODO 제대로 들어가있는지 확인하기
+            binding.image.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        }
+
+        binding.cardDescription.setOnFocusChangeListener { view, hasFocus ->
+            if(hasFocus) binding.cardDescription.hint = ""
         }
         binding.cardDescription.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -145,6 +151,7 @@ class ShareCardFragment : Fragment() {
         })
 
         binding.shareBtn.setOnSingleClickListener {
+            binding.shareBtn.isClickable = false
             val data = SendingMelodyCardModel(args.music.artist, args.music.title,"", args.music.previewUrl,args.address,args.music.imageUrl,cardDescription,args.color)
             if(img!=null){
                 cardService.createCard(accessToken!!,refreshToken!!,data,img).enqueue(object : Callback<ResponseBody> {
@@ -158,7 +165,9 @@ class ShareCardFragment : Fragment() {
                                     dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
                                 }
                             }
-                            val intent = Intent(mContext, GroundActivity::class.java)
+                            val currentActivity = activity
+                            currentActivity?.finish()
+                            val intent = Intent(mContext, ProfileActivity::class.java)
                             startActivity(intent)
                         }else{
                             val errorBody = JSONObject(response.errorBody()?.string())
@@ -186,7 +195,9 @@ class ShareCardFragment : Fragment() {
                                     dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
                                 }
                             }
-                            val intent = Intent(mContext, GroundActivity::class.java)
+                            val currentActivity = activity
+                            currentActivity?.finish()
+                            val intent = Intent(mContext, ProfileActivity::class.java)
                             startActivity(intent)
                         }else{
                             val errorBody = JSONObject(response.errorBody()?.string())

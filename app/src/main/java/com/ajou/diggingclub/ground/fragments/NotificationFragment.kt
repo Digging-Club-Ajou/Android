@@ -8,10 +8,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentNotificationBinding
+import com.ajou.diggingclub.ground.RealTimeChangeViewModel
 import com.ajou.diggingclub.ground.adapter.NotificationRVAdapter
 import com.ajou.diggingclub.ground.models.NotificationsModel
 import com.ajou.diggingclub.network.RetrofitInstance
@@ -31,8 +34,10 @@ class NotificationFragment : Fragment() {
     private var mContext : Context? = null
     private val notificationService = RetrofitInstance.getInstance().create(NotificationService::class.java)
 
+    private val viewModel : RealTimeChangeViewModel by viewModels()
     var accessToken : String? = null
     var refreshToken : String? = null
+    private lateinit var adapter : NotificationRVAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,11 +79,15 @@ class NotificationFragment : Fragment() {
                                 dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
                             }
                         }else{
-                            val list : List<NotificationsModel> = response.body()!!.notificationsList
+                            val list : ArrayList<NotificationsModel> = response.body()!!.notificationsList
                             Log.d("list",list.toString())
-                            val notiListRVAdapter = NotificationRVAdapter(mContext!!,list,link)
-                            binding.notiRV.adapter = notiListRVAdapter
+                            viewModel.setNotificationList(list)
+                            adapter = NotificationRVAdapter(mContext!!,viewModel.notificationList.value!!,link)
+                            binding.notiRV.adapter = adapter
                             binding.notiRV.layoutManager = LinearLayoutManager(mContext)
+                            binding.notiRV.apply {
+                                itemAnimator = null
+                            }
                         }
                     }
                 }
@@ -92,11 +101,11 @@ class NotificationFragment : Fragment() {
         binding.backBtn.setOnClickListener {
             findNavController().popBackStack()
         }
+
     }
 
     inner class DeleteNotification{
-        // TODO 삭제 버튼 클릭 시 바로 사라지도록 해야할 듯
-        fun deleteNotification(notificationId : String){
+        fun deleteNotification(notificationId : String, position : Int){
             notificationService.deleteNotification(accessToken!!,refreshToken!!,notificationId).enqueue(object : retrofit2.Callback<ResponseBody>{
                 override fun onResponse(
                     call: Call<ResponseBody>,
@@ -104,6 +113,10 @@ class NotificationFragment : Fragment() {
                 ) {
                     if(response.isSuccessful){
                         Log.d("success",response.body().toString())
+                        viewModel.notificationList.value?.removeAt(position)
+                        adapter.notifyItemRemoved(position)
+                        adapter.notifyItemRangeRemoved(position,viewModel.notificationList.value!!.size-position)
+
                     }else{
                         Log.d("error",response.errorBody()?.string().toString())
                     }

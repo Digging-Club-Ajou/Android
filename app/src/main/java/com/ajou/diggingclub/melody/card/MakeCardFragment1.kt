@@ -16,6 +16,7 @@ import androidx.navigation.fragment.navArgs
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.FragmentMakeCard1Binding
 import com.ajou.diggingclub.utils.setOnSingleClickListener
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MakeCardFragment1 : Fragment() {
@@ -58,9 +59,14 @@ class MakeCardFragment1 : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val args : MakeCardFragment1Args by navArgs()
 
-        Log.d("args",args.music.artist)
         binding.artist.text = args.music.artist
         binding.title.text = args.music.title
+
+//        Glide.with(mContext!!)
+//            .load(args.music.imageUrl)
+//            .centerCrop()
+//            .into(binding.image)
+// TODO 추후에 albumCoverImage을 넣는다고 하면 이 코드 쓰기
 
         binding.camera.setOnSingleClickListener {
             val action = MakeCardFragment1Directions.actionMakeCardFragment1ToCameraFragment("card",args.music)

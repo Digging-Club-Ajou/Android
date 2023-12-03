@@ -5,16 +5,11 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import com.ajou.diggingclub.R
 import com.ajou.diggingclub.databinding.ActivityMelodyBinding
 import com.ajou.diggingclub.ground.GroundActivity
 import com.ajou.diggingclub.profile.ProfileActivity
-import com.ajou.diggingclub.start.StartViewModel
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 
 class MelodyActivity : AppCompatActivity() {
@@ -27,12 +22,16 @@ class MelodyActivity : AppCompatActivity() {
 
         requestPermissions()
 
-//        binding.tabProfile.setOnSingleClickListener {
-//            val intent = Intent(this, ProfileActivity::class.java)
-//            startActivity(intent)
-//        }
+        binding.tabProfile.setOnSingleClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
         binding.tabGround.setOnSingleClickListener {
             val intent = Intent(this, GroundActivity::class.java)
+            startActivity(intent)
+        }
+        binding.tabMelody.setOnSingleClickListener {
+            val intent = Intent(this, MelodyActivity::class.java)
             startActivity(intent)
         }
 

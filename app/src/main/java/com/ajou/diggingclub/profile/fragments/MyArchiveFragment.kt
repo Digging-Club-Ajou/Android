@@ -2,13 +2,21 @@ package com.ajou.diggingclub.profile.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.PorterDuff
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
+import android.text.style.TextAppearanceSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.ajou.diggingclub.R
@@ -20,12 +28,10 @@ import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.AlbumService
 import com.ajou.diggingclub.network.api.FollowingService
 import com.ajou.diggingclub.profile.MyAlbumViewModel
+import com.ajou.diggingclub.setting.SettingActivity
 import com.ajou.diggingclub.start.LandingActivity
+import com.ajou.diggingclub.utils.multiOptions
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.MultiTransformation
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -38,6 +44,7 @@ class MyArchiveFragment : Fragment() {
     private val followingService = RetrofitInstance.getInstance().create(FollowingService::class.java)
     private val albumService = RetrofitInstance.getInstance().create(AlbumService::class.java)
     private lateinit var viewModel : MyAlbumViewModel
+    private val TAG = MyArchiveFragment::class.java.simpleName
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -72,30 +79,70 @@ class MyArchiveFragment : Fragment() {
         var followingsList : Array<FollowingModel> ?= null
         var followersList : Array<FollowingModel> ?= null
         var userId : String ?= null
+        var nickname : String ?= null
 
-        val multiOptions = MultiTransformation(
-            CenterCrop(),
-            RoundedCorners(40)
-        ) // glide 옵션
+        if(viewModel.moveToMelody.value == true){
+            var argsMemberId = ""
+            var argsAlbumId = ""
+            var argsNickname = ""
+            arguments?.let {
+                argsMemberId = it.getString("memberId").toString()
+                argsAlbumId = it.getString("albumId").toString()
+                argsNickname = it.getString("name").toString()
+            }
+            viewModel.setMoveToMelody(false)
+            val action = MyArchiveFragmentDirections.actionMyArchiveFragmentToAlbumMelodyCardFragment(argsMemberId,argsAlbumId,argsNickname,"my")
+            findNavController().navigate(action)
+        }
         CoroutineScope(Dispatchers.IO).launch {
             accessToken = dataStore.getAccessToken().toString()
             refreshToken = dataStore.getRefreshToken().toString()
             userId = dataStore.getMemberId().toString()
+            nickname = dataStore.getNickname().toString()
             if(accessToken == null || refreshToken == null){
                 val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
             if(albumInfo==null){
                 Log.d("albumId",albumId.toString())
-                if(albumId != 0.toString()){
-                    albumService.getAlbum(accessToken!!, refreshToken!!, albumId!!)
+                if(albumId == null){
+                    Log.d(TAG, "albumId is null")
+                    albumService.getMyAlbum(accessToken!!, refreshToken!!).enqueue(object : Callback<ReceivedAlbumModel> {
+                        override fun onResponse(
+                            call: Call<ReceivedAlbumModel>,
+                            response: Response<ReceivedAlbumModel>
+                        ) {
+                                if(response.isSuccessful){
+                                    val body = response.body()
+                                    viewModel.setAlbumInfo(body!!)
+                                    viewModel.setAlbumId(body.albumId.toString())
+                                    Log.d("viewmodel body",viewModel.albumInfo.value.toString())
+                                    Log.d("viewmodel body",viewModel.albumId.value.toString())
+                                }else{
+                                    Log.d(TAG,response.errorBody()?.string().toString())
+                                    viewModel.setAlbumId("0")
+                                    albumId = "0"
+                                    Glide.with(mContext!!)
+                                        .clear(binding.image)
+                                    binding.title.text = "앨범이 없습니다"
+                                }
+                        }
+                        override fun onFailure(call: Call<ReceivedAlbumModel>, t: Throwable) {
+                            Log.d(TAG, t.message.toString())
+                        }
+                    })
+                } else if(albumId != "0"){
+                    albumService.getAlbum(accessToken!!, refreshToken!!, albumId.toString())
                         .enqueue(object : Callback<ReceivedAlbumModel> {
                             override fun onResponse(
                                 call: Call<ReceivedAlbumModel>,
                                 response: Response<ReceivedAlbumModel>
                             ) {
                                 if (response.isSuccessful) {
-                                    viewModel.setAlbumInfo(response.body()!!)
+                                    CoroutineScope(Dispatchers.Main).launch {
+                                        viewModel.setAlbumInfo(response.body()!!)
+                                        viewModel.setAlbumId(viewModel.albumInfo.value!!.albumId.toString())
+                                    }
                                 } else {
                                     Log.d("error ", response.errorBody()?.string().toString())
                                 }
@@ -106,11 +153,18 @@ class MyArchiveFragment : Fragment() {
                             }
                         })
                 }else{
-                    // TODO 앨범이 없을 경우 기본 이미지 ? 를 띄우라고 하셨는데 디자인팀이랑 얘기해보고 채우기
+                    Log.d("albumId is 0 !","")
+                    viewModel.setAlbumId("0")
+                    albumId = "0"
+                    Glide.with(mContext!!)
+                        .clear(binding.image)
+                    binding.title.text = "앨범이 없습니다"
                 }
+            }else{
+                viewModel.setAlbumId(viewModel.albumInfo.value!!.albumId.toString())
             }
             val numberOfFollowDeferred =
-                async { followingService.getFollowingList(accessToken!!, refreshToken!!, userId!!) }
+                async { followingService.getFollowingList(accessToken!!, refreshToken!!,userId!!) }
                 val numberOfFollowResponse = numberOfFollowDeferred.await()
                 if(numberOfFollowResponse.isSuccessful){
                     followingsList = numberOfFollowResponse.body()?.followings?.toTypedArray()
@@ -119,46 +173,66 @@ class MyArchiveFragment : Fragment() {
                     Log.d("numberOfFollow error",numberOfFollowResponse.errorBody()?.string().toString())
                 }
             withContext(Dispatchers.Main){
-                if(albumId != 0.toString()){
-                    Glide.with(mContext!!)
-                        .load(viewModel.albumInfo.value!!.imageUrl)
-                        .apply(RequestOptions.bitmapTransform(multiOptions))
-                        .into(binding.image)
-                }
-                binding.profile.text = viewModel.albumInfo.value!!.nickname
-                binding.nickname.text = viewModel.albumInfo.value!!.nickname
-                binding.nicknameTitle.text = String.format(resources.getString(R.string.melody_nickname),viewModel.albumInfo.value!!.nickname)
-                binding.nicknameLike.text = viewModel.albumInfo.value!!.nickname
-                binding.title.text = viewModel.albumInfo.value!!.albumName
-                binding.follower.text = followersList!!.size.toString()
-                binding.following.text = followingsList!!.size.toString()
+                viewModel.albumInfo.observe(requireActivity(), Observer{
+                    if(viewModel.albumId.value != "0"){
+                        Glide.with(mContext!!)
+                            .load(viewModel.albumInfo.value!!.imageUrl)
+                            .apply(multiOptions)
+                            .into(binding.image)
+                        binding.title.text = viewModel.albumInfo.value!!.albumName
+                    }
+                })
+                Log.d("follwingsList",followingsList?.toList()?.size.toString())
+                binding.profile.text = nickname
+                binding.nickname.text = nickname
+                binding.nicknameTitle.text = String.format(resources.getString(R.string.melody_nickname),nickname)
+                binding.nicknameLike.text = nickname
+                binding.follow.text = String.format(resources.getString(R.string.follow),followersList?.toList()?.size.toString(),followingsList?.toList()?.size.toString())
+                val spannableString = SpannableString(binding.follow.text)
+
+                val followerIndex = binding.follow.text.indexOf(followingsList?.toList()?.size.toString())
+                val followingIndex = binding.follow.text.lastIndexOf(followersList?.toList()?.size.toString())
+
+                spannableString.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    followerIndex,
+                    followerIndex + followersList?.toList()?.size.toString().length,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
+                spannableString.setSpan(
+                    StyleSpan(Typeface.BOLD),
+                    followingIndex,
+                    followingIndex + followersList?.toList()?.size.toString().length,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+                )
+                binding.follow.text = spannableString
             }
         }
         binding.settingBtn.setOnClickListener {
-            // TODO 세팅 2.3.0 페이지로 이동
+            val intent = Intent(mContext, SettingActivity::class.java)
+            startActivity(intent)
         }
 
         binding.editBtn.setOnClickListener {
             findNavController().navigate(R.id.action_myArchiveFragment_to_editAlbumFragment)
         }
 
-        binding.following.setOnClickListener{
+        binding.follow.setOnClickListener{
             val action = MyArchiveFragmentDirections.actionMyArchiveFragmentToFollowingListFragment(followingsList!!,followersList!!)
             findNavController().navigate(action)
         }
         binding.image.setOnClickListener {
-            // TODO 2.1.2.1 페이지로 이동
+            Log.d("albumId",albumId.toString())
+            if(albumId != "0"){
+                val action = MyArchiveFragmentDirections.actionMyArchiveFragmentToAlbumMelodyCardFragment(userId.toString(),viewModel.albumId.value.toString(),viewModel.albumInfo.value!!.albumName,"my")
+                findNavController().navigate(action)
+            }
+        }
+        binding.melodyMove.setOnClickListener {
+            val action = MyArchiveFragmentDirections.actionMyArchiveFragmentToLikeMelodyFragment(userId.toString(),nickname.toString())
+            findNavController().navigate(action)
         }
 
-//
-//        binding.moveBtn.setOnClickListener {
-//            val action = UserArchiveFragmentDirections.actionUserArchiveFragmentToLikeMelodyFragment(viewModel.albumInfo.value!!.nickname,viewModel.albumInfo.value!!.memberId.toString())
-//            findNavController().navigate(action)
-//        }
-
-        binding.backBtn.setOnClickListener {
-            findNavController().popBackStack()
-        }
         binding.profileIcon.setColorFilter(resources.getColor(R.color.textColor), PorterDuff.Mode.SRC_IN)
     }
 }

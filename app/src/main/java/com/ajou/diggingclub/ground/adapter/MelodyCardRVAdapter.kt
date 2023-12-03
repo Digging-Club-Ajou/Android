@@ -4,8 +4,6 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.LayerDrawable
-import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,7 +14,6 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.R
-import com.ajou.diggingclub.ground.fragments.GroundFragment
 import com.ajou.diggingclub.ground.models.ReceivedMelodyCardModel
 import com.ajou.diggingclub.utils.AdapterToFragment
 import com.ajou.diggingclub.utils.setOnSingleClickListener
@@ -39,6 +36,10 @@ class MelodyCardRVAdapter(val context: Context, val list:List<ReceivedMelodyCard
         val playIcon : ImageView = view.findViewById(R.id.playIcon)
         val profileIcon : ImageView = view.findViewById(R.id.profileIcon)
         val likeBtn : ImageView = view.findViewById(R.id.likeBtn)
+        val deleteBtn : ImageView = view.findViewById(R.id.deleteBtn)
+        val deleteText : TextView = view.findViewById(R.id.deleteText)
+        val deleteOverlay : ImageView = view.findViewById(R.id.deleteOverlay)
+
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -60,7 +61,7 @@ class MelodyCardRVAdapter(val context: Context, val list:List<ReceivedMelodyCard
             return ViewHolder(view)
         }else{
             // TODO 에러 처리여야 할 듯
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_card_ground,parent,false)
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_card_profile,parent,false)
             return ViewHolder(view)
         }
     }
@@ -130,6 +131,12 @@ class MelodyCardRVAdapter(val context: Context, val list:List<ReceivedMelodyCard
 
         holder.profileIcon.setOnClickListener {
             link.getSelectedId(list[position].memberId.toString(),list[position].albumId.toString(), "", "card")
+        }
+
+        holder.deleteBtn.setOnClickListener {
+            link.getSelectedId(list[position].memberId.toString(),list[position].albumId.toString(), position.toString(), "delete")
+            notifyItemRemoved(position)
+            Log.d("position",position.toString())
         }
 
     }

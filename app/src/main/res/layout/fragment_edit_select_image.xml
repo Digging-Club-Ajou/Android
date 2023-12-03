@@ -13,6 +13,8 @@
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
             android:src="@drawable/back_arrow_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -23,13 +25,12 @@
             android:layout_marginTop="2dp"
             android:gravity="center"
             android:lineSpacingExtra="5sp"
-            android:text="앨범 커버 촬영"
+            android:text="멜로디 앨범 수정하기"
             android:textColor="@color/textColor"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:translationY="-2.65sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/backBtn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
@@ -51,19 +52,18 @@
             app:layout_constraintEnd_toEndOf="@+id/image"
             app:layout_constraintStart_toStartOf="@+id/image"
             app:layout_constraintTop_toBottomOf="@+id/image">
-
             <Button
                 android:id="@+id/rePhoto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="168dp"
+                android:layout_height="56dp"
                 android:layout_marginRight="9dp"
                 android:layout_weight="1"
                 android:background="@drawable/rephoto" />
 
             <Button
                 android:id="@+id/use"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="168dp"
+                android:layout_height="56dp"
                 android:layout_weight="1"
                 android:background="@drawable/use" />
         </LinearLayout>

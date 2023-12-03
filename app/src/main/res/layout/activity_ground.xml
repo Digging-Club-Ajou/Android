@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ground.GroundActivity">
-
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -14,18 +13,18 @@
         android:layout_marginTop="16dp"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
+        android:layout_marginBottom="66dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/bottomTabLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/ground_graph" />
-
     <LinearLayout
         android:id="@+id/bottomTabLayout"
         android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:background="@drawable/rectangle_4"
+        android:layout_height="74dp"
+        android:background="@drawable/bottom_navigation"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -34,35 +33,32 @@
 
         <ImageView
             android:id="@+id/tabGround"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
-            android:clickable="true"
-            android:padding="8dp"
             android:background="@android:color/transparent"
+            android:clickable="true"
             android:src="@drawable/home" />
 
         <ImageView
             android:id="@+id/tabMelody"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
-            android:clickable="true"
-            android:padding="8dp"
             android:background="@android:color/transparent"
+            android:clickable="true"
             android:src="@drawable/plus_off" />
 
         <ImageView
             android:id="@+id/tabProfile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
-            android:clickable="true"
-            android:padding="8dp"
             android:background="@android:color/transparent"
+            android:clickable="true"
             android:src="@drawable/profile_off" />
-
     </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

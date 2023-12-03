@@ -25,7 +25,9 @@
         android:layout_marginTop="4dp"
         android:text="hyeongger"
         android:textColor="@color/textColor"
-        android:textSize="18sp"
+        android:textSize="14sp"
+        android:singleLine="true"
+        android:ellipsize="end"
         app:layout_constraintBottom_toTopOf="@+id/text"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toTopOf="parent"
@@ -56,4 +58,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/removeBtn"
+        android:visibility="gone"
+        android:layout_width="64dp"
+        android:layout_height="32dp"
+        android:background="@drawable/following"
+        android:text="삭제"
+        android:textColor="@color/textColor"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

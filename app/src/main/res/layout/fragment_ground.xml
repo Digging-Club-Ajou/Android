@@ -11,10 +11,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <ImageView
             android:id="@+id/notification"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/notification_on"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -27,22 +29,39 @@
             app:layout_constraintEnd_toStartOf="@+id/search"
             app:layout_constraintStart_toEndOf="@+id/notification"
             app:layout_constraintTop_toTopOf="parent" />
+
         <ImageView
             android:id="@+id/search"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:background="@drawable/search_icon"
+            android:background="@drawable/search_icon_dark"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/notification" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/cardRV"
             android:layout_width="0dp"
             android:layout_height="480dp"
-            app:layout_constraintBottom_toTopOf="@+id/textView13"
+            app:layout_constraintBottom_toTopOf="@+id/dots_indicator"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/imageView10" />
+        <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+            android:id="@+id/dots_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:dotsColor="@color/secondaryColor"
+            app:dotsCornerRadius="8dp"
+            app:dotsSize="8dp"
+            app:dotsSpacing="2dp"
+            app:dotsWidthFactor="1.5"
+            app:selectedDotColor="@color/primaryColor"
+            app:progressMode="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardRV"
+            />
 
         <TextView
             android:id="@+id/textView13"
@@ -54,29 +73,32 @@
             android:textStyle="bold"
             android:layout_marginTop="44dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardRV" />
+            app:layout_constraintTop_toBottomOf="@+id/dots_indicator" />
 
         <TextView
             android:id="@+id/followingMore"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="0dp"
             android:text="더보기"
             android:textColor="@color/paleTextColor"
             android:textSize="12sp"
-            android:layout_marginTop="44dp"
-            app:layout_constraintEnd_toStartOf="@+id/imageView11"
-            app:layout_constraintTop_toBottomOf="@+id/cardRV" />
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/followingMoreBtn"
+            app:layout_constraintEnd_toStartOf="@+id/followingMoreBtn"
+            app:layout_constraintTop_toTopOf="@+id/followingMoreBtn" />
 
         <ImageView
-            android:id="@+id/imageView11"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:id="@+id/followingMoreBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="44dp"
-            android:background="@drawable/more_icon"
             android:backgroundTint="@color/paleTextColor"
-            app:layout_constraintEnd_toEndOf="@+id/cardRV"
-            app:layout_constraintTop_toBottomOf="@+id/cardRV" />
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:src="@drawable/more_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/textView13"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView13" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/followingRV"
@@ -91,7 +113,7 @@
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="'이형기'"
+            android:text="''"
             android:textColor="@color/textColor"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -111,25 +133,29 @@
             app:layout_constraintTop_toBottomOf="@+id/followingRV" />
 
         <TextView
+            android:id="@+id/aiRecommendMore"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="0dp"
             android:text="더보기"
             android:textColor="@color/paleTextColor"
             android:textSize="12sp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toStartOf="@+id/imageView15"
-            app:layout_constraintTop_toBottomOf="@+id/followingRV" />
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/aiRecommendMoreBtn"
+            app:layout_constraintEnd_toStartOf="@+id/aiRecommendMoreBtn"
+            app:layout_constraintTop_toTopOf="@+id/aiRecommendMoreBtn" />
 
         <ImageView
-            android:id="@+id/imageView15"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:id="@+id/aiRecommendMoreBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/more_icon"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:src="@drawable/more_icon"
             android:backgroundTint="@color/paleTextColor"
-            app:layout_constraintEnd_toEndOf="@+id/followingRV"
-            app:layout_constraintTop_toBottomOf="@+id/followingRV" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView15"
+            app:layout_constraintBottom_toBottomOf="@+id/textView15"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/aiRecommendRV"
@@ -153,25 +179,31 @@
             app:layout_constraintTop_toBottomOf="@+id/aiRecommendRV" />
 
         <TextView
+            android:id="@+id/genreRecommendMore"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="0dp"
             android:text="더보기"
             android:textColor="@color/paleTextColor"
             android:textSize="12sp"
-            android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toStartOf="@+id/imageView13"
-            app:layout_constraintTop_toBottomOf="@+id/aiRecommendRV" />
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="@+id/genreRecommendMoreBtn"
+            app:layout_constraintEnd_toStartOf="@+id/genreRecommendMoreBtn"
+            app:layout_constraintTop_toTopOf="@+id/genreRecommendMoreBtn" />
 
         <ImageView
-            android:id="@+id/imageView13"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:id="@+id/genreRecommendMoreBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/more_icon"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp"
+            android:src="@drawable/more_icon"
             android:backgroundTint="@color/paleTextColor"
             app:layout_constraintEnd_toEndOf="@+id/aiRecommendRV"
-            app:layout_constraintTop_toBottomOf="@+id/aiRecommendRV" />
+            app:layout_constraintTop_toTopOf="@+id/textView16"
+            app:layout_constraintBottom_toBottomOf="@+id/textView16"
+            />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recommendRV"
             android:layout_width="0dp"

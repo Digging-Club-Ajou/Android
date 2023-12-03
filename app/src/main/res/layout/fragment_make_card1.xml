@@ -13,6 +13,8 @@
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
             android:src="@drawable/back_arrow_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -28,52 +30,102 @@
             android:textColor="@color/textColor"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:translationY="-2.65sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/backBtn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            app:cardCornerRadius="14.5dp"
+            android:layout_height="480dp"
             app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14.5dp"
             app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
+            android:layout_marginTop="14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView10">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/melody_frame" />
-            <ImageView
-                android:layout_gravity="center_horizontal"
-                android:layout_height="345dp"
-                android:layout_width="345dp"
-                android:background="@color/secondaryColor"/>
-            <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="ETA"
-                android:layout_marginTop="365dp"
-                android:layout_marginLeft="16dp"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/textColor"/>
-            <TextView
-                android:id="@+id/artist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="NewJeans"
-                android:layout_marginTop="389dp"
-                android:layout_marginLeft="16dp"
-                android:textSize="12sp"
-                android:textColor="@color/paleTextColor"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:id="@+id/imageView16"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/melody_frame"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="0dp"
+                    android:layout_height="348dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@color/secondaryColor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/deleteOverlay"
+                    android:layout_width="0dp"
+                    android:layout_height="348dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="#66797979"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="ETA"
+                    android:textColor="@color/textColor"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/image" />
+
+                <TextView
+                    android:id="@+id/artist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:text="New Jeans"
+                    android:textColor="@color/paleTextColor"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/title" />
+
+                <TextView
+                    android:id="@+id/cardDescription"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="28dp"
+                    android:background="@android:color/transparent"
+                    android:lineSpacingExtra="8sp"
+                    android:text=""
+                    android:textColor="@color/textColor"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/artist" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.cardview.widget.CardView>
+
         <!--        <ImageView-->
 <!--            android:id="@+id/image"-->
 <!--            android:layout_width="0dp"-->
@@ -88,27 +140,27 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cardView">
             <ImageView
                 android:id="@+id/camera"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="88dp"
+                android:layout_height="88dp"
                 android:layout_weight="1"
                 android:src="@drawable/camera_album_icon"/>
             <ImageView
                 android:id="@+id/gallery"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="88dp"
+                android:layout_height="88dp"
                 android:layout_weight="1"
                 android:src="@drawable/gallery_album_icon"/>
             <ImageView
                 android:id="@+id/palette"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="88dp"
+                android:layout_height="88dp"
                 android:layout_weight="1"
                 android:src="@drawable/pallette"/>
         </LinearLayout>

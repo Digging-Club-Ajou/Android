@@ -6,26 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".melody.MelodyActivity">
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@id/bottomTab"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/melody_graph" />
-
     <LinearLayout
         android:id="@+id/bottomTab"
         android:layout_width="0dp"
-        android:layout_height="52dp"
-        android:background="@drawable/rectangle_4"
+        android:layout_height="74dp"
+        android:background="@drawable/bottom_navigation"
         android:gravity="center"
         android:elevation="3dp"
         android:orientation="horizontal"
@@ -35,34 +20,48 @@
 
         <ImageView
             android:id="@+id/tabGround"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:padding="8dp"
             android:background="@android:color/transparent"
             android:src="@drawable/home_off" />
 
         <ImageView
             android:id="@+id/tabMelody"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:padding="8dp"
             android:background="@android:color/transparent"
             android:src="@drawable/plus" />
 
         <ImageView
             android:id="@+id/tabProfile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:padding="8dp"
             android:background="@android:color/transparent"
             android:src="@drawable/profile_off" />
-
     </LinearLayout>
 
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="66dp"
+        app:defaultNavHost="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navGraph="@navigation/melody_graph" />
 </androidx.constraintlayout.widget.ConstraintLayout>

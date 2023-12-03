@@ -12,6 +12,8 @@
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingEnd="16dp"
+            android:paddingBottom="16dp"
             android:src="@drawable/back_arrow_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -20,16 +22,14 @@
             android:id="@+id/textView10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
             android:gravity="center"
             android:lineSpacingExtra="5sp"
             android:text="배경 색상 선택"
             android:textColor="@color/textColor"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:translationY="-2.65sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/backBtn"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
         <TextView
             android:id="@+id/done"
@@ -46,14 +46,17 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            app:cardCornerRadius="14.5dp"
+            android:layout_height="0dp"
             app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="14.5dp"
             app:cardElevation="4dp"
+            app:cardUseCompatPadding="true"
+            android:layout_marginTop="14dp"
+            app:layout_constraintDimensionRatio="1:1.4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView10">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -72,23 +75,48 @@
                 <ImageView
                     android:id="@+id/image"
                     android:layout_width="0dp"
-                    android:layout_height="348dp"
+                    android:layout_height="0dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@color/secondaryColor"
+                    android:src="@color/secondaryColor"
+                    android:adjustViewBounds="true"
+                    app:layout_constraintDimensionRatio="1:1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:id="@+id/rectangle_4"
+                    android:layout_width="0dp"
+                    android:layout_height="4dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:background="#E9E9EA"
+                    app:layout_constraintBottom_toBottomOf="@+id/image"
+                    app:layout_constraintEnd_toEndOf="@+id/image"
+                    app:layout_constraintStart_toStartOf="@+id/image" />
+                <View
+                    android:id="@+id/progressBar"
+                    android:layout_width="0dp"
+                    android:layout_height="4dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:background="#E9E9EA"
+                    app:layout_constraintBottom_toBottomOf="@+id/image"
+                    app:layout_constraintEnd_toEndOf="@+id/image"
+                    app:layout_constraintStart_toStartOf="@+id/image" />
 
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
                     android:text="ETA"
                     android:textColor="@color/textColor"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/image" />
 
@@ -96,10 +124,10 @@
                     android:id="@+id/artist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:text="New Jeans"
                     android:textColor="@color/paleTextColor"
                     android:textSize="12sp"
-                    android:layout_marginStart="16dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/title" />
 
@@ -107,9 +135,9 @@
                     android:id="@+id/playIcon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@drawable/playingicon"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/playicon"
                     app:layout_constraintBottom_toBottomOf="@+id/image"
                     app:layout_constraintEnd_toEndOf="parent" />
 
@@ -120,76 +148,14 @@
                     android:background="@drawable/heart"
                     app:layout_constraintEnd_toEndOf="@+id/playIcon"
                     app:layout_constraintTop_toTopOf="@+id/title" />
-
-                <TextView
-                    android:id="@+id/cardDescription"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:lineSpacingExtra="8sp"
-                    android:text=""
-                    android:textColor="@color/paleTextColor"
-                    android:textSize="12sp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginBottom="28dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/artist" />
-
-                <ImageView
-                    android:id="@+id/profileIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/profile_small"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/nickname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:gravity="top"
-                    android:text="nickname"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/profileIcon"
-                    app:layout_constraintStart_toEndOf="@+id/profileIcon"
-                    app:layout_constraintTop_toTopOf="@+id/profileIcon" />
-
-                <TextView
-                    android:id="@+id/location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="12dp"
-                    android:gravity="top"
-                    android:text="아주대학교 성호관"
-                    android:textColor="#f4f4f4"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/nickname"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/nickname" />
-
-                <ImageView
-                    android:id="@+id/locationIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/location_small"
-                    android:layout_marginEnd="4dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/profileIcon"
-                    app:layout_constraintEnd_toStartOf="@+id/location"
-                    app:layout_constraintTop_toTopOf="@+id/profileIcon" />
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.cardview.widget.CardView>
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -287,6 +253,7 @@
                         android:id="@+id/hueSeekBar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:rotation="180"
                         app:hslColoringMode="pure"
                         app:hslMode="lightness" />

@@ -8,11 +8,20 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp"
+            android:paddingEnd="12dp"
+            android:src="@drawable/back_arrow_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
             <TextView
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="좋아하는 장르를 선택해주세요"
+                android:text="좋아하는 아티스트를 선택해주세요"
                 android:textColor="@color/textColor"
                 android:textSize="18sp"
                 android:layout_marginTop="44dp"
@@ -47,19 +56,20 @@
         </androidx.core.widget.NestedScrollView>
 
         <Button
-        android:id="@+id/nextBtn"
-        android:layout_width="345dp"
-        android:layout_height="56dp"
-        android:gravity="center"
-        android:lineSpacingExtra="-3sp"
-        android:text="다음(0/5)"
-        android:textStyle="bold"
-        android:background="@drawable/rectangle_3"
-        android:textColor="@color/paleTextColor"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            android:id="@+id/nextBtn"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:enabled="false"
+            android:lineSpacingExtra="-3sp"
+            android:text="다음(0/5)"
+            android:textStyle="bold"
+            android:background="@drawable/rectangle_3"
+            android:textColor="@color/paleTextColor"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -21,6 +21,8 @@ import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.AlbumService
 import com.ajou.diggingclub.start.LandingActivity
 import com.ajou.diggingclub.utils.getMultipartFile
+import com.ajou.diggingclub.utils.hideKeyboard
+import com.ajou.diggingclub.utils.multiOptions
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.MultiTransformation
@@ -59,8 +61,10 @@ class MakeAlbumFragment3 : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentMakeAlbum3Binding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        binding.root.setOnClickListener{
+            hideKeyboard(requireActivity())
+        }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -84,15 +88,11 @@ class MakeAlbumFragment3 : Fragment() {
         }
 
         val parsedUri = Uri.parse(args.uri)
-        val multiOptions = MultiTransformation(
-            CenterCrop(),
-            RoundedCorners(10)
-        ) // glide 옵션
 
         Glide.with(requireActivity())
             .load(parsedUri)
             .centerCrop()
-            .apply(RequestOptions.bitmapTransform(multiOptions))
+            .apply(multiOptions)
             .into(binding.image)
 
         val img = getMultipartFile(parsedUri,requireActivity(),"albumImage")
@@ -110,6 +110,9 @@ class MakeAlbumFragment3 : Fragment() {
                     response: Response<ResponseBody>
                 ) {
                     if(response.isSuccessful){
+                        CoroutineScope(Dispatchers.IO).launch{
+                            dataStore.saveAlbumExistFlag(true)
+                        }
                         findNavController().navigate(R.id.action_makeAlbumFragment3_to_findMusicFragment)
                     }else{
                         Log.d("response not success",response.errorBody()?.string().toString())
@@ -127,13 +130,15 @@ class MakeAlbumFragment3 : Fragment() {
             findNavController().popBackStack()
         }
 
+        binding.title.setOnFocusChangeListener { view, hasFocus ->
+            if(hasFocus) binding.title.hint = ""
+        }
+
         binding.title.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
-
             override fun afterTextChanged(str: Editable?) {
                 job?.cancel() // 이전 작업을 취소
                 if(str.toString().isNotEmpty()){

@@ -56,7 +56,7 @@ class DetailAlbumFragment : Fragment() { // TODO 추후에 앨범 -> 멜로디�
             }
         }
 
-        binding.followingBtn.text = "팔로우" // TODO 팔로우하고 있는 상태인지 받아서 초기에 텍스트 값과 selected 여부 넣어줘야함
+        binding.followingBtn.text = "팔로우"
 
         binding.followingBtn.setOnSingleClickListener {
             if(binding.followingBtn.text == "팔로우"){

@@ -57,7 +57,6 @@ class MakeCardFragment2 : Fragment() {
         Glide.with(requireActivity())
             .load(parsedUri)
             .centerCrop()
-            .apply(multiOptions)
             .into(binding.image)
 
         binding.use.setOnSingleClickListener {

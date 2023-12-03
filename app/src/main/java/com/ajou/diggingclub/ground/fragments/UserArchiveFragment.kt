@@ -3,17 +3,24 @@ package com.ajou.diggingclub.ground.fragments
 import android.content.Context
 import android.content.Intent
 import android.graphics.PorterDuff
+import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.StyleSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentUserArchiveBinding
+import com.ajou.diggingclub.ground.RealTimeChangeViewModel
 import com.ajou.diggingclub.ground.models.FollowingModel
 import com.ajou.diggingclub.ground.models.ReceivedAlbumModel
 import com.ajou.diggingclub.network.RetrofitInstance
@@ -23,10 +30,6 @@ import com.ajou.diggingclub.start.LandingActivity
 import com.ajou.diggingclub.utils.multiOptions
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.MultiTransformation
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.google.gson.JsonObject
 import kotlinx.coroutines.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -44,6 +47,8 @@ class UserArchiveFragment : Fragment() {
     private val args : UserArchiveFragmentArgs by navArgs()
     private val followingService = RetrofitInstance.getInstance().create(FollowingService::class.java)
     private val albumService = RetrofitInstance.getInstance().create(AlbumService::class.java)
+    private val viewModel : RealTimeChangeViewModel by viewModels()
+    private val TAG = UserArchiveFragment::class.java.simpleName
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -68,7 +73,7 @@ class UserArchiveFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d(TAG,"onViewCreated")
         val dataStore = UserDataStore()
         var accessToken : String? = null
         var refreshToken : String? = null
@@ -76,6 +81,7 @@ class UserArchiveFragment : Fragment() {
         var followingsList : Array<FollowingModel> ?= null
         var followersList : Array<FollowingModel> ?= null
         var userId : String ?= null
+        var numOfFollower = 0
 
         CoroutineScope(Dispatchers.IO).launch {
             accessToken = dataStore.getAccessToken().toString()
@@ -87,7 +93,9 @@ class UserArchiveFragment : Fragment() {
             }
             if(args.albumInfo!=null){
                 albumInfo = args.albumInfo
+                Log.d("albumInfo",albumInfo.toString())
             }else {
+                Log.d("albumId check",args.albumId.toString())
                 albumService.getAlbum(accessToken!!, refreshToken!!, args.albumId)
                     .enqueue(object : Callback<ReceivedAlbumModel> {
                         override fun onResponse(
@@ -96,6 +104,7 @@ class UserArchiveFragment : Fragment() {
                         ) {
                             if (response.isSuccessful) {
                                 albumInfo = response.body()
+                                Log.d("albumInfo",albumInfo.toString())
                             } else {
                                 Log.d("error ", response.errorBody()?.string().toString())
                             }
@@ -121,15 +130,12 @@ class UserArchiveFragment : Fragment() {
                 if(followingStatusResponse.isSuccessful){
                     val body = JSONObject(followingStatusResponse.body()?.string())
                     withContext(Dispatchers.Main){
-                        Log.d("userId not same",userId.toString())
-                        Log.d("memberId",args.memberId)
                         if(body.get("isFollowing") == true){
                             binding.followingBtn.isSelected = true
                             binding.followingBtn.text = "팔로잉"
                             binding.melodyMove.visibility = View.VISIBLE
                             binding.notFollowingText.visibility = View.GONE
                         }else{
-                            Log.d("userId",userId.toString())
                             if(userId.toString() == args.memberId){
                                 Log.d("userId is ","same")
                                 binding.followingBtn.visibility = View.INVISIBLE
@@ -144,6 +150,7 @@ class UserArchiveFragment : Fragment() {
                                 binding.melodyMove.visibility = View.GONE
                             }
                         }
+                        binding.followingBtn.visibility = View.VISIBLE
                     }
                 }else{
                     Log.d("followingStatus error",followingStatusResponse.errorBody()?.string().toString())
@@ -151,31 +158,37 @@ class UserArchiveFragment : Fragment() {
                 if(numberOfFollowResponse.isSuccessful){
                     followingsList = numberOfFollowResponse.body()?.followings?.toTypedArray()
                     followersList = numberOfFollowResponse.body()?.followers?.toTypedArray()
-                    Log.d("followingsList",followingsList.toString())
-                    Log.d("followersList",followersList.toString())
+                    numOfFollower = followersList!!.size
                 }else{
                     Log.d("numberOfFollow error",numberOfFollowResponse.errorBody()?.string().toString())
                 }
             withContext(Dispatchers.Main){
-                Glide.with(mContext!!)
-                    .load(albumInfo!!.imageUrl)
-                    .apply(multiOptions)
-                    .into(binding.image)
+                Log.d("albumInfo",albumInfo.toString())
+                if(albumInfo!!.albumId != 0){
+                    Glide.with(mContext!!)
+                        .load(albumInfo!!.imageUrl)
+                        .apply(multiOptions)
+                        .into(binding.image)
+                    binding.title.text = albumInfo!!.albumName
+                }else{
+                    Glide.with(mContext!!)
+                        .clear(binding.image)
+                    binding.title.text = "앨범이 없습니다"
+                }
                 binding.profile.text = albumInfo!!.nickname
                 binding.nickname.text = albumInfo!!.nickname
                 binding.nicknameTitle.text = String.format(resources.getString(R.string.melody_nickname),albumInfo!!.nickname)
                 binding.nicknameLike.text = albumInfo!!.nickname
-                binding.title.text = albumInfo!!.albumName
-                binding.follower.text = followersList!!.size.toString()
-                binding.following.text = followingsList!!.size.toString()
+                binding.follow.text = String.format(resources.getString(R.string.follow),followersList?.toList()?.size.toString(),followingsList?.toList()?.size.toString())
+                binding.follow.text = setBoldType(followersList?.toList()?.size.toString(),followingsList?.toList()?.size.toString(), binding.follow.text.toString())
             }
         }
-        binding.following.setOnClickListener{
-            val action = UserArchiveFragmentDirections.actionUserArchiveFragmentToFollowingListFragment(followingsList!!,followersList!!,albumInfo!!.nickname)
+        binding.follow.setOnClickListener{
+            val action = UserArchiveFragmentDirections.actionUserArchiveFragmentToFollowingListFragment(followingsList!!,followersList!!,albumInfo!!.nickname,albumInfo!!.memberId.toString())
             findNavController().navigate(action)
         }
 
-        binding.moveBtn.setOnClickListener {
+        binding.melodyMove.setOnClickListener {
             val action = UserArchiveFragmentDirections.actionUserArchiveFragmentToLikeMelodyFragment(albumInfo!!.nickname,albumInfo!!.memberId.toString())
             findNavController().navigate(action)
         }
@@ -184,6 +197,23 @@ class UserArchiveFragment : Fragment() {
             findNavController().popBackStack()
         }
         binding.profileIcon.setColorFilter(resources.getColor(R.color.textColor), PorterDuff.Mode.SRC_IN)
+
+        viewModel.isFollowing.observe(viewLifecycleOwner, Observer {
+            if(viewModel.isFollowing.value == true) {
+                binding.melodyMove.visibility = View.VISIBLE
+                binding.notFollowingText.visibility = View.GONE
+                numOfFollower +=1
+                binding.follow.text = String.format(resources.getString(R.string.follow),numOfFollower.toString(),followingsList?.toList()?.size.toString())
+                binding.follow.text = setBoldType(numOfFollower.toString(),followingsList?.toList()?.size.toString(), binding.follow.text.toString())
+            }
+            else {
+                binding.melodyMove.visibility = View.GONE
+                binding.notFollowingText.visibility = View.VISIBLE
+                numOfFollower -=1
+                binding.follow.text = String.format(resources.getString(R.string.follow),numOfFollower.toString(),followingsList?.toList()?.size.toString())
+                binding.follow.text = setBoldType(numOfFollower.toString(),followingsList?.toList()?.size.toString(), binding.follow.text.toString())
+            }
+        })
         binding.followingBtn.setOnSingleClickListener {
             if(binding.followingBtn.isSelected){
                 binding.followingBtn.isSelected = false
@@ -200,6 +230,8 @@ class UserArchiveFragment : Fragment() {
                     ) {
                         if(response.isSuccessful){
                             Log.d("팔로잉 삭제 성공",response.body().toString())
+                            viewModel.setFollowing(false)
+                            Log.d("numOfFollower",numOfFollower.toString())
                         }else{
                             Log.d("팔로잉 삭제 실패 error ",response.errorBody()?.string().toString())
                         }
@@ -224,6 +256,8 @@ class UserArchiveFragment : Fragment() {
                     ) {
                         if(response.isSuccessful){
                             Log.d("팔로잉 성공", "팔로잉 성공")
+                            viewModel.setFollowing(true)
+                            Log.d("numOfFollower",numOfFollower.toString())
                         }else{
                             Log.d("팔로잉 실패",response.errorBody().toString())
                         }
@@ -235,5 +269,38 @@ class UserArchiveFragment : Fragment() {
                 })
             }
         }
+
+        binding.image.setOnSingleClickListener {
+            if(args.albumId != "0"){
+                val action = UserArchiveFragmentDirections.actionUserArchiveFragmentToAlbumMelodyCardFragment(args.memberId,args.albumId,albumInfo!!.albumName,"others")
+                findNavController().navigate(action)
+            }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG,"onStart")
+    }
+
+    private fun setBoldType(followerSize : String, followingSize : String, text : String) : SpannableString{
+        val spannableString = SpannableString(text)
+
+        val followerIndex = binding.follow.text.indexOf(followerSize)
+        val followingIndex = binding.follow.text.lastIndexOf(followingSize)
+
+        spannableString.setSpan(
+            StyleSpan(Typeface.BOLD),
+            followerIndex,
+            followerIndex + followerSize.length,
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+        )
+        spannableString.setSpan(
+            StyleSpan(Typeface.BOLD),
+            followingIndex,
+            followingIndex + followingSize.length,
+            Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+        )
+        return spannableString
     }
 }

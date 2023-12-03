@@ -9,22 +9,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.databinding.FragmentAlbumListBinding
 import com.ajou.diggingclub.ground.adapter.FollowingAlbumListRVAdapter
+import com.ajou.diggingclub.ground.adapter.MelodyCardRVAdapter
 import com.ajou.diggingclub.ground.models.ReceivedAlbumModel
+import com.ajou.diggingclub.ground.models.ReceivedMelodyCardModel
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.AlbumService
+import com.ajou.diggingclub.network.api.CardService
+import com.ajou.diggingclub.network.api.FavoriteService
+import com.ajou.diggingclub.network.api.MusicService
 import com.ajou.diggingclub.network.models.AlbumResponse
+import com.ajou.diggingclub.profile.ProfileActivity
 import com.ajou.diggingclub.start.LandingActivity
 import com.ajou.diggingclub.utils.AdapterToFragment
 import com.ajou.diggingclub.utils.fromDpToPx
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import okhttp3.internal.wait
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,7 +38,16 @@ class AlbumListFragment : Fragment(), AdapterToFragment {
     private var _binding: FragmentAlbumListBinding? = null
     private val binding get() = _binding!!
     private var mContext: Context? = null
+    private val cardService = RetrofitInstance.getInstance().create(CardService::class.java)
     private val albumService = RetrofitInstance.getInstance().create(AlbumService::class.java)
+    private val favoriteService = RetrofitInstance.getInstance().create(FavoriteService::class.java)
+    private val musicService = RetrofitInstance.getInstance().create(MusicService::class.java)
+    private val TAG = AlbumListFragment::class.java.simpleName
+
+    var accessToken : String? = null
+    var refreshToken : String? = null
+    var userId : String ?= null
+    val dataStore = UserDataStore()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,85 +70,85 @@ class AlbumListFragment : Fragment(), AdapterToFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val dataStore = UserDataStore()
-        var accessToken: String? = null
-        var refreshToken: String? = null
         var nickname: String? = null
-
+        val args : AlbumListFragmentArgs by navArgs()
+        val list = args.albums.toList()
         CoroutineScope(Dispatchers.IO).launch {
             accessToken = dataStore.getAccessToken().toString()
             refreshToken = dataStore.getRefreshToken().toString()
             nickname = dataStore.getNickname().toString()
-            val tmp = "AI가 " + nickname + "님에게 추천하는 앨범이에요!"
-            binding.name.text = tmp
+            userId = dataStore.getMemberId().toString()
+            var title = ""
             if (accessToken == null || refreshToken == null) {
                 val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
-
-            binding.backBtn.setOnClickListener {
-                findNavController().navigate(R.id.action_albumListFragment_to_groundFragment)
+            when(args.type){
+                "following" -> {
+                    title = "내가 팔로우하는 앨범 살펴보기"
+                }
+                "ai" -> {
+                    title = nickname + "님만을 위한 추천 앨범이에요!"
+                }
+                "genre" -> {
+                    title = "오늘, 이런 장르는 어떠세요?"
+                }
+                else -> {
+                }
             }
-
             withContext(Dispatchers.Main) {
-                // TODO type을 받아서 type에 따라 api 호출하기 following, AI 등등..
-                albumService.getFollowingAlbums(accessToken!!, refreshToken!!).enqueue(object :
-                    Callback<AlbumResponse> {
-                    override fun onResponse(
-                        call: Call<AlbumResponse>,
-                        response: Response<AlbumResponse>
-                    ) {
-                        if (response.isSuccessful) {
-                            if (response.headers()["AccessToken"] != null) {
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    Log.d(
-                                        "new AccessToken",
-                                        response.headers()["AccessToken"].toString()
-                                    )
-                                    dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
-                                }
-                            }
-                            val list: List<ReceivedAlbumModel> = response.body()!!.albumListResult
-                            Log.d("success", list.toString())
-                            val albumListRVAdapter =
-                                FollowingAlbumListRVAdapter(mContext!!, list, "following", this@AlbumListFragment)
-                            binding.albumRV.adapter = albumListRVAdapter
-                            val gridLayoutManager = GridLayoutManager(mContext, 2)
-                            binding.albumRV.addItemDecoration(
-                                FollowingAlbumListRVAdapter.GridSpacingItemDecoration(
-                                    2,
-                                    8f.fromDpToPx()
-                                )
-                            )
-                            binding.albumRV.layoutManager = gridLayoutManager
-
-                        } else {
-                            Log.d(
-                                "response not successful",
-                                response.errorBody()?.string().toString()
-                            )
-                        }
-                    }
-
-                    override fun onFailure(call: Call<AlbumResponse>, t: Throwable) {
-                        Log.d("failll", t.message.toString())
-                    }
-                })
+                binding.name.text = title
+                val albumListRVAdapter = FollowingAlbumListRVAdapter(mContext!!, list, this@AlbumListFragment)
+                binding.albumRV.adapter = albumListRVAdapter
+                val gridLayoutManager = GridLayoutManager(mContext, 2)
+                binding.albumRV.layoutManager = gridLayoutManager
+                binding.albumRV.addItemDecoration(FollowingAlbumListRVAdapter.GridSpacingItemDecoration(2, 4f.fromDpToPx()))
             }
         }
 
         binding.backBtn.setOnClickListener {
-            findNavController().navigate(R.id.action_albumListFragment_to_groundFragment)
+            findNavController().popBackStack()
         }
     }
-    // TODO 어댑터들 연결해야함 GroundFragment처럼
 
     override fun getSelectedItem(item: ReceivedAlbumModel) {
-        // TODO
+        Log.d(TAG,"userId : $userId  item.memberId : ${item.memberId}")
+        if(userId == item.memberId.toString()){
+            Log.d(TAG,"id is same")
+            val intent = Intent(mContext, ProfileActivity::class.java)
+            intent.putExtra("albumInfo",item)
+            startActivity(intent)
+        }else{
+            val action = AlbumListFragmentDirections.actionAlbumListFragmentToUserArchiveFragment(item,item.albumId.toString(),item.memberId.toString())
+            findNavController().navigate(action)
+        }
     }
 
     override fun getSelectedId(memberId: String, albumId: String, name : String, type: String) {
-        // TODO
+        when(type){
+            "card" -> {
+                if(userId == memberId){
+                    val intent = Intent(mContext, ProfileActivity::class.java)
+                    intent.putExtra("albumId",albumId)
+                    startActivity(intent)
+                }
+                val action = AlbumListFragmentDirections.actionAlbumListFragmentToUserArchiveFragment(null,albumId,memberId)
+                findNavController().navigate(action)
+            }
+            "album" -> {
+                val bottomSheetDialogFragment = BottomSheetFragment()
+                val bundle = Bundle().apply {
+                    putString("albumId",albumId)
+                    putString("memberId",memberId)
+                    putString("name",name)
+                }
+                bottomSheetDialogFragment.arguments = bundle
+                bottomSheetDialogFragment.show(parentFragmentManager,bottomSheetDialogFragment.tag)
+            }
+            else -> {
+                Log.d("else","error....")
+            }
+        }
     }
 
     override fun postFavoriteId(melodyCardId: String, isLike: Boolean) {
@@ -144,4 +158,105 @@ class AlbumListFragment : Fragment(), AdapterToFragment {
     override fun addRecordCount(position: Int) {
         // TODO
     }
+
+    private suspend fun getFollowingAlbums() : List<ReceivedAlbumModel> {
+        var list = listOf<ReceivedAlbumModel>()
+        albumService.getFollowingAlbums(accessToken!!, refreshToken!!).enqueue(object :
+            Callback<AlbumResponse> {
+            override fun onResponse(
+                call: Call<AlbumResponse>,
+                response: Response<AlbumResponse>
+            ) {
+                if (response.isSuccessful) {
+                    if (response.headers()["AccessToken"] != null) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            Log.d(
+                                "new AccessToken",
+                                response.headers()["AccessToken"].toString()
+                            )
+                            dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
+                        }
+                    }
+                    list = response.body()!!.albumListResult
+                    Log.d(TAG,"following $list")
+                } else {
+                    Log.d(TAG, response.errorBody()?.string().toString())
+                    Log.d(TAG,"following $list")
+                }
+            }
+
+            override fun onFailure(call: Call<AlbumResponse>, t: Throwable) {
+                Log.d("failll", t.message.toString())
+                Log.d(TAG,"following $list")
+            }
+        })
+        return list
+    }
+    private suspend fun getAIRecommendAlbums(): List<ReceivedAlbumModel> {
+        var list = listOf<ReceivedAlbumModel>()
+        albumService.getAIAlbums(accessToken!!, refreshToken!!).enqueue(object :
+            Callback<AlbumResponse> {
+            override fun onResponse(
+                call: Call<AlbumResponse>,
+                response: Response<AlbumResponse>
+            ) {
+                if (response.isSuccessful) {
+                    if (response.headers()["AccessToken"] != null) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            Log.d(
+                                "new AccessToken",
+                                response.headers()["AccessToken"].toString()
+                            )
+                            dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
+                        }
+                    }
+                    list = response.body()!!.albumListResult
+                    Log.d(TAG,"ai $list")
+                } else {
+                    Log.d(TAG, response.errorBody()?.string().toString())
+                    Log.d(TAG,"ai $list")
+                }
+            }
+
+            override fun onFailure(call: Call<AlbumResponse>, t: Throwable) {
+                Log.d("failll", t.message.toString())
+                Log.d(TAG,"ai $list")
+            }
+        })
+        return list
+    }
+    private suspend fun getGenreRecommendAlbums(): List<ReceivedAlbumModel> {
+        var list = listOf<ReceivedAlbumModel>()
+        albumService.getGenreAlbums(accessToken!!, refreshToken!!).enqueue(object :
+            Callback<AlbumResponse> {
+            override fun onResponse(
+                call: Call<AlbumResponse>,
+                response: Response<AlbumResponse>
+            ) {
+                if (response.isSuccessful) {
+                    if (response.headers()["AccessToken"] != null) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            Log.d(
+                                "new AccessToken",
+                                response.headers()["AccessToken"].toString()
+                            )
+                            dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
+                        }
+                    }
+                    list = response.body()!!.albumListResult
+                    Log.d(TAG,"genre $list")
+                } else {
+                    Log.d(TAG, response.errorBody()?.string().toString())
+                    Log.d(TAG,"genre $list")
+                }
+            }
+
+            override fun onFailure(call: Call<AlbumResponse>, t: Throwable) {
+                Log.d("failll", t.message.toString())
+                Log.d(TAG,"genre $list")
+            }
+        })
+        return list
+    }
+
 }

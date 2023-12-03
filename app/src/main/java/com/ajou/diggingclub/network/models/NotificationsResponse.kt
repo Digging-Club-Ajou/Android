@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 
 data class NotificationsResponse(
     @SerializedName("notificationResponses")
-    val notificationsList : List<NotificationsModel> = arrayListOf()
+    val notificationsList : ArrayList<NotificationsModel> = arrayListOf()
 )

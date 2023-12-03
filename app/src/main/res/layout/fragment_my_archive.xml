@@ -11,14 +11,6 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/backBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/back_arrow_icon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
             android:id="@+id/profileIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,7 +19,6 @@
             app:layout_constraintEnd_toStartOf="@+id/nickname"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@+id/backBtn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,10 +27,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:text="dlwldma"
+            android:text="       "
             android:textColor="@color/textColor"
             android:textSize="14sp"
             android:gravity="top"
+            android:layout_marginTop="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/profileIcon"
@@ -55,57 +47,16 @@
             app:layout_constraintTop_toTopOf="@+id/nickname" />
 
         <TextView
-            android:id="@+id/follower"
+            android:id="@+id/follow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="64"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
+            android:text=""
             android:textColor="@color/textColor"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp"
             app:layout_constraintBottom_toBottomOf="@+id/editBtn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editBtn" />
-
-        <TextView
-            android:id="@+id/textView11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text=" 팔로워"
-            android:textColor="@color/textColor"
-            android:textSize="12sp"
-            android:layout_marginTop="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/editBtn"
-            app:layout_constraintStart_toEndOf="@id/follower"
-            app:layout_constraintTop_toTopOf="@+id/editBtn" />
-
-        <TextView
-            android:id="@+id/following"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:text="96"
-            android:textColor="@color/textColor"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:layout_marginTop="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/editBtn"
-            app:layout_constraintStart_toEndOf="@id/textView11"
-            app:layout_constraintTop_toTopOf="@+id/editBtn" />
-
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text=" 팔로잉"
-            android:textColor="@color/textColor"
-            android:textSize="12sp"
-            android:layout_marginTop="4dp"
-            app:layout_constraintBottom_toBottomOf="@+id/editBtn"
-            app:layout_constraintStart_toEndOf="@id/following"
             app:layout_constraintTop_toTopOf="@+id/editBtn" />
 
         <ImageView
@@ -116,13 +67,13 @@
             android:background="@drawable/edit_icon"
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backBtn"/>
+            app:layout_constraintTop_toBottomOf="@+id/nickname"/>
 
         <ImageView
             android:id="@+id/image"
             android:layout_width="0dp"
             android:layout_height="345dp"
-            android:src="@drawable/rectangle_5"
+            android:background="@drawable/rectangle_5"
             android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -142,17 +93,18 @@
             android:id="@+id/profile"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:gravity="top"
-            android:text="kimkimjiye"
+            android:text=""
             android:textColor="#f4f4f4"
             android:textSize="14sp"
             android:shadowColor="#80000000"
             android:shadowDx="0"
             android:shadowDy="0"
             android:shadowRadius="2"
+            android:layout_marginStart="4dp"
             app:layout_constraintStart_toEndOf="@+id/imageView5"
-            app:layout_constraintTop_toTopOf="@+id/image" />
+            app:layout_constraintTop_toTopOf="@+id/imageView5"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView5"/>
 
         <TextView
             android:id="@+id/title"
@@ -164,6 +116,7 @@
             android:text="앨범의 이름을 입력해주세요"
             android:textColor="#F4F4F4"
             android:textColorHint="#f4f4f4"
+            android:textSize="24sp"
             android:textStyle="bold"
             android:shadowColor="#80000000"
             android:shadowDx="0"
@@ -176,13 +129,21 @@
             android:id="@+id/nicknameTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/melody_nickname"
+            android:text=""
             android:textColor="@color/textColor"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/album_play_icon"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="22dp"
+            app:layout_constraintBottom_toBottomOf="@+id/image"
+            app:layout_constraintEnd_toEndOf="@+id/image" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/melodyMove"
@@ -207,7 +168,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="dlwlrma"
+                android:text=""
                 android:textColor="@color/textColor"
                 android:textSize="14sp"
                 android:textStyle="bold"

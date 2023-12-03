@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.Observer
@@ -48,9 +49,15 @@ class KakaoSignUpActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[KakaoSignUpViewModel::class.java]
 
         val webview : WebView = findViewById(R.id.webview)
-        webview.settings.javaScriptEnabled = true
-        webview.settings.javaScriptCanOpenWindowsAutomatically = true
-        webview.settings.setSupportMultipleWindows(true)
+        webview.settings.apply {
+            javaScriptEnabled = true
+            javaScriptCanOpenWindowsAutomatically = true
+            setSupportMultipleWindows(true)
+            cacheMode = WebSettings.LOAD_NO_CACHE
+        }
+        webview.clearCache(true)
+        webview.clearHistory() // webview 캐시 지워줘야 카카오 로그인 시 자동로그인 막음
+        webview.clearFormData()
         webview.webViewClient = object : WebViewClient(){
             val target = redirectUri+"?code=" // code 앞에 들어갈 것은 redirectURI
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -61,7 +68,6 @@ class KakaoSignUpActivity : AppCompatActivity() {
                 }
             }
         }
-
         webview.loadUrl("https://kauth.kakao.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=${responseType}")
 
         viewModel.authCode.observe(this, Observer{
@@ -87,7 +93,6 @@ class KakaoSignUpActivity : AppCompatActivity() {
                             startActivity(intent)
                             }else{
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    Log.d("here!!","here!!!")
                                     val nicknameDeferred = async { userService.getNickname(tokens!!.accessToken, tokens!!.refreshToken) }
                                     val albumExistDeferred = async { albumService.checkAlbumExist(tokens!!.accessToken, tokens!!.refreshToken) }
                                     val userInfoDeferred = async { userService.getUserInfo(tokens!!.accessToken, tokens!!.refreshToken) }
@@ -107,16 +112,18 @@ class KakaoSignUpActivity : AppCompatActivity() {
                                         if (albumExistObject.get("alreadyExist") == false) dataStore.saveAlbumExistFlag(false)
                                         else dataStore.saveAlbumExistFlag(true)
                                         val userInfoBody = JSONObject(userInfoResponse.body()?.string())
-                                        dataStore.saveMemberId(userInfoBody.get("memberId").toString().toInt())
-                                        dataStore.saveAlbumId(userInfoBody.get("albumId").toString().toInt())
+                                        dataStore.saveMemberId(userInfoBody.get("memberId").toString())
+                                        dataStore.saveAlbumId(userInfoBody.get("albumId").toString())
+                                        val intent = Intent(this@KakaoSignUpActivity, GroundActivity::class.java)
+                                        startActivity(intent)
                                     }else{
                                         Log.d("nicknameerror response",nicknameResponse.errorBody()?.string().toString())
                                         Log.d("albumexisterror response",albumExistResponse.errorBody()?.string().toString())
                                         Log.d("userinfoerror response",userInfoResponse.errorBody()?.string().toString())
+                                        val intent = Intent(this@KakaoSignUpActivity, IntroActivity::class.java)
+                                        startActivity(intent)
                                     }
                                 }
-                                val intent = Intent(this@KakaoSignUpActivity, GroundActivity::class.java)
-                                startActivity(intent)
                             }
 //                           webview.removeAllViews() // TODO 흰 화면 보일 때 처리 어떻게 할 것인지 + redirectURI로 이동했을 때 뜨는 에러페이지 보일 때 어떻게 할 것인지
 //                           webview.destroy()

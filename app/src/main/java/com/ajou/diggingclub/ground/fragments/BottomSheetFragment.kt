@@ -37,6 +37,7 @@ class BottomSheetFragment() : BottomSheetDialogFragment(), AdapterToFragment {
     private val cardService = RetrofitInstance.getInstance().create(CardService::class.java)
     private val followingService = RetrofitInstance.getInstance().create(FollowingService::class.java)
     private var list : ArrayList<ReceivedMelodyCardModel> = arrayListOf()
+    private lateinit var adapter : MelodyCardRVAdapter
 
     var accessToken : String? = null
     var refreshToken : String? = null
@@ -106,7 +107,8 @@ class BottomSheetFragment() : BottomSheetDialogFragment(), AdapterToFragment {
                     }.awaitAll().filterNotNull()
                     list.addAll(favList)
                     withContext(Dispatchers.Main){
-                        binding.cardRV.adapter = MelodyCardRVAdapter(mContext!!,favList,this@BottomSheetFragment,"rv")
+                        adapter = MelodyCardRVAdapter(mContext!!,favList,this@BottomSheetFragment, "rv")
+                        binding.cardRV.adapter = adapter
                         binding.cardRV.layoutManager = LinearLayoutManager(mContext)
                         binding.title.text = String.format(resources.getString(R.string.likelist_nickname),nickname)
                         binding.nickname.text = nickname
@@ -115,14 +117,19 @@ class BottomSheetFragment() : BottomSheetDialogFragment(), AdapterToFragment {
             }else{ // AlbumFragment
                 val result = cardService.getAlbumCards(accessToken!!,refreshToken!!,albumId!!)
                 if(result.isSuccessful){
-                    val list = result.body()?.melodyCardListResult
+                    val cardList = result.body()?.melodyCardListResult
                     val title = nickname // nickname으로 앨범명 넘겨받았기 때문에 title에 값 넣어주는 과정
-                    nickname = list?.get(0)?.nickname
+                    list.addAll(cardList!!)
+                    Log.d("list",cardList.toString())
                     withContext(Dispatchers.Main){
-                        binding.cardRV.adapter = MelodyCardRVAdapter(mContext!!,list!!,this@BottomSheetFragment, "rv")
-                        binding.cardRV.layoutManager = LinearLayoutManager(mContext)
-                        binding.title.text = title
-                        binding.nickname.text = nickname
+                    binding.title.text = title
+                    if(cardList!!.isNotEmpty()){
+                            nickname = list[0].nickname
+                            adapter = MelodyCardRVAdapter(mContext!!,cardList,this@BottomSheetFragment, "rv")
+                            binding.cardRV.adapter = adapter
+                            binding.cardRV.layoutManager = LinearLayoutManager(mContext)
+                            binding.nickname.text = nickname
+                        }
                     }
 
                 } //  TODO 마저 작성하기
@@ -149,6 +156,13 @@ class BottomSheetFragment() : BottomSheetDialogFragment(), AdapterToFragment {
                     }
                 }
             }
+        }
+
+        binding.nickname.setOnClickListener {
+            // TODO userarchive fragmeet로 이동하기
+        }
+        binding.followingBtn.setOnClickListener {
+            // TODO 팔로잉 처리하기
         }
     }
 
@@ -182,6 +196,13 @@ class BottomSheetFragment() : BottomSheetDialogFragment(), AdapterToFragment {
 
     override fun addRecordCount(position: Int) {
         // TODO
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        for(i in 0 until list.size){
+           adapter.stopMediaPlayer(i)
+        }
     }
 
     private fun setupRatio(bottomSheetDialog: BottomSheetDialog) {

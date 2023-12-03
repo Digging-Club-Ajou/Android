@@ -32,6 +32,12 @@ class IntroViewModel : ViewModel(){
         _genreArr.value = currentList
         Log.d("removeArr",genreArr.value.toString())
     }
+    fun setEmptyGenreArr(){
+        _genreArr.value = mutableListOf()
+    }
+    fun setEmptyArtistArr(){
+        _artistArr.value = mutableListOf()
+    }
     fun getArr() : MutableList<Int>{
         if(_genreArr.value?.size==5){
 

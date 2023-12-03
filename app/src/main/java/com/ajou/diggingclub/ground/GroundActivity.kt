@@ -22,12 +22,16 @@ class GroundActivity : AppCompatActivity() {
         binding = ActivityGroundBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        binding.tabProfile.setOnSingleClickListener {
-//            val intent = Intent(this, ProfileActivity::class.java)
-//            startActivity(intent)
-//        }
+        binding.tabProfile.setOnSingleClickListener {
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
         binding.tabMelody.setOnSingleClickListener {
             val intent = Intent(this, MelodyActivity::class.java)
+            startActivity(intent)
+        }
+        binding.tabGround.setOnSingleClickListener {
+            val intent = Intent(this, GroundActivity::class.java)
             startActivity(intent)
         }
     }

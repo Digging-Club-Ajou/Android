@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.ground.models.ReceivedAlbumModel
 import com.ajou.diggingclub.utils.AdapterToFragment
+import com.ajou.diggingclub.utils.requestOptions
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -22,11 +23,7 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 
-class FollowingAlbumListRVAdapter(val context: Context, val list : List<ReceivedAlbumModel>,val type:String, val link : AdapterToFragment): RecyclerView.Adapter<FollowingAlbumListRVAdapter.ViewHolder>() {
-
-    private val requestOptions = RequestOptions()
-        .transform(CenterCrop(), RoundedCorners(20))
-
+class FollowingAlbumListRVAdapter(val context: Context, val list : List<ReceivedAlbumModel>, val link : AdapterToFragment): RecyclerView.Adapter<FollowingAlbumListRVAdapter.ViewHolder>() {
     inner class ViewHolder(view : View):RecyclerView.ViewHolder(view){
         val image : ImageView = view.findViewById(R.id.image)
         val nickname : TextView = view.findViewById(R.id.nickname)
@@ -45,7 +42,7 @@ class FollowingAlbumListRVAdapter(val context: Context, val list : List<Received
     }
 
     override fun onBindViewHolder(holder: FollowingAlbumListRVAdapter.ViewHolder, position: Int) {
-        val artistList = list[position].artistNames.take(4)
+        val artistList = list[position].artistNames
         holder.nickname.text = list[position].nickname
         holder.albumTitle.text = list[position].albumName
         Glide.with(context)
@@ -79,28 +76,48 @@ class FollowingAlbumListRVAdapter(val context: Context, val list : List<Received
         private val spanCount: Int, // Grid의 column 수
         private val spacing: Int // 간격
     ) : RecyclerView.ItemDecoration() {
-
         override fun getItemOffsets(
             outRect: Rect,
             view: View,
             parent: RecyclerView,
             state: RecyclerView.State
         ) {
-            val position = parent.getChildAdapterPosition(view)
-            val column = position % spanCount + 1      // 1부터 시작
+            val position: Int = parent.getChildAdapterPosition(view)
 
-            /** 첫번째 행(row-1)에 있는 아이템인 경우 상단에 [space] 만큼의 여백을 추가한다 */
-            if (position < spanCount){
-                outRect.top = spacing
+            if (position >= 0) {
+                val column = position % spanCount // item column
+                outRect.apply {
+                    // spacing - column * ((1f / spanCount) * spacing)
+                    left = spacing - column * spacing / spanCount
+                    // (column + 1) * ((1f / spanCount) * spacing)
+                    right = (column + 1) * spacing / spanCount
+                    if (position < spanCount) top = spacing
+                    bottom = spacing
+                }
+            } else {
+                outRect.apply {
+                    left = 0
+                    right = 0
+                    top = 0
+                    bottom = 0
+                }
             }
-            /** 마지막 열(column-N)에 있는 아이템인 경우 우측에 [space] 만큼의 여백을 추가한다 */
-            if (column == spanCount){
-                outRect.right = spacing
-            }
-            /** 모든 아이템의 좌측과 하단에 [space] 만큼의 여백을 추가한다. */
-            outRect.left = spacing/2
-            outRect.bottom = spacing*2
-
         }
     }
+
+    internal class HorizontalItemDecoration(
+        private val spacing: Int
+    ) : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            super.getItemOffsets(outRect, view, parent, state)
+            outRect.left = spacing
+            outRect.right = spacing
+        }
+    }
+
 }

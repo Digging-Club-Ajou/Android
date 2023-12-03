@@ -23,6 +23,7 @@ import com.ajou.diggingclub.network.api.SearchService
 import com.ajou.diggingclub.network.models.MemberSearchResponse
 import com.ajou.diggingclub.profile.ProfileActivity
 import com.ajou.diggingclub.start.LandingActivity
+import com.ajou.diggingclub.utils.hideKeyboard
 import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -54,6 +55,10 @@ class SearchUserFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentSearchUserBinding.inflate(inflater, container, false)
+        binding.root.setOnClickListener {
+            Log.d("clicked!","clicked!")
+            hideKeyboard(requireActivity())
+        }
         return binding.root
     }
 
@@ -93,7 +98,7 @@ class SearchUserFragment : Fragment() {
                         list.clear()
                         binding.removeBtn.visibility = View.VISIBLE
                         job = CoroutineScope(Dispatchers.IO).launch {
-                            delay(1000)
+                            delay(200)
                             accessToken = dataStore.getAccessToken().toString()
                             refreshToken = dataStore.getRefreshToken().toString()
                             searchService.searchMember(accessToken!!,refreshToken!!,str.toString()).enqueue(object :
@@ -110,18 +115,23 @@ class SearchUserFragment : Fragment() {
                                         }
                                         val memberSearchListResult: List<MemberSearchModel> =
                                             response.body()!!.memberSearchListResult
+                                        Log.d("member userList",memberSearchListResult.toString())
                                         CoroutineScope(Dispatchers.IO).launch {
                                             val userList = memberSearchListResult.map { memberSearchModel ->
                                                     async {
-                                                        val albumResponse = albumClient.getAlbum(
-                                                            accessToken!!,
-                                                            refreshToken!!,
-                                                            memberSearchModel.albumId
-                                                        ).execute()
-                                                        albumResponse.body()
+                                                        if(memberSearchModel.albumId != "0"){
+                                                            val albumResponse = albumClient.getAlbum(
+                                                                accessToken!!,
+                                                                refreshToken!!,
+                                                                memberSearchModel.albumId
+                                                            ).execute()
+                                                            albumResponse.body()
+                                                        }
+                                                        else{
+                                                            ReceivedAlbumModel(memberSearchModel.memberId.toInt(),0,memberSearchModel.nickname,"","", arrayListOf())
+                                                        }
                                                     }
                                                 }.awaitAll().filterNotNull()
-                                            Log.d("data userlist",userList.toString())
                                             list.addAll(userList)
                                             withContext(Dispatchers.Main) {
                                                 val userListRVAdapter = SearchUserRVAdapter(mContext!!, userList,link)

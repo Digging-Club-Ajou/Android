@@ -20,8 +20,9 @@ import com.ajou.diggingclub.databinding.FragmentMakeAlbum1Binding
 import com.ajou.diggingclub.melody.models.MusicSpotifyModel
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.UserService
-import com.ajou.diggingclub.start.StartViewModel
+import com.ajou.diggingclub.profile.MyAlbumViewModel
 import com.ajou.diggingclub.utils.setOnSingleClickListener
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -39,7 +40,6 @@ class MakeAlbumFragment1 : Fragment() {
     private val userService = RetrofitInstance.getInstance().create(UserService::class.java)
     var accessToken : String? = null
     var refreshToken : String? = null
-    private val viewModel : StartViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,26 +74,28 @@ class MakeAlbumFragment1 : Fragment() {
         val dataStore = UserDataStore()
         var nickname : String ?= null
 
-        CoroutineScope(Dispatchers.IO).launch {
-            var accessToken = dataStore.getAccessToken().toString()
-            var refreshToken = dataStore.getRefreshToken().toString()
-            val result = userService.getNickname(accessToken,refreshToken)
-            if(result.isSuccessful){
-                val body = JSONObject(result.body()?.string())
-                nickname = body.get("nickname").toString()
-                CoroutineScope(Dispatchers.IO).launch {
-                    dataStore.saveNickname(body.get("nickname").toString())
-                }
-            }else{
-                Log.d("response is not successful", result.errorBody()?.string().toString())
+        CoroutineScope(Dispatchers.Main).launch {
+            var flag = dataStore.getAlbumExistFlag()
+            if(flag) findNavController().navigate(R.id.action_upload_to_findMusicFragment)
+            else{
+                nickname = dataStore.getNickname()
+                binding.username.text = nickname
+                binding.video.visibility = View.VISIBLE
             }
-            withContext(Dispatchers.Main){
-                var flag = dataStore.getAlbumExistFlag()
-                Log.d("flag",flag.toString())
-                if(flag){
-                    findNavController().navigate(R.id.action_upload_to_findMusicFragment)
+            withContext(Dispatchers.IO){
+                var accessToken = dataStore.getAccessToken().toString()
+                var refreshToken = dataStore.getRefreshToken().toString()
+                val result = userService.getNickname(accessToken,refreshToken)
+                if(result.isSuccessful){
+                    val body = JSONObject(result.body()?.string())
+                    nickname = body.get("nickname").toString()
+                    dataStore.saveNickname(nickname!!)
+                    withContext(Dispatchers.Main){
+                        binding.username.text = nickname
+                        binding.video.visibility = View.VISIBLE
+                    }
                 }else{
-                    binding.username.text = nickname
+                    Log.d("response is not successful", result.errorBody()?.string().toString())
                 }
             }
         }
@@ -110,8 +112,8 @@ class MakeAlbumFragment1 : Fragment() {
         binding.video.start()  // video 관련 코드
 
         binding.backBtn.setOnSingleClickListener {
-            findNavController().navigate(R.id.action_upload_to_findMusicFragment)
-        } // TODO 테스트용으로 연결해둔 것으로 다른 걸로 연결해야함
+            findNavController().popBackStack()
+        }
 
         binding.camera.setOnSingleClickListener {
             val action = MakeAlbumFragment1Directions.actionUploadToCameraFragment("album",

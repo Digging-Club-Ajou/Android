@@ -2,6 +2,7 @@ package com.ajou.diggingclub.network.api
 
 import com.ajou.diggingclub.ground.models.ReceivedAlbumModel
 import com.ajou.diggingclub.network.models.AlbumResponse
+import com.ajou.diggingclub.network.models.EditAlbum
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -64,11 +65,11 @@ interface AlbumService {
     ) : Call<ResponseBody>
 
     @Multipart
-    @POST("albums/update")
+    @PATCH("albums")
     fun updateAlbum(
         @Header("AccessToken") accessToken : String,
         @Header("RefreshToken") refreshToken : String,
-        @Part("albumNameRequest") albumNameRequest : RequestBody,
+        @Part("albumNameRequest") albumNameRequest : EditAlbum,
         @Part file : MultipartBody.Part?
-    )
+    ) : Call<ResponseBody>
 }

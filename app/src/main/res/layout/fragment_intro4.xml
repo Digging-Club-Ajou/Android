@@ -13,6 +13,8 @@
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingBottom="12dp"
+            android:paddingEnd="12dp"
             android:src="@drawable/back_arrow_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -101,7 +103,7 @@
 
         <TextView
             android:id="@+id/description"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_marginTop="8dp"
@@ -110,12 +112,12 @@
             android:text="영문, 숫자, 밑줄(_), 마침표(.)를 포함하여 2~20자를 지원합니다."
             android:textColor="#767676"
             android:textSize="12sp"
-            android:translationY="-3.84sp"
+            app:layout_constraintEnd_toEndOf="@+id/removeBtn"
             app:layout_constraintStart_toStartOf="@+id/textView3"
             app:layout_constraintTop_toBottomOf="@+id/nickname" />
         <TextView
             android:id="@+id/duplicate"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="다른 유저와 중복되는 아이디입니다."
             android:layout_alignParentLeft="true"
@@ -125,13 +127,13 @@
             android:gravity="top"
             android:lineSpacingExtra="8sp"
             android:textSize="12sp"
-            android:translationY="-3.84sp"
             app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/nickname"/>
+            app:layout_constraintTop_toBottomOf="@+id/nickname"
+            app:layout_constraintEnd_toEndOf="@+id/removeBtn"/>
 
         <TextView
             android:id="@+id/possible"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="사용 가능한 아이디입니다."
             android:layout_alignParentLeft="true"
@@ -141,9 +143,9 @@
             android:gravity="top"
             android:lineSpacingExtra="8sp"
             android:textSize="12sp"
-            android:translationY="-3.84sp"
             app:layout_constraintStart_toStartOf="@+id/textView3"
-            app:layout_constraintTop_toBottomOf="@+id/nickname"/>
+            app:layout_constraintTop_toBottomOf="@+id/nickname"
+            app:layout_constraintEnd_toEndOf="@+id/removeBtn"/>
 
         <Button
             android:id="@+id/nextBtn"

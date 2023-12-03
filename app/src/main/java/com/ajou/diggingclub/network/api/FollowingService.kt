@@ -30,10 +30,10 @@ interface FollowingService {
     ) : Response<ResponseBody>
 
     @GET("followings")
-    fun getMyFollowingList(
+    suspend fun getMyFollowingList(
         @Header("AccessToken") accessToken : String,
         @Header("RefreshToken") refreshToken : String,
-    ) : Call<FollowingResponseBody>
+    ) : Response<FollowingResponseBody>
 
     @GET("followings/{memberId}")
     suspend fun getFollowingList(

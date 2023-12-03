@@ -14,22 +14,26 @@ import androidx.activity.viewModels
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
 import com.ajou.diggingclub.ground.GroundActivity
+import com.ajou.diggingclub.intro.IntroActivity
 import com.ajou.diggingclub.network.RetrofitInstance
 import com.ajou.diggingclub.network.api.AlbumService
 import com.ajou.diggingclub.network.api.UserService
+import com.ajou.diggingclub.profile.MyAlbumViewModel
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
+@AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
 
-    private val viewModel : StartViewModel by viewModels()
+    private val viewModel : MyAlbumViewModel by viewModels()
     private val client = RetrofitInstance.getInstance().create(AlbumService::class.java)
     private val userClient = RetrofitInstance.getInstance().create(UserService::class.java)
 
@@ -83,6 +87,7 @@ class SplashActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.IO).launch {
                 accessToken = dataStore.getAccessToken().toString()
                 refreshToken = dataStore.getRefreshToken().toString()
+                Log.d("accessToken",accessToken.toString())
 
                 if(accessToken == null || refreshToken == null){
                     val intent = Intent(this@SplashActivity, LandingActivity::class.java)
@@ -98,17 +103,25 @@ class SplashActivity : AppCompatActivity() {
                     val albumExistResponse = albumExistDeferred.await()
                     val userInfoResponse = userInfoDeferred.await()
 
-                    if (nicknameResponse.isSuccessful && albumExistResponse.isSuccessful && userInfoResponse.isSuccessful) {
+                    if(!nicknameResponse.isSuccessful){
+                        Log.d("nickname",nicknameResponse.errorBody()?.string().toString())
+                       val intent = Intent(this@SplashActivity, IntroActivity::class.java)
+                       startActivity(intent)
+                    } else if (nicknameResponse.isSuccessful && albumExistResponse.isSuccessful && userInfoResponse.isSuccessful) {
                         if(nicknameResponse.headers()["AccessToken"] != null) dataStore.saveAccessToken(nicknameResponse.headers()["AccessToken"].toString())
                         Log.d("accessToken",accessToken.toString())
                         val nicknameBody = JSONObject(nicknameResponse.body()?.string())
                         dataStore.saveNickname(nicknameBody.get("nickname").toString())
+                        viewModel.setNickname(nicknameBody.get("nickname").toString())
+                        Log.d("nickname",nicknameBody.get("nickname").toString())
                         val albumExistBody = JSONObject(albumExistResponse.body()?.string())
                         if (albumExistBody.get("alreadyExist") == false) dataStore.saveAlbumExistFlag(false)
                         else dataStore.saveAlbumExistFlag(true)
                         val userInfoBody = JSONObject(userInfoResponse.body()?.string())
-                        dataStore.saveMemberId(userInfoBody.get("memberId").toString().toInt())
-                        dataStore.saveAlbumId(userInfoBody.get("albumId").toString().toInt())
+                        dataStore.saveMemberId(userInfoBody.get("memberId").toString())
+                        viewModel.setUserId(userInfoBody.get("memberId").toString())
+                        dataStore.saveAlbumId(userInfoBody.get("albumId").toString())
+                        viewModel.setAlbumId(userInfoBody.get("albumId").toString())
                         val intent = Intent(this@SplashActivity, GroundActivity::class.java)
                         startActivity(intent)
 //                        finish()
@@ -121,7 +134,6 @@ class SplashActivity : AppCompatActivity() {
                         startActivity(intent)
 //                        finish()
                     }
-
                 }catch (e:Exception){
                     Log.d("fail in catch",e.message.toString())
                     Firebase.crashlytics.recordException(e)
@@ -129,7 +141,7 @@ class SplashActivity : AppCompatActivity() {
 
             }
         }, 2000)
-        viewModel.checkFirstFlag()
+        viewModel.getFirstFlag()
         viewModel.getExistFlag()
     }
 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signout_graph"
+    app:startDestination="@id/signOutFragment">
+
+    <fragment
+        android:id="@+id/signOutFragment"
+        android:name="com.ajou.diggingclub.setting.SignOutFragment"
+        android:label="fragment_sign_out"
+        tools:layout="@layout/fragment_sign_out" >
+        <action
+            android:id="@+id/action_signOutFragment_to_withdrawalFragment"
+            app:destination="@id/withdrawalFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/withdrawalFragment"
+        android:name="com.ajou.diggingclub.setting.WithdrawalFragment"
+        android:label="fragment_withdrawal"
+        tools:layout="@layout/fragment_withdrawal" />
+</navigation>

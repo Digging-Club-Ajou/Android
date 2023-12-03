@@ -10,8 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.melody.card.SearchLocationFragment
 import com.ajou.diggingclub.melody.models.LocationModel
+import com.ajou.diggingclub.melody.models.MusicSpotifyModel
 
-class LocationListRVAdapter(val context: Context, val list : List<LocationModel>, val link : SearchLocationFragment.AdapterToFragment) : RecyclerView.Adapter<LocationListRVAdapter.ViewHolder>() {
+class LocationListRVAdapter(val context: Context, var list : List<LocationModel>, val link : SearchLocationFragment.AdapterToFragment) : RecyclerView.Adapter<LocationListRVAdapter.ViewHolder>() {
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val name : TextView = view.findViewById(R.id.name)
         val distance : TextView = view.findViewById(R.id.distance)
@@ -33,5 +34,9 @@ class LocationListRVAdapter(val context: Context, val list : List<LocationModel>
         holder.item.setOnClickListener {
             link.getSelectedItem(list[position].name)
         }
+    }
+    fun updateList(newList: List<LocationModel>) {
+        list = newList
+        notifyDataSetChanged()
     }
 }

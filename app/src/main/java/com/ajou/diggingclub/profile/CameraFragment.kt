@@ -19,6 +19,7 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainer
@@ -41,7 +42,6 @@ class CameraFragment : Fragment() {
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
     private var mContext: Context? = null
-//    val args: CameraFragmentArgs by navArgs()
 
     private var fragmentContainer: FragmentContainerView? = null
     private var layoutParams: ViewGroup.MarginLayoutParams? = null
@@ -50,7 +50,7 @@ class CameraFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        requireActivity().findViewById<LinearLayout>(R.id.bottomTab).visibility = View.GONE
+        requireActivity().findViewById<LinearLayout>(R.id.bottomTabLayout).visibility = View.GONE
 
         fragmentContainer = requireActivity().findViewById(R.id.fragmentContainerView)
 
@@ -58,7 +58,9 @@ class CameraFragment : Fragment() {
         layoutParams = fragmentContainer?.layoutParams as? ViewGroup.MarginLayoutParams
 
         fragmentContainer?.let { container ->
+            Log.d(TAG,"before margin ${layoutParams?.marginStart} ${layoutParams?.marginEnd} ${layoutParams?.topMargin} ${layoutParams?.bottomMargin}")
             layoutParams?.setMargins(0, 0, 0, 0)
+            Log.d(TAG,"after margin ${layoutParams?.marginStart} ${layoutParams?.marginEnd} ${layoutParams?.topMargin} ${layoutParams?.bottomMargin}")
             container.requestLayout()
         }
         
@@ -119,17 +121,8 @@ class CameraFragment : Fragment() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-//                    if(args.type == "album"){
-//                        val action = CameraFragmentDirections.actionCameraFragmentToMakeAlbumFragment2(output.savedUri.toString())
-//                        findNavController().navigate(action)
-//                    }else if(args.type == "card"){
-//                        val action =
-//                            CameraFragmentDirections.actionCameraFragmentToMakeCardFragment2(
-//                                output.savedUri.toString(),
-//                                args.music
-//                            )
-//                        findNavController().navigate(action)
-//                    }
+                    val action = CameraFragmentDirections.actionCameraFragmentToEditSelectImageFragment(output.savedUri.toString())
+                    findNavController().navigate(action)
                 }
             }
         )
@@ -175,12 +168,12 @@ class CameraFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        requireActivity().findViewById<LinearLayout>(R.id.bottomTab).visibility = View.VISIBLE
+        requireActivity().findViewById<LinearLayout>(R.id.bottomTabLayout).visibility = View.VISIBLE
 
         val density = resources.displayMetrics.density
         val sideMargin = (24*density).toInt()
         val topMargin = (26*density).toInt()
-        val bottomMargin = (22*density).toInt()
+        val bottomMargin = (66*density).toInt()
 
         fragmentContainer?.let { container ->
             layoutParams?.setMargins(sideMargin, topMargin, sideMargin, bottomMargin)

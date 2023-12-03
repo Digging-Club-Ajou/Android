@@ -2,14 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item"
-    android:layout_width="164dp"
-    android:layout_height="wrap_content"
-    android:layout_marginEnd="8dp">
+    android:layout_width="148dp"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/image"
         android:layout_width="0dp"
-        android:layout_height="164dp"
+        android:layout_height="148dp"
         android:background="@drawable/rectangle_5_small"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
-        android:background="@drawable/profile_small"
+        android:background="@drawable/profile_small_album"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,10 +28,12 @@
         android:id="@+id/nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:paddingStart="0dp"
         android:layout_marginStart="4dp"
-        android:text="kimkimjiye"
+        android:text=""
         android:textColor="@color/secondaryColor"
-        android:textSize="12sp"
+        android:textSize="10sp"
         android:shadowColor="#80000000"
         android:shadowDx="0"
         android:shadowDy="0"
@@ -46,8 +47,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="112dp"
-        android:text="저는 사나가 좋아요\n"
+        android:text=""
         android:textColor="@color/secondaryColor"
         android:textSize="12sp"
         android:textStyle="bold"
@@ -55,14 +55,15 @@
         android:shadowDx="0"
         android:shadowDy="0"
         android:shadowRadius="2"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/image"
-        app:layout_constraintStart_toStartOf="@id/image"
-        app:layout_constraintTop_toBottomOf="@+id/nickname" />
+        app:layout_constraintStart_toStartOf="@id/image"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hashtagRV"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/image"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

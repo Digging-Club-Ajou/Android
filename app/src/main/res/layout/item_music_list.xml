@@ -5,7 +5,8 @@
     android:id="@+id/item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp">
+    android:layout_marginBottom="6dp"
+    android:layout_marginTop="6dp">
 
     <ImageView
         android:id="@+id/albumImg"
@@ -24,6 +25,8 @@
         android:textColor="@color/textColor"
         android:textSize="14sp"
         android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:layout_marginLeft="12dp"
         app:layout_constraintStart_toEndOf="@+id/albumImg"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,6 +39,8 @@
         android:text="New Jeans"
         android:textColor="#767676"
         android:textSize="12sp"
+        android:singleLine="true"
+        android:ellipsize="end"
         app:layout_constraintStart_toEndOf="@+id/albumImg"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 

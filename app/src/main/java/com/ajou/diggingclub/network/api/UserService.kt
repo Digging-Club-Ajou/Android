@@ -13,9 +13,10 @@ interface UserService {
 
     @GET("members")
     suspend fun getUserInfo(
-        @Header("AccessToken") accessToken : String?,
+        @Header("AccessToken") accessToken : String,
         @Header("RefreshToken") refreshToken : String,
     ) : Response<ResponseBody>
+
 
     @POST("nickname-validation")
     fun checkNickname(
@@ -37,4 +38,16 @@ interface UserService {
         @Body nickname : RequestBody
     ) : Call<ResponseBody>
 
+    @POST("withdrawal")
+    fun withdrawal(
+        @Header("AccessToken") accessToken : String?,
+        @Header("RefreshToken") refreshToken : String?,
+        @Body reason : RequestBody
+    ) : Call<ResponseBody>
+
+    @POST("logout")
+    fun logout(
+        @Header("AccessToken") accessToken : String?,
+        @Header("RefreshToken") refreshToken : String?
+    ) : Call<ResponseBody>
 }

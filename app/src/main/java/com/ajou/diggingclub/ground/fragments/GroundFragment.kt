@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
@@ -39,16 +40,18 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Math.abs
 
 class GroundFragment : Fragment(), AdapterToFragment {
 
     private var _binding: FragmentGroundBinding? = null
     private val binding get() = _binding!!
     private var mContext : Context? = null
-    private val cardServiceClient = RetrofitInstance.getInstance().create(CardService::class.java)
-    private val albumServiceClient = RetrofitInstance.getInstance().create(AlbumService::class.java)
+    private val cardService = RetrofitInstance.getInstance().create(CardService::class.java)
+    private val albumService = RetrofitInstance.getInstance().create(AlbumService::class.java)
     private val favoriteService = RetrofitInstance.getInstance().create(FavoriteService::class.java)
-    private val musicServiceClient = RetrofitInstance.getInstance().create(MusicService::class.java)
+    private val musicService = RetrofitInstance.getInstance().create(MusicService::class.java)
+    private val TAG = GroundFragment::class.java.simpleName
 
     var accessToken : String? = null
     var refreshToken : String? = null
@@ -79,6 +82,9 @@ class GroundFragment : Fragment(), AdapterToFragment {
         val dataStore = UserDataStore()
         var nickname : String ?= null
 //        var albumId : String ?= null
+        var followingAlbumList = listOf<ReceivedAlbumModel>()
+        var aiRecommendAlbumList = listOf<ReceivedAlbumModel>()
+        var genreRecommendAlbumList = listOf<ReceivedAlbumModel>()
 
         binding.search.setOnSingleClickListener {
             findNavController().navigate(R.id.action_groundFragment_to_searchUserFragment)
@@ -86,8 +92,30 @@ class GroundFragment : Fragment(), AdapterToFragment {
         binding.notification.setOnSingleClickListener {
             findNavController().navigate(R.id.action_groundFragment_to_notificationFragment)
         }
+
         binding.followingMore.setOnClickListener {
-            findNavController().navigate(R.id.action_groundFragment_to_albumListFragment)
+            val action = GroundFragmentDirections.actionGroundFragmentToAlbumListFragment("following",followingAlbumList.toTypedArray())
+            findNavController().navigate(action)
+        }
+        binding.followingMoreBtn.setOnClickListener {
+            val action = GroundFragmentDirections.actionGroundFragmentToAlbumListFragment("following",followingAlbumList.toTypedArray())
+            findNavController().navigate(action)
+        }
+        binding.aiRecommendMore.setOnClickListener {
+            val action = GroundFragmentDirections.actionGroundFragmentToAlbumListFragment("ai",aiRecommendAlbumList.toTypedArray())
+            findNavController().navigate(action)
+        }
+        binding.aiRecommendMoreBtn.setOnClickListener {
+            val action = GroundFragmentDirections.actionGroundFragmentToAlbumListFragment("ai",aiRecommendAlbumList.toTypedArray())
+            findNavController().navigate(action)
+        }
+        binding.genreRecommendMore.setOnClickListener {
+            val action = GroundFragmentDirections.actionGroundFragmentToAlbumListFragment("genre",genreRecommendAlbumList.toTypedArray())
+            findNavController().navigate(action)
+        }
+        binding.genreRecommendMoreBtn.setOnClickListener {
+            val action = GroundFragmentDirections.actionGroundFragmentToAlbumListFragment("genre",genreRecommendAlbumList.toTypedArray())
+            findNavController().navigate(action)
         }
 
         var previousPosition = binding.cardRV.currentItem
@@ -111,50 +139,33 @@ class GroundFragment : Fragment(), AdapterToFragment {
             refreshToken = dataStore.getRefreshToken().toString()
             nickname = dataStore.getNickname().toString()
             userId = dataStore.getMemberId().toString()
-            if(dataStore.getAlbumExistFlag()){
-                Log.d("album Exist flag",dataStore.getAlbumExistFlag().toString())
-            }
 //            albumId = dataStore.getAlbumId().toString()
             binding.name.text = "'"+nickname+"'"
+            Log.d("accessToken",accessToken.toString())
+            Log.d("refreshToken",refreshToken.toString())
             if(accessToken == null || refreshToken == null){
                 val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
             }
         }
         CoroutineScope(Dispatchers.Main).launch {
-//            val cardResponse = cardApiClient.getAlbumCards(accessToken!!, refreshToken!!, albumId!!)
-//            if(cardResponse.isSuccessful){
-//                Log.d("accessToken",accessToken.toString())
-//                if(cardResponse.headers()["AccessToken"] != null) {
-//                    CoroutineScope(Dispatchers.IO).launch {
-//                        dataStore.saveAccessToken(cardResponse.headers()["AccessToken"].toString())
-//                    }
-//                }
-//                cardList = cardResponse.body()!!.melodyCardListResult
-//                Log.d("cardList",cardList.toString())
-//                cardViewPagerAdapter = MelodyCardRVAdapter(mContext!!,cardList,this@GroundFragment, "viewpager")
-//                binding.cardRV.adapter = cardViewPagerAdapter
-//                binding.cardRV.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-//            } else {
-//                Log.d("response not successful",cardResponse.errorBody()?.string().toString())
-//            }
-            albumServiceClient.getFollowingAlbums(accessToken!!,refreshToken!!).enqueue(object :Callback<AlbumResponse>{
+            albumService.getFollowingAlbums(accessToken!!,refreshToken!!).enqueue(object :Callback<AlbumResponse>{
                 override fun onResponse(
                     call: Call<AlbumResponse>,
                     response: Response<AlbumResponse>
                 ) {
                     if(response.isSuccessful){
-                        val list : List<ReceivedAlbumModel> = response.body()!!.albumListResult
-                        Log.d("list",list.toString())
-                        val albumListRVAdapter = FollowingAlbumListRVAdapter(mContext!!,list,"following",this@GroundFragment)
+                        followingAlbumList = response.body()!!.albumListResult
+                        Log.d("list",followingAlbumList.toString())
+                        val albumListRVAdapter = FollowingAlbumListRVAdapter(mContext!!,followingAlbumList,this@GroundFragment)
                         binding.followingRV.adapter = albumListRVAdapter
                         binding.followingRV.layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
+                        binding.followingRV.addItemDecoration(FollowingAlbumListRVAdapter.HorizontalItemDecoration(8))
 
                         CoroutineScope(Dispatchers.IO).launch {
-                            for (i in list.indices){
-                                val response =  cardServiceClient.getAlbumCards(accessToken!!, refreshToken!!, list[i].albumId.toString())
+                            for (i in followingAlbumList.indices){
+                                val response =  cardService.getAlbumCards(accessToken!!, refreshToken!!, followingAlbumList[i].albumId.toString())
                                 if(response.isSuccessful){
-                                    Log.d("response cardList",response.body()!!.melodyCardListResult.toString())
                                     cardList.addAll(response.body()!!.melodyCardListResult)
                                     Log.d("success cardList",cardList.toString())
                                 }else{
@@ -162,10 +173,29 @@ class GroundFragment : Fragment(), AdapterToFragment {
                                 }
                             }
                             withContext(Dispatchers.Main){
-                                Log.d("cardList url check ",cardList.toString())
                                 cardViewPagerAdapter = MelodyCardRVAdapter(mContext!!,cardList,this@GroundFragment, "viewpager")
                                 binding.cardRV.adapter = cardViewPagerAdapter
                                 binding.cardRV.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+
+                                binding.cardRV.offscreenPageLimit = 4
+                                // item_view 간의 양 옆 여백을 상쇄할 값
+                                val offsetBetweenPages = resources.getDimensionPixelOffset(R.dimen.offsetBetweenPages).toFloat()
+                                binding.cardRV.setPageTransformer { page, position ->
+                                    val myOffset = position * -(2 * offsetBetweenPages)
+                                    if (position < -1) {
+                                        page.translationX = -myOffset
+                                    } else if (position <= 1) {
+                                        // Paging 시 Y축 Animation 배경색을 약간 연하게 처리
+                                        val scaleFactor = 0.9f.coerceAtLeast(1 - kotlin.math.abs(position))
+                                        page.translationX = myOffset
+                                        page.scaleY = scaleFactor
+                                        page.alpha = scaleFactor
+                                    } else {
+                                        page.alpha = 0f
+                                        page.translationX = myOffset
+                                    }
+                                }
+//                                binding.dotsIndicator.attachTo(binding.cardRV)
                             }
                         }
 
@@ -179,7 +209,7 @@ class GroundFragment : Fragment(), AdapterToFragment {
                     Log.d("failll",t.message.toString())
                 }
             })
-            albumServiceClient.getFollowingAlbums(accessToken!!,refreshToken!!).enqueue(object :Callback<AlbumResponse>{
+            albumService.getAIAlbums(accessToken!!,refreshToken!!).enqueue(object :Callback<AlbumResponse>{
                 override fun onResponse(
                     call: Call<AlbumResponse>,
                     response: Response<AlbumResponse>
@@ -190,13 +220,12 @@ class GroundFragment : Fragment(), AdapterToFragment {
                                 dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
                             }
                         }
-                        val list : List<ReceivedAlbumModel> = response.body()!!.albumListResult
-                        Log.d("success",list.toString())
-                        val albumListRVAdapter = FollowingAlbumListRVAdapter(mContext!!,list,"recommend",this@GroundFragment)
+                        aiRecommendAlbumList = response.body()!!.albumListResult
+                        Log.d("success",aiRecommendAlbumList.toString())
+                        val albumListRVAdapter = FollowingAlbumListRVAdapter(mContext!!,aiRecommendAlbumList,this@GroundFragment)
                         binding.aiRecommendRV.adapter = albumListRVAdapter
                         binding.aiRecommendRV.layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
-                        binding.recommendRV.adapter = albumListRVAdapter
-                        binding.recommendRV.layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
+                        binding.aiRecommendRV.addItemDecoration(FollowingAlbumListRVAdapter.HorizontalItemDecoration(8))
                     }else{
                         Log.d("response not successful",response.errorBody()?.string().toString())
                     }
@@ -206,7 +235,33 @@ class GroundFragment : Fragment(), AdapterToFragment {
                     Log.d("failll",t.message.toString())
                 }
             })
-            // 추후에 추천앨범 2가지 api로 변경하기
+
+            albumService.getGenreAlbums(accessToken!!,refreshToken!!).enqueue(object :Callback<AlbumResponse>{
+                override fun onResponse(
+                    call: Call<AlbumResponse>,
+                    response: Response<AlbumResponse>
+                ) {
+                    if(response.isSuccessful){
+                        if(response.headers()["AccessToken"] != null) {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
+                            }
+                        }
+                        genreRecommendAlbumList = response.body()!!.albumListResult
+                        Log.d("success",genreRecommendAlbumList.toString())
+                        val albumListRVAdapter = FollowingAlbumListRVAdapter(mContext!!,genreRecommendAlbumList,this@GroundFragment)
+                        binding.recommendRV.adapter = albumListRVAdapter
+                        binding.recommendRV.layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
+                        binding.recommendRV.addItemDecoration(FollowingAlbumListRVAdapter.HorizontalItemDecoration(8))
+                    }else{
+                        Log.d("response not successful",response.errorBody()?.string().toString())
+                    }
+                }
+
+                override fun onFailure(call: Call<AlbumResponse>, t: Throwable) {
+                    Log.d("failll",t.message.toString())
+                }
+            })
         }
     }
 
@@ -222,14 +277,25 @@ class GroundFragment : Fragment(), AdapterToFragment {
                 findNavController().navigate(action)
             }
             "album" -> {
-                val bottomSheetDialogFragment = BottomSheetFragment()
-                val bundle = Bundle().apply {
-                    putString("albumId",albumId)
-                    putString("memberId",memberId)
-                    putString("name",name)
+                if(memberId != userId){
+                    val action = GroundFragmentDirections.actionGroundFragmentToAlbumMelodyCardFragment(memberId,albumId, name, "others")
+                    findNavController().navigate(action)
+                }else{
+                    val intent = Intent(mContext, ProfileActivity::class.java)
+                    intent.putExtra("toAlbum",true)
+                    intent.putExtra("albumId",albumId)
+                    intent.putExtra("name",name)
+                    intent.putExtra("type","my")
                 }
-                bottomSheetDialogFragment.arguments = bundle
-                bottomSheetDialogFragment.show(parentFragmentManager,bottomSheetDialogFragment.tag)
+                // TODO 내 앨범인 경우에는 Profile Activity의 AlbumMelodyCardFragment로 이동해야함. 이 경우 아직 확인이 불가능함(그라운드 영역에 내 앨범이 없어..)
+//                val bottomSheetDialogFragment = BottomSheetFragment()
+//                val bundle = Bundle().apply {
+//                    putString("albumId",albumId)
+//                    putString("memberId",memberId)
+//                    putString("name",name)
+//                }
+//                bottomSheetDialogFragment.arguments = bundle
+//                bottomSheetDialogFragment.show(parentFragmentManager,bottomSheetDialogFragment.tag)
             }
             else -> {
                 Log.d("else","error....")
@@ -241,10 +307,12 @@ class GroundFragment : Fragment(), AdapterToFragment {
         if(userId == item.memberId.toString()){
             val intent = Intent(mContext, ProfileActivity::class.java)
             intent.putExtra("albumInfo",item)
-            // TODO 내 앨범인 경우이므로 intent 이동해야함
+            startActivity(intent)
+            // 내 앨범인 경우이므로 intent 이동해야함
+        }else{
+            val action = GroundFragmentDirections.actionGroundFragmentToUserArchiveFragment(item,item.albumId.toString(),item.memberId.toString())
+            findNavController().navigate(action)
         }
-        val action = GroundFragmentDirections.actionGroundFragmentToUserArchiveFragment(item,item.albumId.toString(),item.memberId.toString())
-        findNavController().navigate(action)
     }
 
     override fun postFavoriteId(melodyCardId: String, isLike: Boolean) {
@@ -274,7 +342,7 @@ class GroundFragment : Fragment(), AdapterToFragment {
             addProperty("songTitle", cardList[position].songTitle)
         }
         val requestBody = RequestBody.create("application/json".toMediaTypeOrNull(), jsonObject.toString())
-        musicServiceClient.addCount(accessToken!!,refreshToken!!,requestBody).enqueue(object :Callback<ResponseBody>{
+        musicService.addCount(accessToken!!,refreshToken!!,requestBody).enqueue(object :Callback<ResponseBody>{
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if(response.isSuccessful){
                     Log.d("success",response.body().toString())
@@ -289,4 +357,15 @@ class GroundFragment : Fragment(), AdapterToFragment {
 
         })
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if(::cardViewPagerAdapter.isInitialized){
+            for(i in 0 until cardList.size){
+                cardViewPagerAdapter.stopMediaPlayer(i)
+                cardList[i].isPlaying = false
+            }
+        }
+    }
+
 }
