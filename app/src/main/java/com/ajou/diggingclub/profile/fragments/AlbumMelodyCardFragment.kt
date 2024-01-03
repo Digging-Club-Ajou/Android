@@ -38,6 +38,7 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 
 class AlbumMelodyCardFragment : Fragment(), AdapterToFragment {
     private var _binding : FragmentAlbumMelodyCardBinding? = null
@@ -339,9 +340,9 @@ class AlbumMelodyCardFragment : Fragment(), AdapterToFragment {
             Callback<ResponseBody> {
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if(response.isSuccessful){
-                    Log.d("success",response.body().toString())
+                    Timber.d(TAG+" success ${response.body().toString()}")
                 }else{
-                    Log.d("error",response.errorBody()?.string().toString())
+                    Timber.d(TAG+" success ${response.errorBody()?.string().toString()}")
                 }
             }
 
@@ -351,8 +352,13 @@ class AlbumMelodyCardFragment : Fragment(), AdapterToFragment {
 
         })
     }
-    override fun onDestroy() {
-        super.onDestroy()
+
+    override fun shareCard(item: ReceivedMelodyCardModel) {
+
+    }
+
+    override fun onPause() {
+        super.onPause()
         if(::adapter.isInitialized){
             for(i in 0 until list.size){
                 adapter.stopMediaPlayer(i)

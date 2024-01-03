@@ -22,7 +22,6 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val code : String = intent.getStringExtra("authCode")!!
-        Log.d("code",code)
         var gender : String = "MALE"
         var isFormatting : Boolean = false
         var phoneNumberFormat : String = ""
@@ -35,14 +34,12 @@ class SignUpActivity : AppCompatActivity() {
         }
         binding.phoneNumber.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                Log.d("before",p0.toString())
             }
 
             override fun onTextChanged(str: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 if (!isFormatting) {
                     isFormatting = true
                     val digits: String = str.toString().replace("[^\\d]","")
-                    Log.d("digits",digits)
                     phoneNumberFormat = formatPhoneNumber(digits)
                     binding.phoneNumber.setText(phoneNumberFormat)
                     binding.phoneNumber.setSelection(phoneNumberFormat.length)
@@ -51,7 +48,6 @@ class SignUpActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                Log.d("after",p0.toString())
             }
 
         })

@@ -55,7 +55,7 @@ class MakeCardFragment3 : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var cardColor : String = resources.getColor(R.color.primaryColor).toString()
+        var cardColor = String.format("#%06X", 0xFFFFFF and resources.getColor(R.color.primaryColor))
 
         val args : MakeCardFragment3Args by navArgs()
 

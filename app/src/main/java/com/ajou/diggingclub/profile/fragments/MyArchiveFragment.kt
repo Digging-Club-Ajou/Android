@@ -163,6 +163,7 @@ class MyArchiveFragment : Fragment() {
             }else{
                 viewModel.setAlbumId(viewModel.albumInfo.value!!.albumId.toString())
             }
+            Log.d(TAG,userId.toString())
             val numberOfFollowDeferred =
                 async { followingService.getFollowingList(accessToken!!, refreshToken!!,userId!!) }
                 val numberOfFollowResponse = numberOfFollowDeferred.await()

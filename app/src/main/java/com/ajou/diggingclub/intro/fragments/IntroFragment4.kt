@@ -74,7 +74,7 @@ class IntroFragment4 : Fragment() {
         }
 
         binding.backBtn.setOnSingleClickListener {
-            findNavController().navigate(R.id.action_introFragment3_to_introFragment2)
+            findNavController().popBackStack()
         }
 
         binding.nickname.setOnEditorActionListener { v, actionId, event ->

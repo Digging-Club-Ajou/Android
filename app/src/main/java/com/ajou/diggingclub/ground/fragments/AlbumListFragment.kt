@@ -112,9 +112,9 @@ class AlbumListFragment : Fragment(), AdapterToFragment {
     }
 
     override fun getSelectedItem(item: ReceivedAlbumModel) {
-        Log.d(TAG,"userId : $userId  item.memberId : ${item.memberId}")
+//        Log.d(TAG,"userId : $userId  item.memberId : ${item.memberId}")
         if(userId == item.memberId.toString()){
-            Log.d(TAG,"id is same")
+//            Log.d(TAG,"id is same")
             val intent = Intent(mContext, ProfileActivity::class.java)
             intent.putExtra("albumInfo",item)
             startActivity(intent)
@@ -136,17 +136,19 @@ class AlbumListFragment : Fragment(), AdapterToFragment {
                 findNavController().navigate(action)
             }
             "album" -> {
-                val bottomSheetDialogFragment = BottomSheetFragment()
-                val bundle = Bundle().apply {
-                    putString("albumId",albumId)
-                    putString("memberId",memberId)
-                    putString("name",name)
+                if(memberId != userId){
+                    val action = AlbumListFragmentDirections.actionAlbumListFragmentToAlbumMelodyCardFragment(memberId,albumId, name, "others")
+                    findNavController().navigate(action)
+                }else{
+                    val intent = Intent(mContext, ProfileActivity::class.java)
+                    intent.putExtra("toAlbum",true)
+                    intent.putExtra("albumId",albumId)
+                    intent.putExtra("name",name)
+                    intent.putExtra("type","my")
                 }
-                bottomSheetDialogFragment.arguments = bundle
-                bottomSheetDialogFragment.show(parentFragmentManager,bottomSheetDialogFragment.tag)
             }
             else -> {
-                Log.d("else","error....")
+//                Log.d("else","error....")
             }
         }
     }
@@ -157,6 +159,10 @@ class AlbumListFragment : Fragment(), AdapterToFragment {
 
     override fun addRecordCount(position: Int) {
         // TODO
+    }
+
+    override fun shareCard(item: ReceivedMelodyCardModel) {
+
     }
 
     private suspend fun getFollowingAlbums() : List<ReceivedAlbumModel> {
@@ -170,24 +176,24 @@ class AlbumListFragment : Fragment(), AdapterToFragment {
                 if (response.isSuccessful) {
                     if (response.headers()["AccessToken"] != null) {
                         CoroutineScope(Dispatchers.IO).launch {
-                            Log.d(
-                                "new AccessToken",
-                                response.headers()["AccessToken"].toString()
-                            )
+//                            Log.d(
+//                                "new AccessToken",
+//                                response.headers()["AccessToken"].toString()
+//                            )
                             dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
                         }
                     }
                     list = response.body()!!.albumListResult
-                    Log.d(TAG,"following $list")
+//                    Log.d(TAG,"following $list")
                 } else {
-                    Log.d(TAG, response.errorBody()?.string().toString())
-                    Log.d(TAG,"following $list")
+//                    Log.d(TAG, response.errorBody()?.string().toString())
+//                    Log.d(TAG,"following $list")
                 }
             }
 
             override fun onFailure(call: Call<AlbumResponse>, t: Throwable) {
-                Log.d("failll", t.message.toString())
-                Log.d(TAG,"following $list")
+//                Log.d("failll", t.message.toString())
+//                Log.d(TAG,"following $list")
             }
         })
         return list
@@ -203,24 +209,24 @@ class AlbumListFragment : Fragment(), AdapterToFragment {
                 if (response.isSuccessful) {
                     if (response.headers()["AccessToken"] != null) {
                         CoroutineScope(Dispatchers.IO).launch {
-                            Log.d(
-                                "new AccessToken",
-                                response.headers()["AccessToken"].toString()
-                            )
+//                            Log.d(
+//                                "new AccessToken",
+//                                response.headers()["AccessToken"].toString()
+//                            )
                             dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
                         }
                     }
                     list = response.body()!!.albumListResult
-                    Log.d(TAG,"ai $list")
+//                    Log.d(TAG,"ai $list")
                 } else {
-                    Log.d(TAG, response.errorBody()?.string().toString())
-                    Log.d(TAG,"ai $list")
+//                    Log.d(TAG, response.errorBody()?.string().toString())
+//                    Log.d(TAG,"ai $list")
                 }
             }
 
             override fun onFailure(call: Call<AlbumResponse>, t: Throwable) {
-                Log.d("failll", t.message.toString())
-                Log.d(TAG,"ai $list")
+//                Log.d("failll", t.message.toString())
+//                Log.d(TAG,"ai $list")
             }
         })
         return list
@@ -236,24 +242,24 @@ class AlbumListFragment : Fragment(), AdapterToFragment {
                 if (response.isSuccessful) {
                     if (response.headers()["AccessToken"] != null) {
                         CoroutineScope(Dispatchers.IO).launch {
-                            Log.d(
-                                "new AccessToken",
-                                response.headers()["AccessToken"].toString()
-                            )
+//                            Log.d(
+//                                "new AccessToken",
+//                                response.headers()["AccessToken"].toString()
+//                            )
                             dataStore.saveAccessToken(response.headers()["AccessToken"].toString())
                         }
                     }
                     list = response.body()!!.albumListResult
-                    Log.d(TAG,"genre $list")
+//                    Log.d(TAG,"genre $list")
                 } else {
-                    Log.d(TAG, response.errorBody()?.string().toString())
-                    Log.d(TAG,"genre $list")
+//                    Log.d(TAG, response.errorBody()?.string().toString())
+//                    Log.d(TAG,"genre $list")
                 }
             }
 
             override fun onFailure(call: Call<AlbumResponse>, t: Throwable) {
-                Log.d("failll", t.message.toString())
-                Log.d(TAG,"genre $list")
+//                Log.d("failll", t.message.toString())
+//                Log.d(TAG,"genre $list")
             }
         })
         return list

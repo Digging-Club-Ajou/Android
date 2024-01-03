@@ -45,6 +45,7 @@ import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import timber.log.Timber
 import java.util.*
 
 
@@ -255,10 +256,12 @@ class SearchLocationFragment : Fragment() {
         mLastLocation = location
         x = mLastLocation.longitude.toString()
         y = mLastLocation.latitude.toString()
-        Log.d("location",x)
-        Log.d("location",y)
-        val address = Geocoder(mContext!!, Locale.KOREAN).getFromLocation(mLastLocation.latitude,mLastLocation.longitude,1)?.first()?.getAddressLine(0)
-        Log.d("address",address.toString()) // 도로명 주소
+        val addressList = Geocoder(mContext!!, Locale.KOREAN).getFromLocation(mLastLocation.latitude,mLastLocation.longitude,1)
+        val address = if (addressList?.isNotEmpty() == true) {
+            addressList.first().getAddressLine(0)
+        } else {
+            "주소를 찾을 수 없어요."
+        }
         mFusedLocationProviderClient?.removeLocationUpdates(locationCallback)
     }
 

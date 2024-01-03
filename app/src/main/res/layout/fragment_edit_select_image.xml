@@ -22,7 +22,6 @@
             android:id="@+id/textView10"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
             android:gravity="center"
             android:lineSpacingExtra="5sp"
             android:text="멜로디 앨범 수정하기"
@@ -43,30 +42,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
-        <LinearLayout
+        <Button
+            android:id="@+id/rePhoto"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="@+id/image"
-            app:layout_constraintStart_toStartOf="@+id/image"
-            app:layout_constraintTop_toBottomOf="@+id/image">
-            <Button
-                android:id="@+id/rePhoto"
-                android:layout_width="168dp"
-                android:layout_height="56dp"
-                android:layout_marginRight="9dp"
-                android:layout_weight="1"
-                android:background="@drawable/rephoto" />
+            android:layout_height="56dp"
+            android:layout_marginRight="9dp"
+            android:background="@drawable/rephoto"
+            android:text="다시 찍기"
+            android:textSize="18sp"
+            android:letterSpacing="-0.03"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/use"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image" />
 
-            <Button
-                android:id="@+id/use"
-                android:layout_width="168dp"
-                android:layout_height="56dp"
-                android:layout_weight="1"
-                android:background="@drawable/use" />
-        </LinearLayout>
+        <Button
+            android:id="@+id/use"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:background="@drawable/rephoto"
+            android:text="사용하기"
+            android:textSize="18sp"
+            android:letterSpacing="-0.03"
+            android:textColor="@color/textColor"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/rePhoto"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/rePhoto"
+            app:layout_constraintTop_toTopOf="@+id/rePhoto" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

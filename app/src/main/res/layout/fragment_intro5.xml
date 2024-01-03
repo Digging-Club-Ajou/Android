@@ -38,6 +38,7 @@
             android:text="취향 분석 완료!"
             android:textColor="@color/textColor"
             android:textSize="24sp"
+            android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/welcome"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

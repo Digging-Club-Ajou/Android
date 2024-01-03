@@ -13,6 +13,7 @@ import android.widget.VideoView
 import androidx.activity.viewModels
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.UserDataStore
+import com.ajou.diggingclub.auth.KakaoSignUpActivity
 import com.ajou.diggingclub.ground.GroundActivity
 import com.ajou.diggingclub.intro.IntroActivity
 import com.ajou.diggingclub.network.RetrofitInstance
@@ -29,6 +30,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import timber.log.Timber
 
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
@@ -42,6 +44,8 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
+        Timber.plant(Timber.DebugTree())
+
         val imageView : ImageView = findViewById(R.id.imageView2)
         val video : VideoView = findViewById(R.id.video)
         val loadingText = findViewById<TextView>(R.id.loadingText)
@@ -52,6 +56,18 @@ class SplashActivity : AppCompatActivity() {
 
         val videoPath = "android.resource://" + packageName + "/" + R.raw.splashloading
         val uri = Uri.parse(videoPath)
+
+        video.setOnPreparedListener { mediaPlayer ->
+            val videoRatio = mediaPlayer.videoWidth / mediaPlayer.videoHeight.toFloat()
+            val screenRatio = video.width / video.height.toFloat()
+            val scaleX = videoRatio / screenRatio
+            if (scaleX >= 1f) {
+                video.scaleX = scaleX
+            } else {
+                video.scaleY = 1f / scaleX
+            }
+        }
+
         video.setVideoURI(uri)
 
         video.setOnCompletionListener { mediaPlayer ->
@@ -83,62 +99,68 @@ class SplashActivity : AppCompatActivity() {
                 val intent = Intent(this@SplashActivity, LandingActivity::class.java)
                 startActivity(intent)
 //                finish()
-            }
-            CoroutineScope(Dispatchers.IO).launch {
-                accessToken = dataStore.getAccessToken().toString()
-                refreshToken = dataStore.getRefreshToken().toString()
-                Log.d("accessToken",accessToken.toString())
+            }else{
+                CoroutineScope(Dispatchers.IO).launch {
+                    accessToken = dataStore.getAccessToken().toString()
+                    refreshToken = dataStore.getRefreshToken().toString()
+//                    Log.d("accessToken",accessToken.toString())
 
-                if(accessToken == null || refreshToken == null){
-                    val intent = Intent(this@SplashActivity, LandingActivity::class.java)
-                    startActivity(intent)
-//                    finish()
-                }
-                try {
-                    val nicknameDeferred = async { userClient.getNickname(accessToken, refreshToken!!) }
-                    val albumExistDeferred = async { client.checkAlbumExist(accessToken!!, refreshToken!!) }
-                    val userInfoDeferred = async { userClient.getUserInfo(accessToken!!, refreshToken!!) }
-
-                    val nicknameResponse = nicknameDeferred.await()
-                    val albumExistResponse = albumExistDeferred.await()
-                    val userInfoResponse = userInfoDeferred.await()
-
-                    if(!nicknameResponse.isSuccessful){
-                        Log.d("nickname",nicknameResponse.errorBody()?.string().toString())
-                       val intent = Intent(this@SplashActivity, IntroActivity::class.java)
-                       startActivity(intent)
-                    } else if (nicknameResponse.isSuccessful && albumExistResponse.isSuccessful && userInfoResponse.isSuccessful) {
-                        if(nicknameResponse.headers()["AccessToken"] != null) dataStore.saveAccessToken(nicknameResponse.headers()["AccessToken"].toString())
-                        Log.d("accessToken",accessToken.toString())
-                        val nicknameBody = JSONObject(nicknameResponse.body()?.string())
-                        dataStore.saveNickname(nicknameBody.get("nickname").toString())
-                        viewModel.setNickname(nicknameBody.get("nickname").toString())
-                        Log.d("nickname",nicknameBody.get("nickname").toString())
-                        val albumExistBody = JSONObject(albumExistResponse.body()?.string())
-                        if (albumExistBody.get("alreadyExist") == false) dataStore.saveAlbumExistFlag(false)
-                        else dataStore.saveAlbumExistFlag(true)
-                        val userInfoBody = JSONObject(userInfoResponse.body()?.string())
-                        dataStore.saveMemberId(userInfoBody.get("memberId").toString())
-                        viewModel.setUserId(userInfoBody.get("memberId").toString())
-                        dataStore.saveAlbumId(userInfoBody.get("albumId").toString())
-                        viewModel.setAlbumId(userInfoBody.get("albumId").toString())
-                        val intent = Intent(this@SplashActivity, GroundActivity::class.java)
-                        startActivity(intent)
-//                        finish()
-                    } else {
-                        // 처리 실패 시의 로직
-                        Log.d("tokens",refreshToken.toString())
-                        Log.d("tokenss",accessToken.toString())
-                        Log.d("API call failed", "Nickname: ${nicknameResponse.errorBody()?.string()}, Album Exist: ${albumExistResponse.errorBody()?.string()}")
+                    if(accessToken == null || refreshToken == null){
                         val intent = Intent(this@SplashActivity, LandingActivity::class.java)
                         startActivity(intent)
-//                        finish()
+//                    finish()
                     }
-                }catch (e:Exception){
-                    Log.d("fail in catch",e.message.toString())
-                    Firebase.crashlytics.recordException(e)
-                }
+                    try {
+                        val nicknameDeferred = async { userClient.getNickname(accessToken, refreshToken!!) }
+                        val albumExistDeferred = async { client.checkAlbumExist(accessToken!!, refreshToken!!) }
+                        val userInfoDeferred = async { userClient.getUserInfo(accessToken!!, refreshToken!!) }
 
+                        val nicknameResponse = nicknameDeferred.await()
+                        val albumExistResponse = albumExistDeferred.await()
+                        val userInfoResponse = userInfoDeferred.await()
+
+                        if(!nicknameResponse.isSuccessful&&nicknameResponse.code() == 404){
+                            Log.d("nickname",nicknameResponse.errorBody()?.string().toString())
+                            val intent = Intent(this@SplashActivity, IntroActivity::class.java)
+                            startActivity(intent)
+                        } else if(!nicknameResponse.isSuccessful&&nicknameResponse.code() == 401){
+                            Log.d("nickname",nicknameResponse.errorBody()?.string().toString())
+                            val intent = Intent(this@SplashActivity, LandingActivity::class.java)
+                            startActivity(intent)
+                        }
+                        else if (nicknameResponse.isSuccessful && albumExistResponse.isSuccessful && userInfoResponse.isSuccessful) {
+                            if(nicknameResponse.headers()["AccessToken"] != null) dataStore.saveAccessToken(nicknameResponse.headers()["AccessToken"].toString())
+//                            Log.d("accessToken",accessToken.toString())
+                            val nicknameBody = JSONObject(nicknameResponse.body()?.string())
+                            dataStore.saveNickname(nicknameBody.get("nickname").toString())
+                            viewModel.setNickname(nicknameBody.get("nickname").toString())
+//                            Log.d("nickname",nicknameBody.get("nickname").toString())
+                            val albumExistBody = JSONObject(albumExistResponse.body()?.string())
+                            if (albumExistBody.get("alreadyExist") == false) dataStore.saveAlbumExistFlag(false)
+                            else dataStore.saveAlbumExistFlag(true)
+                            val userInfoBody = JSONObject(userInfoResponse.body()?.string())
+                            dataStore.saveMemberId(userInfoBody.get("memberId").toString())
+                            viewModel.setUserId(userInfoBody.get("memberId").toString())
+                            dataStore.saveAlbumId(userInfoBody.get("albumId").toString())
+                            viewModel.setAlbumId(userInfoBody.get("albumId").toString())
+                            val intent = Intent(this@SplashActivity, GroundActivity::class.java)
+                            startActivity(intent)
+//                        finish()
+                        } else {
+                            // 처리 실패 시의 로직
+//                            Log.d("tokens",refreshToken.toString())
+//                            Log.d("tokenss",accessToken.toString())
+//                            Log.d("API call failed", "Nickname: ${nicknameResponse.errorBody()?.string()}, Album Exist: ${albumExistResponse.errorBody()?.string()}")
+                            val intent = Intent(this@SplashActivity, LandingActivity::class.java)
+                            startActivity(intent)
+//                        finish()
+                        }
+                    }catch (e:Exception){
+                        Log.d("fail in catch",e.message.toString())
+                        Firebase.crashlytics.recordException(e)
+                    }
+
+                }
             }
         }, 2000)
         viewModel.getFirstFlag()

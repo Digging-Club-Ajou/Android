@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".start.SplashActivity">
+
     <VideoView
         android:id="@+id/video"
         android:layout_width="0dp"
@@ -29,13 +30,15 @@
         app:layout_constraintBottom_toBottomOf="@+id/video"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
     <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="100dp"
         android:visibility="gone"
-        android:id="@+id/imageView2"
+        android:paddingBottom="100dp"
         android:background="@color/white"/>
+
     <TextView
         android:id="@+id/loadingText"
         android:layout_width="0dp"
@@ -48,7 +51,7 @@
         android:layout_marginTop="200dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/video" />
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:id="@+id/diggle"
         android:layout_width="0dp"

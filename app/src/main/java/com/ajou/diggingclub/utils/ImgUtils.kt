@@ -23,7 +23,7 @@ private fun absolutelyPath(path: Uri?, activity:Activity ): String {
         c?.moveToFirst()
 
         var result = c?.getString(index!!)
-        Log.d("result",result.toString())
+//        Log.d("result",result.toString())
         return result!!
     } // 절대경로로 변환하는 함수
 

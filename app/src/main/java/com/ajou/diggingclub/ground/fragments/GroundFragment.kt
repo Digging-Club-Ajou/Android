@@ -2,6 +2,7 @@ package com.ajou.diggingclub.ground.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -47,10 +48,14 @@ class GroundFragment : Fragment(), AdapterToFragment {
     private var _binding: FragmentGroundBinding? = null
     private val binding get() = _binding!!
     private var mContext : Context? = null
+
     private val cardService = RetrofitInstance.getInstance().create(CardService::class.java)
     private val albumService = RetrofitInstance.getInstance().create(AlbumService::class.java)
     private val favoriteService = RetrofitInstance.getInstance().create(FavoriteService::class.java)
     private val musicService = RetrofitInstance.getInstance().create(MusicService::class.java)
+
+    var followingAlbumList = listOf<ReceivedAlbumModel>()
+
     private val TAG = GroundFragment::class.java.simpleName
 
     var accessToken : String? = null
@@ -82,7 +87,6 @@ class GroundFragment : Fragment(), AdapterToFragment {
         val dataStore = UserDataStore()
         var nickname : String ?= null
 //        var albumId : String ?= null
-        var followingAlbumList = listOf<ReceivedAlbumModel>()
         var aiRecommendAlbumList = listOf<ReceivedAlbumModel>()
         var genreRecommendAlbumList = listOf<ReceivedAlbumModel>()
 
@@ -134,6 +138,7 @@ class GroundFragment : Fragment(), AdapterToFragment {
                 }
             }
         })
+
         CoroutineScope(Dispatchers.IO).launch {
             accessToken = dataStore.getAccessToken().toString()
             refreshToken = dataStore.getRefreshToken().toString()
@@ -141,8 +146,8 @@ class GroundFragment : Fragment(), AdapterToFragment {
             userId = dataStore.getMemberId().toString()
 //            albumId = dataStore.getAlbumId().toString()
             binding.name.text = "'"+nickname+"'"
-            Log.d("accessToken",accessToken.toString())
-            Log.d("refreshToken",refreshToken.toString())
+//            Log.d("accessToken",accessToken.toString())
+//            Log.d("refreshToken",refreshToken.toString())
             if(accessToken == null || refreshToken == null){
                 val intent = Intent(mContext, LandingActivity::class.java)
                 startActivity(intent)
@@ -156,7 +161,7 @@ class GroundFragment : Fragment(), AdapterToFragment {
                 ) {
                     if(response.isSuccessful){
                         followingAlbumList = response.body()!!.albumListResult
-                        Log.d("list",followingAlbumList.toString())
+//                        Log.d("list",followingAlbumList.toString())
                         val albumListRVAdapter = FollowingAlbumListRVAdapter(mContext!!,followingAlbumList,this@GroundFragment)
                         binding.followingRV.adapter = albumListRVAdapter
                         binding.followingRV.layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
@@ -167,9 +172,9 @@ class GroundFragment : Fragment(), AdapterToFragment {
                                 val response =  cardService.getAlbumCards(accessToken!!, refreshToken!!, followingAlbumList[i].albumId.toString())
                                 if(response.isSuccessful){
                                     cardList.addAll(response.body()!!.melodyCardListResult)
-                                    Log.d("success cardList",cardList.toString())
+//                                    Log.d("success cardList",cardList.toString())
                                 }else{
-                                    Log.d("response not successful",response.errorBody()?.string().toString())
+//                                    Log.d("response not successful",response.errorBody()?.string().toString())
                                 }
                             }
                             withContext(Dispatchers.Main){
@@ -201,12 +206,12 @@ class GroundFragment : Fragment(), AdapterToFragment {
 
 
                     }else{
-                        Log.d("FollowingAlbum",response.errorBody()?.string().toString())
+//                        Log.d("FollowingAlbum",response.errorBody()?.string().toString())
                     }
                 }
 
                 override fun onFailure(call: Call<AlbumResponse>, t: Throwable) {
-                    Log.d("failll",t.message.toString())
+//                    Log.d("failll",t.message.toString())
                 }
             })
             albumService.getAIAlbums(accessToken!!,refreshToken!!).enqueue(object :Callback<AlbumResponse>{
@@ -221,18 +226,18 @@ class GroundFragment : Fragment(), AdapterToFragment {
                             }
                         }
                         aiRecommendAlbumList = response.body()!!.albumListResult
-                        Log.d("success",aiRecommendAlbumList.toString())
+//                        Log.d("success",aiRecommendAlbumList.toString())
                         val albumListRVAdapter = FollowingAlbumListRVAdapter(mContext!!,aiRecommendAlbumList,this@GroundFragment)
                         binding.aiRecommendRV.adapter = albumListRVAdapter
                         binding.aiRecommendRV.layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
                         binding.aiRecommendRV.addItemDecoration(FollowingAlbumListRVAdapter.HorizontalItemDecoration(8))
                     }else{
-                        Log.d("response not successful",response.errorBody()?.string().toString())
+//                        Log.d("response not successful",response.errorBody()?.string().toString())
                     }
                 }
 
                 override fun onFailure(call: Call<AlbumResponse>, t: Throwable) {
-                    Log.d("failll",t.message.toString())
+//                    Log.d("failll",t.message.toString())
                 }
             })
 
@@ -248,18 +253,18 @@ class GroundFragment : Fragment(), AdapterToFragment {
                             }
                         }
                         genreRecommendAlbumList = response.body()!!.albumListResult
-                        Log.d("success",genreRecommendAlbumList.toString())
+//                        Log.d("success",genreRecommendAlbumList.toString())
                         val albumListRVAdapter = FollowingAlbumListRVAdapter(mContext!!,genreRecommendAlbumList,this@GroundFragment)
                         binding.recommendRV.adapter = albumListRVAdapter
                         binding.recommendRV.layoutManager = LinearLayoutManager(mContext,LinearLayoutManager.HORIZONTAL,false)
                         binding.recommendRV.addItemDecoration(FollowingAlbumListRVAdapter.HorizontalItemDecoration(8))
                     }else{
-                        Log.d("response not successful",response.errorBody()?.string().toString())
+//                        Log.d("response not successful",response.errorBody()?.string().toString())
                     }
                 }
 
                 override fun onFailure(call: Call<AlbumResponse>, t: Throwable) {
-                    Log.d("failll",t.message.toString())
+//                    Log.d("failll",t.message.toString())
                 }
             })
         }
@@ -287,18 +292,9 @@ class GroundFragment : Fragment(), AdapterToFragment {
                     intent.putExtra("name",name)
                     intent.putExtra("type","my")
                 }
-                // TODO 내 앨범인 경우에는 Profile Activity의 AlbumMelodyCardFragment로 이동해야함. 이 경우 아직 확인이 불가능함(그라운드 영역에 내 앨범이 없어..)
-//                val bottomSheetDialogFragment = BottomSheetFragment()
-//                val bundle = Bundle().apply {
-//                    putString("albumId",albumId)
-//                    putString("memberId",memberId)
-//                    putString("name",name)
-//                }
-//                bottomSheetDialogFragment.arguments = bundle
-//                bottomSheetDialogFragment.show(parentFragmentManager,bottomSheetDialogFragment.tag)
             }
             else -> {
-                Log.d("else","error....")
+//                Log.d("else","error....")
             }
         }
     }
@@ -320,17 +316,17 @@ class GroundFragment : Fragment(), AdapterToFragment {
             if(isLike){
                 val response = favoriteService.postFavorite(accessToken!!,refreshToken!!,melodyCardId)
                 if(response.isSuccessful){
-                    Log.d("success add",response.body().toString())
+//                    Log.d("success add",response.body().toString())
                 }else{
-                    Log.d("error ",response.errorBody()?.string().toString())
+//                    Log.d("error ",response.errorBody()?.string().toString())
                     // TODO 실패했으면 하트 눌린 거 취소되어야 할 듯?
                 }
             }else{
                 val response = favoriteService.deleteFavorite(accessToken!!,refreshToken!!,melodyCardId)
                 if(response.isSuccessful){
-                    Log.d("success delete",response.body().toString())
+//                    Log.d("success delete",response.body().toString())
                 }else{
-                    Log.d("error",response.errorBody()?.string().toString())
+//                    Log.d("error",response.errorBody()?.string().toString())
                 }
             }
         }
@@ -345,21 +341,25 @@ class GroundFragment : Fragment(), AdapterToFragment {
         musicService.addCount(accessToken!!,refreshToken!!,requestBody).enqueue(object :Callback<ResponseBody>{
             override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                 if(response.isSuccessful){
-                    Log.d("success",response.body().toString())
+//                    Log.d("success",response.body().toString())
                 }else{
-                    Log.d("error",response.errorBody()?.string().toString())
+//                    Log.d("error",response.errorBody()?.string().toString())
                 }
             }
 
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                Log.d("fail",t.message.toString())
+//                Log.d("fail",t.message.toString())
             }
 
         })
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun shareCard(item: ReceivedMelodyCardModel) {
+
+    }
+
+    override fun onPause() {
+        super.onPause()
         if(::cardViewPagerAdapter.isInitialized){
             for(i in 0 until cardList.size){
                 cardViewPagerAdapter.stopMediaPlayer(i)

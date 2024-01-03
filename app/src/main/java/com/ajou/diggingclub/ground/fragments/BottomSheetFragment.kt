@@ -198,6 +198,10 @@ class BottomSheetFragment() : BottomSheetDialogFragment(), AdapterToFragment {
         // TODO
     }
 
+    override fun shareCard(item: ReceivedMelodyCardModel) {
+
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         for(i in 0 until list.size){

@@ -53,14 +53,14 @@ class IndentLeadingMarginSpan(
     ) {
         // New Line 일때만 체크
         if (!isFirstLine) {
-            Log.d("margin", "firstLine")
+//            Log.d("margin", "firstLine")
             return
         }
 
         // 해당줄의 처음 2글자를 가져옴
         val lineStartText =
             runCatching { text.substring(lineStart, lineStart + 2) }.getOrNull() ?: return
-        Log.d("margin",lineStartText)
+//        Log.d("margin",lineStartText)
         // 2글자중 마지막 값을 trim한게 delimiter 목록에 포함된다면 해당 길이만큼을 indentMargin 지정
         indentMargin =
             if (indentDelimiters.contains(lineStartText.trimEnd())) {
@@ -68,7 +68,7 @@ class IndentLeadingMarginSpan(
             } else {
                 0
             }
-        Log.d("margin",indentMargin.toString())
+//        Log.d("margin",indentMargin.toString())
     }
 
     companion object {

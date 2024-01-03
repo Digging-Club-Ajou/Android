@@ -2,7 +2,7 @@ package com.ajou.diggingclub.melody.card
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.PorterDuff
+import android.graphics.*
 import android.graphics.drawable.LayerDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.ajou.diggingclub.R
@@ -45,6 +46,8 @@ import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
 
 class ShareCardFragment : Fragment() {
 
@@ -104,6 +107,7 @@ class ShareCardFragment : Fragment() {
         binding.title.text = args.music.title
         binding.location.text = args.address
 
+        Log.d("args.color",args.color)
         layerDrawable.getDrawable(0).setColorFilter(android.graphics.Color.parseColor(args.color),
             PorterDuff.Mode.SRC_IN)
         binding.playIcon.setImageDrawable(layerDrawable)
@@ -171,12 +175,12 @@ class ShareCardFragment : Fragment() {
                             startActivity(intent)
                         }else{
                             val errorBody = JSONObject(response.errorBody()?.string())
-                            Log.d("response not successsss",errorBody.toString())
+//                            Log.d("response not successsss",errorBody.toString())
                         }
                     }
 
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.d("fail",t.message.toString())
+//                        Log.d("fail",t.message.toString())
                     }
 
                 })
@@ -201,20 +205,16 @@ class ShareCardFragment : Fragment() {
                             startActivity(intent)
                         }else{
                             val errorBody = JSONObject(response.errorBody()?.string())
-                            Log.d("response not successsss here",errorBody.toString())
+//                            Log.d("response not successsss here",errorBody.toString())
                         }
                     }
 
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.d("fail",t.message.toString())
+//                        Log.d("fail",t.message.toString())
                     }
 
                 })
             }
-
         }
-
-
     }
-
 }

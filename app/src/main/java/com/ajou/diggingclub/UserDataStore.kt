@@ -85,7 +85,6 @@ class UserDataStore() {
     }
 
     suspend fun saveAlbumExistFlag(flag : Boolean) {
-        Log.d("flag save",flag.toString())
         withContext(Dispatchers.IO) {
             dataStore.edit { pref ->
                 pref[PreferencesKeys.ALBUM_EXIST] = flag

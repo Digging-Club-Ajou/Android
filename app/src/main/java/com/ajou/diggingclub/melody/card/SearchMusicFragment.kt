@@ -49,7 +49,7 @@ class SearchMusicFragment : Fragment() {
     inner class AdapterToFragment {
         fun getSelectedItem(data : MusicSpotifyModel) {
             val action = SearchMusicFragmentDirections.actionFindMusicFragmentToMakeCardFragment1(data)
-            Log.d("data",data.toString())
+//            Log.d("data",data.toString())
             findNavController().navigate(action)
         }
     }
@@ -69,7 +69,7 @@ class SearchMusicFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentSearchMusicBinding.inflate(inflater, container, false)
         binding.root.setOnClickListener{
-            Log.d("clicked!","clicked!")
+//            Log.d("clicked!","clicked!")
             hideKeyboard(requireActivity())
         }
         return binding.root
@@ -158,7 +158,7 @@ class SearchMusicFragment : Fragment() {
                         }
                     }
                     val data : List<MusicSpotifyModel> = response.body()!!.spotifyListResult
-                    Log.d("success",data.toString())
+//                    Log.d("success",data.toString())
                     if(data.isEmpty()){
                         isEnd = true
                     }else{
@@ -168,13 +168,13 @@ class SearchMusicFragment : Fragment() {
                         isLoading = false
                     }
                 }else{
-                    Log.d("response not successful",response.errorBody()?.string().toString())
+//                    Log.d("response not successful",response.errorBody()?.string().toString())
                     isEnd = true
                 }
             }
 
             override fun onFailure(call: Call<SpotifyResponse>, t: Throwable) {
-                Log.d("fail",t.message.toString())
+//                Log.d("fail",t.message.toString())
                 isEnd = true
             }
 

@@ -94,8 +94,8 @@ class FollowRVAdapter (val context : Context, var list : List<FollowingModel>, v
         notifyDataSetChanged()
     }
 
-    fun deleteFollower(position : Int){
-
-    }
+//    fun deleteFollower(position : Int){
+//
+//    }
 
 }

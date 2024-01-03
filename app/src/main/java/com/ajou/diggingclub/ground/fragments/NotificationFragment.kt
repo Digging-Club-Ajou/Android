@@ -80,7 +80,7 @@ class NotificationFragment : Fragment() {
                             }
                         }else{
                             val list : ArrayList<NotificationsModel> = response.body()!!.notificationsList
-                            Log.d("list",list.toString())
+//                            Log.d("list",list.toString())
                             viewModel.setNotificationList(list)
                             adapter = NotificationRVAdapter(mContext!!,viewModel.notificationList.value!!,link)
                             binding.notiRV.adapter = adapter

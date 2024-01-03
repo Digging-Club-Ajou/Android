@@ -73,7 +73,6 @@ class UserArchiveFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG,"onViewCreated")
         val dataStore = UserDataStore()
         var accessToken : String? = null
         var refreshToken : String? = null
@@ -93,9 +92,9 @@ class UserArchiveFragment : Fragment() {
             }
             if(args.albumInfo!=null){
                 albumInfo = args.albumInfo
-                Log.d("albumInfo",albumInfo.toString())
+//                Log.d("albumInfo",albumInfo.toString())
             }else {
-                Log.d("albumId check",args.albumId.toString())
+//                Log.d("albumId check",args.albumId.toString())
                 albumService.getAlbum(accessToken!!, refreshToken!!, args.albumId)
                     .enqueue(object : Callback<ReceivedAlbumModel> {
                         override fun onResponse(
@@ -104,14 +103,14 @@ class UserArchiveFragment : Fragment() {
                         ) {
                             if (response.isSuccessful) {
                                 albumInfo = response.body()
-                                Log.d("albumInfo",albumInfo.toString())
+//                                Log.d("albumInfo",albumInfo.toString())
                             } else {
-                                Log.d("error ", response.errorBody()?.string().toString())
+//                                Log.d("error ", response.errorBody()?.string().toString())
                             }
                         }
 
                         override fun onFailure(call: Call<ReceivedAlbumModel>, t: Throwable) {
-                            Log.d("fail", t.message.toString())
+//                            Log.d("fail", t.message.toString())
                         }
                     })
             }
@@ -137,7 +136,7 @@ class UserArchiveFragment : Fragment() {
                             binding.notFollowingText.visibility = View.GONE
                         }else{
                             if(userId.toString() == args.memberId){
-                                Log.d("userId is ","same")
+//                                Log.d("userId is ","same")
                                 binding.followingBtn.visibility = View.INVISIBLE
                                 binding.editBtn.visibility = View.VISIBLE
                                 binding.settingBtn.visibility = View.VISIBLE
@@ -153,17 +152,17 @@ class UserArchiveFragment : Fragment() {
                         binding.followingBtn.visibility = View.VISIBLE
                     }
                 }else{
-                    Log.d("followingStatus error",followingStatusResponse.errorBody()?.string().toString())
+//                    Log.d("followingStatus error",followingStatusResponse.errorBody()?.string().toString())
                 }
                 if(numberOfFollowResponse.isSuccessful){
                     followingsList = numberOfFollowResponse.body()?.followings?.toTypedArray()
                     followersList = numberOfFollowResponse.body()?.followers?.toTypedArray()
                     numOfFollower = followersList!!.size
                 }else{
-                    Log.d("numberOfFollow error",numberOfFollowResponse.errorBody()?.string().toString())
+//                    Log.d("numberOfFollow error",numberOfFollowResponse.errorBody()?.string().toString())
                 }
             withContext(Dispatchers.Main){
-                Log.d("albumInfo",albumInfo.toString())
+//                Log.d("albumInfo",albumInfo.toString())
                 if(albumInfo!!.albumId != 0){
                     Glide.with(mContext!!)
                         .load(albumInfo!!.imageUrl)
@@ -229,16 +228,16 @@ class UserArchiveFragment : Fragment() {
                         response: Response<ResponseBody>
                     ) {
                         if(response.isSuccessful){
-                            Log.d("팔로잉 삭제 성공",response.body().toString())
+//                            Log.d("팔로잉 삭제 성공",response.body().toString())
                             viewModel.setFollowing(false)
-                            Log.d("numOfFollower",numOfFollower.toString())
+//                            Log.d("numOfFollower",numOfFollower.toString())
                         }else{
-                            Log.d("팔로잉 삭제 실패 error ",response.errorBody()?.string().toString())
+//                            Log.d("팔로잉 삭제 실패 error ",response.errorBody()?.string().toString())
                         }
                     }
 
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.d("팔로잉 삭제 실패 fail",t.message.toString())
+//                        Log.d("팔로잉 삭제 실패 fail",t.message.toString())
                     }
                 })
             }else{
@@ -255,16 +254,16 @@ class UserArchiveFragment : Fragment() {
                         response: Response<ResponseBody>
                     ) {
                         if(response.isSuccessful){
-                            Log.d("팔로잉 성공", "팔로잉 성공")
+//                            Log.d("팔로잉 성공", "팔로잉 성공")
                             viewModel.setFollowing(true)
-                            Log.d("numOfFollower",numOfFollower.toString())
+//                            Log.d("numOfFollower",numOfFollower.toString())
                         }else{
-                            Log.d("팔로잉 실패",response.errorBody().toString())
+//                            Log.d("팔로잉 실패",response.errorBody().toString())
                         }
                     }
 
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Log.d("fail",t.message.toString())
+//                        Log.d("fail",t.message.toString())
                     }
                 })
             }
@@ -276,11 +275,6 @@ class UserArchiveFragment : Fragment() {
                 findNavController().navigate(action)
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG,"onStart")
     }
 
     private fun setBoldType(followerSize : String, followingSize : String, text : String) : SpannableString{

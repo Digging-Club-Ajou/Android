@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">diggingclub</string>
+    <string name="app_name">Diggle</string>
     <string name="welcome">\@%s 님의 가입을 환영합니다.\n이제 디글과 함께 취향을 공유하고 기록할 수 있습니다.</string>
     <string name="nickname">\@%s</string>
     <string name="melody_nickname">%s 님이 좋아하는 멜로디</string>

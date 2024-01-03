@@ -126,7 +126,6 @@ class IntroFragment1 : Fragment() {
                 else
                     genreObject.addProperty(itemList[i].genre, false)
             }
-            Log.d("genreObject", genreObject.toString())
             val requestBody =
                 RequestBody.create("application/json".toMediaTypeOrNull(), genreObject.toString())
             genreService.postGenre(accessToken!!, refreshToken!!, requestBody).enqueue(object :
@@ -143,12 +142,12 @@ class IntroFragment1 : Fragment() {
                         }
                         findNavController().navigate(R.id.action_introFragment1_to_introFragment2)
                     } else {
-                        Log.d("response not succeesss", response.errorBody()?.string().toString())
+//                        Log.d("response not succeesss", response.errorBody()?.string().toString())
                     }
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                    Log.d("faill", t.message.toString())
+//                    Log.d("faill", t.message.toString())
                 }
             })
         }
@@ -159,7 +158,6 @@ class IntroFragment1 : Fragment() {
                 adapter.blockAdd(false)
                 binding.nextBtn.setBackgroundResource(R.drawable.rectangle_2)
                 binding.nextBtn.setTextColor(resources.getColor(R.color.textColor))
-                Log.d("it", it.size.toString())
                 binding.nextBtn.isEnabled = true
             } else {
                 adapter.blockAdd(true)

@@ -31,7 +31,6 @@
             android:textColor="@color/textColor"
             android:textSize="14sp"
             android:gravity="top"
-            android:layout_marginTop="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/profileIcon"

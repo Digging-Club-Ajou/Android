@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.navigation.fragment.findNavController
 import com.ajou.diggingclub.ground.fragments.GroundFragmentDirections
 import com.ajou.diggingclub.ground.models.ReceivedAlbumModel
+import com.ajou.diggingclub.ground.models.ReceivedMelodyCardModel
 
 interface AdapterToFragment {
         fun getSelectedItem(item : ReceivedAlbumModel)
@@ -13,4 +14,6 @@ interface AdapterToFragment {
         fun postFavoriteId(melodyCardId : String, isLike : Boolean)
 
         fun addRecordCount(position : Int)
+
+        fun shareCard(item : ReceivedMelodyCardModel)
 }

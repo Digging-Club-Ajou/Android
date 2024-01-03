@@ -23,8 +23,8 @@ android {
         applicationId "com.ajou.diggingclub"
         minSdk 26
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -146,6 +146,12 @@ dependencies {
 
     // FlexboxLayout
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
+
+    // Chrome Custom tab
+    implementation 'androidx.browser:browser:1.5.0'
+
+    // Timber(Logging)
+    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     implementation platform('com.google.firebase:firebase-bom:31.2.3')
     implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.5'

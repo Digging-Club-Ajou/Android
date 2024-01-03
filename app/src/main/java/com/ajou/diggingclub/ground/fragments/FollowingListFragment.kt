@@ -110,7 +110,6 @@ class FollowingListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        Log.d("view is onDestroyed", "view is destroyed")
         viewModel.setEmptyList()
     }
 }

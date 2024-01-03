@@ -1,6 +1,9 @@
 package com.ajou.diggingclub.ground.adapter
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.LayerDrawable
@@ -10,14 +13,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
+import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.ajou.diggingclub.R
 import com.ajou.diggingclub.ground.models.ReceivedMelodyCardModel
 import com.ajou.diggingclub.utils.AdapterToFragment
 import com.ajou.diggingclub.utils.setOnSingleClickListener
 import com.bumptech.glide.Glide
+import timber.log.Timber
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 
 class MelodyCardRVAdapter(val context: Context, val list:List<ReceivedMelodyCardModel>, private val link : AdapterToFragment, val type : String) : RecyclerView.Adapter<MelodyCardRVAdapter.ViewHolder>() {
@@ -37,9 +47,9 @@ class MelodyCardRVAdapter(val context: Context, val list:List<ReceivedMelodyCard
         val profileIcon : ImageView = view.findViewById(R.id.profileIcon)
         val likeBtn : ImageView = view.findViewById(R.id.likeBtn)
         val deleteBtn : ImageView = view.findViewById(R.id.deleteBtn)
-        val deleteText : TextView = view.findViewById(R.id.deleteText)
-        val deleteOverlay : ImageView = view.findViewById(R.id.deleteOverlay)
-
+//        val progressBar : ProgressBar = view.findViewById(R.id.progressBar)
+        val shareBtn : ImageView = view.findViewById(R.id.shareBtn)
+        val cardView : CardView = view.findViewById(R.id.cardView)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -68,6 +78,7 @@ class MelodyCardRVAdapter(val context: Context, val list:List<ReceivedMelodyCard
 
     override fun onBindViewHolder(holder: MelodyCardRVAdapter.ViewHolder, position: Int) {
 
+        Timber.d("timber!")
         val playLayerDrawable = ContextCompat.getDrawable(context, R.drawable.playicon)?.mutate() as LayerDrawable
         val playingLayerDrawable = ContextCompat.getDrawable(context, R.drawable.playingicon)?.mutate() as LayerDrawable
         holder.title.text = list[position].songTitle
@@ -103,6 +114,7 @@ class MelodyCardRVAdapter(val context: Context, val list:List<ReceivedMelodyCard
 
         holder.likeBtn.isSelected = list[position].isLike
         holder.nickname.setOnSingleClickListener {
+            Log.d("nickname","clicked!")
             link.getSelectedId(list[position].memberId.toString(),list[position].albumId.toString(), "", "card")
         }
 
@@ -120,6 +132,7 @@ class MelodyCardRVAdapter(val context: Context, val list:List<ReceivedMelodyCard
         }
 
         holder.likeBtn.setOnSingleClickListener {
+            Timber.d("checked!")
             if(holder.likeBtn.isSelected){
                 holder.likeBtn.isSelected = false
                 link.postFavoriteId(list[position].melodyCardId.toString(),false)
@@ -128,17 +141,29 @@ class MelodyCardRVAdapter(val context: Context, val list:List<ReceivedMelodyCard
                 link.postFavoriteId(list[position].melodyCardId.toString(),true)
             }
         }
-
         holder.profileIcon.setOnClickListener {
+            Timber.d("checked!")
             link.getSelectedId(list[position].memberId.toString(),list[position].albumId.toString(), "", "card")
+            Timber.d("checked!")
         }
 
-        holder.deleteBtn.setOnClickListener {
-            link.getSelectedId(list[position].memberId.toString(),list[position].albumId.toString(), position.toString(), "delete")
-            notifyItemRemoved(position)
-            Log.d("position",position.toString())
-        }
+        holder.shareBtn.setOnSingleClickListener {
+            val bitmap = Bitmap.createBitmap(holder.cardView.width, holder.cardView.height, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(bitmap)
+            holder.cardView.draw(canvas)
+            val file = File(context?.externalCacheDir, "melodycard.png")
+            val fileOutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fileOutputStream)
+            fileOutputStream.flush()
+            fileOutputStream.close()
+            val uri = FileProvider.getUriForFile(context, "com.ajou.diggingclub.fileprovider", file)
+            val intent = Intent(Intent.ACTION_SEND)
 
+            intent.type = ("image/*")
+            intent.putExtra(Intent.EXTRA_STREAM, uri)
+            Timber.d("Intent : ${intent.type}")
+            context.startActivity(Intent.createChooser(intent, "Share img"))
+        }
     }
 
     override fun getItemCount(): Int {
@@ -186,4 +211,13 @@ class MelodyCardRVAdapter(val context: Context, val list:List<ReceivedMelodyCard
             pausedPosition = currentPosition
         }
     }
+
+//    fun updateProgressBar(progressBar: ProgressBar){
+//        val duration = mediaPlayer?.duration
+//        val currentPosition = mediaPlayer?.currentPosition
+//        Log.d("progress", "duration : $duration, currentPosition : $currentPosition")
+//        val progress = (currentPosition!!.toFloat() / duration!!.toFloat() * 100).toInt()
+//        Log.d("progress", "progress : $progress")
+//        progressBar.progress = progress
+//    }
 }

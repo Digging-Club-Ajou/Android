@@ -71,10 +71,6 @@ class IntroGenreRVAdapter(val context: Context, val list : List<IntroSelectModel
                 link.getSelectedItem(list[position],position)
                 notifyItemChanged(position)
             }
-            else{
-                //
-                Log.d("holder","too many")
-            }
             // 선택된 거 변경 뜨게
         }
     }

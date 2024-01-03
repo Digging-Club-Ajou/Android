@@ -56,7 +56,6 @@ class SearchUserFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentSearchUserBinding.inflate(inflater, container, false)
         binding.root.setOnClickListener {
-            Log.d("clicked!","clicked!")
             hideKeyboard(requireActivity())
         }
         return binding.root
@@ -115,7 +114,7 @@ class SearchUserFragment : Fragment() {
                                         }
                                         val memberSearchListResult: List<MemberSearchModel> =
                                             response.body()!!.memberSearchListResult
-                                        Log.d("member userList",memberSearchListResult.toString())
+//                                        Log.d("member userList",memberSearchListResult.toString())
                                         CoroutineScope(Dispatchers.IO).launch {
                                             val userList = memberSearchListResult.map { memberSearchModel ->
                                                     async {
@@ -141,11 +140,11 @@ class SearchUserFragment : Fragment() {
                                         }
                                     }
                                     else {
-                                        Log.d("response not successful",response.errorBody()?.string().toString())
+//                                        Log.d("response not successful",response.errorBody()?.string().toString())
                                     }
                                 }
                                 override fun onFailure(call: Call<MemberSearchResponse>, t: Throwable) {
-                                    Log.d("fail",t.message.toString())
+//                                    Log.d("fail",t.message.toString())
                                 }
                             })
                         }

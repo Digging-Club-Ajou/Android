@@ -2,6 +2,7 @@ package com.ajou.diggingclub.melody.album
 
 import android.content.Context
 import android.content.Intent
+import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -95,7 +96,7 @@ class MakeAlbumFragment1 : Fragment() {
                         binding.video.visibility = View.VISIBLE
                     }
                 }else{
-                    Log.d("response is not successful", result.errorBody()?.string().toString())
+//                    Log.d("response is not successful", result.errorBody()?.string().toString())
                 }
             }
         }
@@ -105,6 +106,11 @@ class MakeAlbumFragment1 : Fragment() {
         val uri = Uri.parse(videoPath)
         binding.video.setVideoURI(uri)
 
+        binding.video.setOnPreparedListener {mediaPlayer ->
+            mediaPlayer.setOnInfoListener { _, what, _ ->
+                what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START
+                }
+        }
         binding.video.setOnCompletionListener { mediaPlayer ->
             binding.video.stopPlayback()
         }

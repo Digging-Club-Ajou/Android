@@ -46,6 +46,9 @@
         <argument
             android:name="albums"
             app:argType="com.ajou.diggingclub.ground.models.ReceivedAlbumModel[]" />
+        <action
+            android:id="@+id/action_albumListFragment_to_albumMelodyCardFragment"
+            app:destination="@id/albumMelodyCardFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchUserFragment"

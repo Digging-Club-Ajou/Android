@@ -89,7 +89,7 @@ class LikeMelodyFragment : Fragment() {
                 val isRecordSuccess = recordResponse.isSuccessful
                 if(isFavSuccess){
                     list = favoriteResponse.body()!!.cardFavoriteResponses
-                    Log.d(TAG,favoriteResponse.body()!!.cardFavoriteResponses.toString())
+//                    Log.d(TAG,favoriteResponse.body()!!.cardFavoriteResponses.toString())
                     withContext(Dispatchers.Main){
                         if(list.isNotEmpty()) {
                             binding.likeListRV.apply {
@@ -111,7 +111,7 @@ class LikeMelodyFragment : Fragment() {
                         binding.record.text = setBoldStyle(recordData!!,binding.record.text.toString())
                         binding.record.visibility = View.VISIBLE
                     }else{
-                        Log.d("errorBody",recordResponse.errorBody()?.string().toString())
+//                        Log.d("errorBody",recordResponse.errorBody()?.string().toString())
                     }
                     when{
                         !isRecordExist && list.isNotEmpty() -> {
@@ -133,7 +133,7 @@ class LikeMelodyFragment : Fragment() {
                     }
                 }
             }catch (e:java.lang.Exception){
-                Log.d(TAG,e.message.toString())
+//                Log.d(TAG,e.message.toString())
             }
         }
         binding.userNickname.text = String.format(resources.getString(R.string.melody_nickname),args.nickname)
@@ -274,4 +274,5 @@ class LikeMelodyFragment : Fragment() {
         )
         return spannableString
     } // TODO setBoldyStyle, setBoldType 같은 역할 하는 함수니까 정리하기
+
 }
